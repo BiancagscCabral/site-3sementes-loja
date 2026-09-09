@@ -1,26 +1,27 @@
-export type Accent = "gold" | "bloom";
+export const STORE_NAME = "3sementes";
 
-export const STORES = [
+const WHATSAPP_NUMBER = "5581920051830";
+
+export function getWhatsAppUrl(text: string) {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+}
+
+export const WHATSAPP_URL = getWhatsAppUrl(
+  "Olá! Vim pelo site e gostaria de saber mais.",
+);
+
+export const INSTAGRAM_LINKS = [
   {
-    slug: "3sementes",
-    name: "3sementes",
-    tagline: "Braceletes, colares, anéis e guias",
-    description:
-      "Joias artesanais em fio dourado e miçangas coloridas, incluindo guias e artigos religiosos.",
-    icon: "📿",
-    accent: "gold" as Accent,
+    label: "@3sementes_store",
     href: "https://www.instagram.com/3sementes_store/",
-    categories: ["Braceletes", "Colares", "Anéis", "Guias"],
   },
-  {
-    slug: "3sflores",
-    name: "3sflores",
-    tagline: "Flores eternas de chenille",
-    description:
-      "O primeiro ateliê de flores eternas de Recife: buquês coloridos que nunca murcham.",
-    icon: "🌸",
-    accent: "bloom" as Accent,
-    href: "https://www.instagram.com/3sflores/",
-    categories: ["Flores Eternas"],
-  },
+  { label: "@3sflores", href: "https://www.instagram.com/3sflores/" },
+];
+
+export const CATEGORIES = [
+  { slug: "braceletes", name: "Braceletes", icon: "📿" },
+  { slug: "colares", name: "Colares", icon: "📿" },
+  { slug: "aneis", name: "Anéis", icon: "💍" },
+  { slug: "guias", name: "Guias", icon: "🙏" },
+  { slug: "flores-eternas", name: "Flores Eternas", icon: "🌸" },
 ];

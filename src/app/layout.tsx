@@ -16,9 +16,9 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "3sementes & 3sflores",
+  title: "3sementes",
   description:
-    "Joias artesanais e flores eternas feitas à mão em Igarassu e Recife.",
+    "Joias artesanais e flores eternas (3sflores) feitas à mão em Igarassu e Recife.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

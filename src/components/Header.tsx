@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { STORES } from "@/lib/catalog";
+import { CATEGORIES } from "@/lib/catalog";
 
 function SearchIcon() {
   return (
@@ -67,7 +67,7 @@ export default function Header() {
   return (
     <div className="sticky top-0 z-10">
       <div className="bg-primary-dark px-6 py-2 text-center text-xs tracking-wide text-primary-foreground">
-        Peças artesanais feitas à mão &middot; Envio para todo o Brasil
+        Peças artesanais feitas à mão &middot; envio para todo o Brasil
       </div>
 
       <header className="border-b border-border bg-background/95 backdrop-blur">
@@ -76,7 +76,7 @@ export default function Header() {
             href="/"
             className="font-display shrink-0 text-xl font-medium tracking-tight text-foreground"
           >
-            3sementes 
+            3sementes
           </Link>
 
           <div className="hidden flex-1 items-center rounded-full border border-border bg-surface px-4 py-2 text-sm text-muted sm:flex">
@@ -97,7 +97,7 @@ export default function Header() {
             </button>
             <button type="button" aria-label="Carrinho" className="relative">
               <BagIcon />
-              <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-gold text-[10px] text-primary-foreground">
+              <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] text-accent-foreground">
                 0
               </span>
             </button>
@@ -105,35 +105,15 @@ export default function Header() {
         </div>
 
         <nav className="hidden justify-center gap-8 border-t border-border bg-surface px-6 py-2 text-sm text-muted sm:flex">
-          {STORES.map((store) => (
-            <div key={store.slug} className="group relative">
-              <span className="cursor-default py-1 transition-colors group-hover:text-foreground">
-                {store.name}
-              </span>
-              <div className="invisible absolute left-1/2 top-full z-20 min-w-48 -translate-x-1/2 rounded-xl border border-border bg-surface p-2 opacity-0 shadow-lg transition-all group-hover:visible group-hover:opacity-100">
-                {store.categories.map((category) => (
-                  <a
-                    key={category}
-                    href={store.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block whitespace-nowrap rounded-lg px-3 py-2 text-left hover:bg-background hover:text-foreground"
-                  >
-                    {category}
-                  </a>
-                ))}
-              </div>
-            </div>
+          {CATEGORIES.map((category) => (
+            <Link
+              key={category.slug}
+              href={`/categorias/${category.slug}`}
+              className="py-1 transition-colors hover:text-foreground"
+            >
+              {category.name}
+            </Link>
           ))}
-          <a href="#sobre" className="py-1 transition-colors hover:text-foreground">
-            Sobre
-          </a>
-          <a
-            href="#contato"
-            className="py-1 transition-colors hover:text-foreground"
-          >
-            Contato
-          </a>
         </nav>
       </header>
     </div>
