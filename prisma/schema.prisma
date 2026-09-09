@@ -1,0 +1,114 @@
+// Schema do banco de dados da loja 3sementes & 3sflores
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Categoria de produto (ex: "Vasos de cerâmica", "Buquês secos", "Bordados")
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
+// Produto artesanal vendido na loja
+model Product {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  description String
+  priceCents  Int // preço em centavos, evita problemas de arredondamento com float
+  images      ProductImage[]
+  variants    ProductVariant[]
+  stock       Int           @default(0) // estoque padrão, usado se não houver variantes
+  weightGrams Int? // peso em gramas, necessário para cotação de frete (SuperFrete)
+  heightCm    Float?
+  widthCm     Float?
+  lengthCm    Float?
+  category    Category      @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  active      Boolean       @default(true)
+  orderItems  OrderItem[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+// Fotos do produto (galeria)
+model ProductImage {
+  id        String   @id @default(cuid())
+  url       String
+  altText   String?
+  position  Int      @default(0)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+}
+
+// Variante do produto (ex: cor, tamanho) — opcional, nem todo produto precisa ter
+model ProductVariant {
+  id         String  @id @default(cuid())
+  name       String // ex: "Azul", "P", "300ml"
+  priceCents Int? // se null, usa o preço do produto
+  stock      Int     @default(0)
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  String
+}
+
+// Pedido feito por um cliente
+model Order {
+  id              String      @id @default(cuid())
+  customerName    String
+  customerEmail   String
+  customerPhone   String
+  shippingAddress Json // CEP, rua, número, bairro, cidade, estado, complemento
+
+  // Frete (SuperFrete)
+  shippingCents   Int?
+  shippingService String? // ex: "Correios PAC", "Correios SEDEX", "Jadlog"
+
+  // Pagamento (InfinitePay)
+  infinitePayOrderNsu String?  @unique // seu identificador do pedido, enviado à InfinitePay
+  infinitePaySlug     String? // slug do link de checkout retornado pela API
+  paymentStatus       PaymentStatus @default(PENDING)
+  paidAmountCents     Int?
+  paymentMethod       String? // "pix" | "credit_card"
+
+  status     OrderStatus @default(AWAITING_PAYMENT)
+  items      OrderItem[]
+  totalCents Int
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model OrderItem {
+  id             String  @id @default(cuid())
+  order          Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId        String
+  product        Product @relation(fields: [productId], references: [id])
+  productId      String
+  variantId      String?
+  quantity       Int
+  unitPriceCents Int // preço no momento da compra (não muda se o preço do produto mudar depois)
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum OrderStatus {
+  AWAITING_PAYMENT
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
