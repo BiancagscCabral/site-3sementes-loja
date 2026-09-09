@@ -27,11 +27,10 @@ export default function Home() {
           Feito à mão, com carinho
         </span>
         <h1 className="font-display max-w-xl text-4xl font-medium leading-tight tracking-tight text-foreground sm:text-5xl">
-          Sementes e flores que viram peças para você usar e presentear
+          3sementes que viram peças para você usar e presentear
         </h1>
         <p className="max-w-md text-base leading-7 text-muted">
-          Joias artesanais e flores eternas feitas à mão em Igarassu e Recife,
-          uma peça de cada vez.
+           Produtos artesanais e flores eternas feitas à mão em Pernambuco.
         </p>
         <a
           href="#lojas"
@@ -47,7 +46,7 @@ export default function Home() {
       >
         <div className="mx-auto max-w-5xl">
           <h2 className="font-display text-2xl font-medium text-foreground">
-            Nossas lojas
+            Nossas Redes
           </h2>
           <div className="mt-10 grid gap-6 sm:grid-cols-2">
             {STORES.map((store) => (

@@ -4,6 +4,7 @@ const NAV_LINKS = [
   { href: "#lojas", label: "Nossas Redes" },
   { href: "#sobre", label: "Sobre" },
   { href: "#contato", label: "Contato" },
+  { href: "#Braceletes", label: "Braceletes" },
 ];
 
 export default function Header() {
