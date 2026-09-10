@@ -83,16 +83,18 @@ export default function Header() {
           scrolled ? "max-h-0 py-0 opacity-0" : "max-h-10 py-2 opacity-100"
         }`}
       >
-        Peças artesanais feitas à mão &middot; envio para todo o Brasil
+        Peças artesanais feitas à mão &middot; Envio para todo o Brasil
       </div>
 
       <header className="border-b border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center gap-6 px-6 py-4">
-          <Link
-            href="/"
-            className="font-display shrink-0 text-xl font-medium tracking-tight text-foreground"
-          >
-            3sementes
+          <Link href="/" className="shrink-0 leading-none">
+            <span className="font-display block text-xl font-medium tracking-tight text-foreground">
+              3sementes
+            </span>
+            <span className="-mt-0.5 block text-right text-[10px] font-medium uppercase tracking-[0.25em] text-accent">
+              Store
+            </span>
           </Link>
 
           <div
@@ -135,7 +137,7 @@ export default function Header() {
             <Link
               key={category.slug}
               href={`/categorias/${category.slug}`}
-              className="rounded-full border border-transparent px-4 py-1.5 text-sm text-muted transition-colors hover:border-border hover:bg-secondary hover:text-secondary-foreground"
+              className="rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-medium text-foreground shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:bg-secondary hover:text-secondary-foreground hover:shadow-md"
             >
               {category.name}
             </Link>
