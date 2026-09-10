@@ -1,7 +1,16 @@
 import Link from "next/link";
 import { CATEGORIES } from "@/lib/catalog";
+import { prisma } from "@/lib/prisma";
+import { formatPriceCents } from "@/lib/format";
 
-export default function Home() {
+export default async function Home() {
+  const featuredProducts = await prisma.product.findMany({
+    where: { active: true },
+    orderBy: { createdAt: "desc" },
+    take: 4,
+    include: { category: true },
+  });
+
   return (
     <div className="flex flex-col">
       <section className="mx-auto max-w-5xl px-6 pt-16 pb-12 text-center sm:pt-20">
@@ -29,8 +38,11 @@ export default function Home() {
       >
         <div className="mx-auto max-w-5xl">
           <h2 className="font-display text-2xl font-medium text-foreground">
-            Categorias
+            Compre por categoria
           </h2>
+          <p className="mt-1 text-sm text-muted">
+            Cinco famílias de produtos, um mesmo cuidado em cada detalhe.
+          </p>
           <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-5">
             {CATEGORIES.map((category) => (
               <Link
@@ -44,6 +56,73 @@ export default function Home() {
                 </span>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {featuredProducts.length > 0 && (
+        <section className="px-6 py-16">
+          <div className="mx-auto max-w-5xl">
+            <h2 className="font-display text-2xl font-medium text-foreground">
+              Da vitrine
+            </h2>
+            <p className="mt-1 text-sm text-muted">
+              Uma seleção do ateliê pronta para encantar.
+            </p>
+            <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+              {featuredProducts.map((product) => {
+                const icon =
+                  CATEGORIES.find((c) => c.slug === product.category.slug)
+                    ?.icon ?? "✨";
+                return (
+                  <Link
+                    key={product.slug}
+                    href={`/produtos/${product.slug}`}
+                    className="group rounded-2xl border border-border bg-surface p-4 transition-colors hover:border-accent/40"
+                  >
+                    <div className="flex aspect-square items-center justify-center rounded-xl bg-background text-3xl">
+                      {icon}
+                    </div>
+                    <p className="mt-3 text-xs uppercase tracking-wide text-muted">
+                      {product.category.name}
+                    </p>
+                    <h3 className="mt-1 text-sm font-medium text-foreground">
+                      {product.name}
+                    </h3>
+                    <p className="mt-1 text-sm text-accent">
+                      {formatPriceCents(product.priceCents)}
+                    </p>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section className="border-t border-border bg-surface px-6 py-12">
+        <div className="mx-auto grid max-w-5xl gap-8 text-center sm:grid-cols-3">
+          <div>
+            <p className="font-display text-lg text-foreground">
+              Feito à mão
+            </p>
+            <p className="mt-1 text-sm text-muted">Peças únicas do ateliê</p>
+          </div>
+          <div>
+            <p className="font-display text-lg text-foreground">
+              Envio para o Brasil
+            </p>
+            <p className="mt-1 text-sm text-muted">
+              Frete calculado para você
+            </p>
+          </div>
+          <div>
+            <p className="font-display text-lg text-foreground">
+              Atendimento no WhatsApp
+            </p>
+            <p className="mt-1 text-sm text-muted">
+              Tire dúvidas e feche o pedido direto com a gente
+            </p>
           </div>
         </div>
       </section>

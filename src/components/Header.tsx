@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CATEGORIES } from "@/lib/catalog";
 
@@ -64,9 +67,22 @@ function BagIcon() {
 }
 
 export default function Header() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <div className="sticky top-0 z-10">
-      <div className="bg-primary-dark px-6 py-2 text-center text-xs tracking-wide text-primary-foreground">
+      <div
+        className={`overflow-hidden bg-primary-dark text-center text-xs tracking-wide text-primary-foreground transition-all duration-300 ${
+          scrolled ? "max-h-0 py-0 opacity-0" : "max-h-10 py-2 opacity-100"
+        }`}
+      >
         Peças artesanais feitas à mão &middot; envio para todo o Brasil
       </div>
 
@@ -79,16 +95,26 @@ export default function Header() {
             3sementes
           </Link>
 
-          <div className="hidden flex-1 items-center rounded-full border border-border bg-surface px-4 py-2 text-sm text-muted sm:flex">
-            <SearchIcon />
-            <input
-              type="text"
-              placeholder="Buscar produtos..."
-              className="ml-2 w-full bg-transparent outline-none placeholder:text-muted"
-            />
+          <div
+            className={`overflow-hidden transition-all duration-300 ${
+              scrolled ? "max-w-0 opacity-0" : "max-w-full flex-1 opacity-100"
+            }`}
+          >
+            <div className="hidden items-center rounded-full border border-border bg-surface px-4 py-2 text-sm text-muted sm:flex">
+              <SearchIcon />
+              <input
+                type="text"
+                placeholder="Buscar produtos..."
+                className="ml-2 w-full bg-transparent outline-none placeholder:text-muted"
+              />
+            </div>
           </div>
 
-          <div className="ml-auto flex items-center gap-4 text-foreground sm:ml-0">
+          <div
+            className={`ml-auto flex items-center gap-4 overflow-hidden text-foreground transition-all duration-300 sm:ml-0 ${
+              scrolled ? "max-w-0 opacity-0" : "max-w-full opacity-100"
+            }`}
+          >
             <button type="button" aria-label="Minha conta">
               <UserIcon />
             </button>
@@ -104,12 +130,12 @@ export default function Header() {
           </div>
         </div>
 
-        <nav className="hidden justify-center gap-8 border-t border-border bg-surface px-6 py-2 text-sm text-muted sm:flex">
+        <nav className="hidden flex-wrap justify-center gap-2 border-t border-border px-6 py-3 sm:flex">
           {CATEGORIES.map((category) => (
             <Link
               key={category.slug}
               href={`/categorias/${category.slug}`}
-              className="py-1 transition-colors hover:text-foreground"
+              className="rounded-full border border-transparent px-4 py-1.5 text-sm text-muted transition-colors hover:border-border hover:bg-secondary hover:text-secondary-foreground"
             >
               {category.name}
             </Link>

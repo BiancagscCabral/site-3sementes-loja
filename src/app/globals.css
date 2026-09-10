@@ -1,17 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf6ef;
-  --surface: #ffffff;
-  --foreground: #2c2a20;
-  --muted: #756f5c;
-  --border: #e4ddcc;
-  --primary: #606542;
-  --primary-dark: #454930;
-  --primary-foreground: #faf6ef;
-  --secondary: #a4a077;
-  --accent: #f37f19;
-  --accent-foreground: #fff8f0;
+  --background: oklch(96.5% 0.012 89);
+  --surface: oklch(99% 0.005 90);
+  --foreground: oklch(28% 0.026 92);
+  --muted: oklch(49% 0.025 92);
+  --muted-bg: oklch(92% 0.018 91);
+  --border: oklch(47% 0.059 111 / 0.16);
+  --primary: oklch(47% 0.059 111);
+  --primary-dark: oklch(40% 0.06 111);
+  --primary-foreground: oklch(96.5% 0.012 89);
+  --secondary: oklch(72% 0.055 101 / 0.18);
+  --secondary-foreground: oklch(36% 0.045 107);
+  --accent: oklch(69% 0.19 53);
+  --accent-foreground: oklch(99% 0.005 90);
 }
 
 @theme inline {
@@ -19,11 +21,13 @@
   --color-surface: var(--surface);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
+  --color-muted-bg: var(--muted-bg);
   --color-border: var(--border);
   --color-primary: var(--primary);
   --color-primary-dark: var(--primary-dark);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --font-sans: var(--font-geist-sans);
