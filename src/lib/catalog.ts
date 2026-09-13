@@ -19,11 +19,15 @@ export const INSTAGRAM_LINKS = [
 ];
 
 export const CATEGORIES = [
+  { slug: "guias", name: "Guias e Brajás" },
   { slug: "braceletes", name: "Braceletes" },
-  { slug: "colares", name: "Colares" },
+  { slug: "colares", name: "Colares e Chokers" },
+  { slug: "pulseiras", name: "Pulseiras" },
+  { slug: "tornozeleiras", name: "Tornozeleiras" },
   { slug: "aneis", name: "Anéis" },
-  { slug: "guias", name: "Guias" },
   { slug: "flores-eternas", name: "Flores Eternas" },
+  { slug: "acessorios", name: "Acessórios" },
+  { slug: "decoracao", name: "Decoração" },
 ];
 
 const FLORES_CATEGORY_SLUG = "flores-eternas";

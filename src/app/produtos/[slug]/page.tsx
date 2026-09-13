@@ -158,22 +158,26 @@ export default async function ProductPage(
           </div>
         </div>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2">
-          <div className="rounded-2xl border border-border bg-surface p-[22px]">
-            <h2 className="font-display text-[17px] font-medium">Sobre a peça</h2>
-            <p className="mt-2.5 text-[13px] leading-[1.7] text-muted">
-              {product.description}
-            </p>
+        {(product.description || measurements.length > 0) && (
+          <div className="mt-14 grid gap-5 sm:grid-cols-2">
+            {product.description && (
+              <div className="rounded-2xl border border-border bg-surface p-[22px]">
+                <h2 className="font-display text-[17px] font-medium">Sobre a peça</h2>
+                <p className="mt-2.5 text-[13px] leading-[1.7] text-muted">
+                  {product.description}
+                </p>
+              </div>
+            )}
+            {measurements.length > 0 && (
+              <div className="rounded-2xl border border-border bg-surface p-[22px]">
+                <h2 className="font-display text-[17px] font-medium">Medidas</h2>
+                <p className="mt-2.5 text-[13px] leading-[1.7] text-muted">
+                  {measurements.join(" · ")}
+                </p>
+              </div>
+            )}
           </div>
-          {measurements.length > 0 && (
-            <div className="rounded-2xl border border-border bg-surface p-[22px]">
-              <h2 className="font-display text-[17px] font-medium">Medidas</h2>
-              <p className="mt-2.5 text-[13px] leading-[1.7] text-muted">
-                {measurements.join(" · ")}
-              </p>
-            </div>
-          )}
-        </div>
+        )}
 
         {related.length > 0 && (
           <div className="mt-14">

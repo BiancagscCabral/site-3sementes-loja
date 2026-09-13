@@ -46,9 +46,9 @@ export default async function Home() {
             Compre por categoria
           </h2>
           <p className="mt-1 text-sm text-muted">
-            Cinco famílias de produtos, um mesmo cuidado em cada detalhe.
+            Um mesmo cuidado em cada detalhe.
           </p>
-          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-5">
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
             {CATEGORIES.map((category) => (
               <Link
                 key={category.slug}
