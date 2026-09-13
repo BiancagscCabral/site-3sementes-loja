@@ -14,6 +14,27 @@
   --secondary-foreground: oklch(36% 0.045 107);
   --accent: oklch(69% 0.19 53);
   --accent-foreground: oklch(99% 0.005 90);
+  --bloom: oklch(69% 0.19 53);
+  --display-font: var(--font-fraunces);
+}
+
+/* 3sflores: rosa #d08678 é decorativo; texto e botões usam um tom mais fechado dele para manter contraste legível */
+.theme-flores {
+  --background: #fff8f1;
+  --surface: #fffdfa;
+  --foreground: #4e5236;
+  --muted: #76795c;
+  --muted-bg: #f6ebe2;
+  --border: #d0867840;
+  --primary: #606542;
+  --primary-dark: #4a4e32;
+  --primary-foreground: #fff8f1;
+  --secondary: #d0867824;
+  --secondary-foreground: #8e4c40;
+  --accent: #a95c4f;
+  --accent-foreground: #fff8f1;
+  --bloom: #d08678;
+  --display-font: var(--font-cormorant);
 }
 
 @theme inline {
@@ -30,8 +51,9 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-bloom: var(--bloom);
   --font-sans: var(--font-geist-sans);
-  --font-display: var(--font-fraunces);
+  --font-display: var(--display-font);
 }
 
 body {

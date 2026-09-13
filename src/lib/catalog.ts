@@ -19,9 +19,27 @@ export const INSTAGRAM_LINKS = [
 ];
 
 export const CATEGORIES = [
-  { slug: "braceletes", name: "Braceletes", icon: "📿" },
-  { slug: "colares", name: "Colares", icon: "📿" },
-  { slug: "aneis", name: "Anéis", icon: "💍" },
-  { slug: "guias", name: "Guias", icon: "🙏" },
-  { slug: "flores-eternas", name: "Flores Eternas", icon: "🌸" },
+  { slug: "braceletes", name: "Braceletes" },
+  { slug: "colares", name: "Colares" },
+  { slug: "aneis", name: "Anéis" },
+  { slug: "guias", name: "Guias" },
+  { slug: "flores-eternas", name: "Flores Eternas" },
 ];
+
+const FLORES_CATEGORY_SLUG = "flores-eternas";
+
+export function getCategoryBrand(categorySlug: string) {
+  return categorySlug === FLORES_CATEGORY_SLUG
+    ? {
+        themeClass: "theme-flores",
+        logo: "/img/logo-3sflores.png",
+        markClass: "scale-150 opacity-45",
+        isFlores: true,
+      }
+    : {
+        themeClass: "",
+        logo: "/img/logo.png",
+        markClass: "opacity-20",
+        isFlores: false,
+      };
+}

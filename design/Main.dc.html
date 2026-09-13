@@ -1,0 +1,294 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Geist:wght@400;500;600&display=swap">
+  <style>
+    body { margin: 0; font-family: Geist, system-ui, -apple-system, sans-serif; }
+    a { color: oklch(47% 0.059 111); text-decoration: none; }
+    a:hover { color: oklch(28% 0.026 92); }
+    .fr { font-family: Fraunces, Georgia, serif; }
+  </style>
+</helmet>
+
+<div style="width: 1440px; background: oklch(96.5% 0.012 89); color: oklch(28% 0.026 92);">
+
+  <div style="background: oklch(40% 0.06 111); color: oklch(96.5% 0.012 89); text-align: center; padding: 9px 24px; font-size: 12px; letter-spacing: 0.04em;">
+    Peças artesanais feitas à mão &middot; Envio para todo o Brasil
+  </div>
+
+  <div style="border-bottom: 1px solid oklch(47% 0.059 111 / 0.16); background: oklch(96.5% 0.012 89);">
+    <div style="max-width: 1024px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; gap: 24px;">
+      <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
+        <img src="logo.png" alt="3sementes" style="width: 56px; height: 56px;">
+        <div style="line-height: 1;">
+          <div class="fr" style="font-size: 30px; font-weight: 600; letter-spacing: -0.02em; color: oklch(69% 0.19 53);">Store</div>
+          <div style="margin-top: 4px; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.3em; color: oklch(49% 0.025 92);">3sementes</div>
+        </div>
+      </div>
+      <div style="flex-grow: 1; display: flex; align-items: center; gap: 8px; border: 1px solid oklch(47% 0.059 111 / 0.16); background: oklch(99% 0.005 90); border-radius: 999px; padding: 9px 16px; color: oklch(49% 0.025 92); font-size: 14px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5" stroke-linecap="round"></path></svg>
+        <span>Buscar produtos...</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px; color: oklch(28% 0.026 92);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6" stroke-linecap="round"></path></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;"><path d="M12 20s-7-4.35-9.5-8.5C.7 8 2 4.5 5.5 4c2-.3 3.8.8 6.5 3.2C14.7 4.8 16.5 3.7 18.5 4 22 4.5 23.3 8 21.5 11.5 19 15.65 12 20 12 20Z" stroke-linejoin="round"></path></svg>
+        <div style="position: relative; display: flex;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;"><path d="M6 8h12l1 13H5L6 8Z" stroke-linejoin="round"></path><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke-linecap="round"></path></svg>
+          <span style="position: absolute; top: -6px; right: -7px; width: 17px; height: 17px; border-radius: 999px; background: {{accent}}; color: oklch(99% 0.005 90); font-size: 10px; display: flex; align-items: center; justify-content: center;">1</span>
+        </div>
+      </div>
+    </div>
+    <div style="border-top: 1px solid oklch(47% 0.059 111 / 0.16); padding: 12px 24px; display: flex; justify-content: center; gap: 8px;">
+      <sc-for list="{{navPills}}" as="pill" hint-placeholder-count="5">
+        <div style="border: 1px solid oklch(47% 0.059 111 / 0.16); background: oklch(99% 0.005 90); border-radius: 999px; padding: 6px 16px; font-size: 14px; font-weight: 500; box-shadow: 0 1px 2px oklch(28% 0.026 92 / 0.05);">{{pill.label}}</div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="max-width: 1024px; margin: 0 auto; padding: 28px 24px 0; display: flex; align-items: center; gap: 8px; font-size: 13px; color: oklch(49% 0.025 92);">
+    <span>Início</span><span>/</span><span>Braceletes</span><span>/</span><span style="color: oklch(28% 0.026 92);">Bracelete das Fadas</span>
+  </div>
+
+  <div style="max-width: 1024px; margin: 0 auto; padding: 28px 24px 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 56px;">
+
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <div style="position: relative; height: 470px; border-radius: 16px; border: 1px solid oklch(47% 0.059 111 / 0.16); background: oklch(99% 0.005 90); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+        <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 42%, oklch(72% 0.055 101 / 0.22), transparent 62%);"></div>
+        <img src="logo.png" alt="" style="width: 160px; height: 160px; opacity: 0.22; position: relative;">
+        <div style="position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: oklch(49% 0.025 92);">Foto do produto</div>
+        <div style="position: absolute; top: 18px; left: 18px; background: {{accent}}; color: oklch(99% 0.005 90); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px;">Novo</div>
+      </div>
+      <div style="display: flex; gap: 12px;">
+        <sc-for list="{{thumbs}}" as="thumb" hint-placeholder-count="4">
+          <div onClick="{{thumb.pick}}" style="{{thumb.style}}">
+            <img src="logo.png" alt="" style="width: 40px; height: 40px; opacity: 0.28;">
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: oklch(49% 0.025 92);">Braceletes</div>
+      <h1 class="fr" style="margin: 10px 0 0; font-size: 40px; font-weight: 500; line-height: 1.1; letter-spacing: -0.02em; color: oklch(28% 0.026 92);">Bracelete das Fadas</h1>
+      <div style="margin-top: 14px; display: flex; align-items: baseline; gap: 12px;">
+        <div style="font-size: 30px; font-weight: 600; color: {{accent}};">R$ 49,00</div>
+        <div style="font-size: 13px; color: oklch(49% 0.025 92);">peça única, feita à mão</div>
+      </div>
+      <p style="margin: 18px 0 0; font-size: 15px; line-height: 1.75; color: oklch(49% 0.025 92); max-width: 46ch; text-wrap: pretty;">
+        Fio dourado trançado à mão com miçangas coloridas e detalhe de flor. Cada bracelete é montado individualmente no ateliê, então pequenas variações fazem parte do charme.
+      </p>
+
+      <div style="height: 1px; background: oklch(47% 0.059 111 / 0.16); margin: 26px 0;"></div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="font-size: 13px; font-weight: 600;">Tamanho do punho</div>
+        <div style="display: flex; gap: 10px;">
+          <sc-for list="{{sizes}}" as="size" hint-placeholder-count="4">
+            <div onClick="{{size.pick}}" style="{{size.style}}">{{size.label}}</div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 22px;">
+        <div style="font-size: 13px; font-weight: 600;">Acabamento</div>
+        <div style="display: flex; gap: 10px;">
+          <sc-for list="{{finishes}}" as="finish" hint-placeholder-count="3">
+            <div onClick="{{finish.pick}}" style="{{finish.style}}">
+              <span style="width: 14px; height: 14px; border-radius: 999px; background: {{finish.swatch}}; border: 1px solid oklch(28% 0.026 92 / 0.12);"></span>
+              <span>{{finish.label}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px; margin-top: 26px;">
+        <div style="display: flex; align-items: center; border: 1px solid oklch(47% 0.059 111 / 0.16); background: oklch(99% 0.005 90); border-radius: 999px; overflow: hidden;">
+          <div onClick="{{dec}}" style="width: 44px; height: 46px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: oklch(49% 0.025 92); cursor: pointer;">&minus;</div>
+          <div style="width: 34px; text-align: center; font-size: 15px; font-weight: 600;">{{qty}}</div>
+          <div onClick="{{inc}}" style="width: 44px; height: 46px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: oklch(49% 0.025 92); cursor: pointer;">+</div>
+        </div>
+        <div style="font-size: 13px; color: oklch(49% 0.025 92);">3 peças prontas em estoque</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 22px;">
+        <div style="background: {{accent}}; color: oklch(99% 0.005 90); border-radius: 999px; height: 54px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; letter-spacing: 0.01em;">Adicionar à sacola</div>
+        <div style="border: 1px solid oklch(47% 0.059 111); color: oklch(47% 0.059 111); border-radius: 999px; height: 54px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 500;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 19px; height: 19px;"><path d="M4 20l1.3-3.9A8 8 0 1 1 8.9 19L4 20Z" stroke-linejoin="round"></path><path d="M8.5 9.3c.2 2.5 2.7 5 5.2 5.2.9.1 1.3-.7 1-1.3l-.6-1.2-1.6.4c-.8-.5-1.5-1.2-2-2l.4-1.6-1.2-.6c-.6-.3-1.3.1-1.2 1.1Z" stroke-linejoin="round"></path></svg>
+          <span>Tirar dúvida no WhatsApp</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 26px; padding-top: 22px; border-top: 1px solid oklch(47% 0.059 111 / 0.16);">
+        <div style="display: flex; align-items: flex-start; gap: 12px;">
+          <div style="width: 34px; height: 34px; border-radius: 999px; background: oklch(72% 0.055 101 / 0.18); color: oklch(36% 0.045 107); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" style="width: 17px; height: 17px;"><path d="M12 3c1.8 3 1.8 5.2 0 7.5C10.2 8.2 10.2 6 12 3Z" stroke-linejoin="round"></path><path d="M12 10.5c3.3 0 5.6 1.4 6.6 4.2-3.4.9-5.7.1-6.6-4.2Z" stroke-linejoin="round"></path><path d="M12 10.5c-3.3 0-5.6 1.4-6.6 4.2 3.4.9 5.7.1 6.6-4.2Z" stroke-linejoin="round"></path><path d="M12 14.7V21" stroke-linecap="round"></path></svg>
+          </div>
+          <div>
+            <div style="font-size: 13px; font-weight: 600;">Feito à mão sob encomenda</div>
+            <div style="font-size: 13px; color: oklch(49% 0.025 92);">3 a 5 dias úteis para produção</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 12px;">
+          <div style="width: 34px; height: 34px; border-radius: 999px; background: oklch(72% 0.055 101 / 0.18); color: oklch(36% 0.045 107); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" style="width: 17px; height: 17px;"><path d="M3 8h10v9H3z" stroke-linejoin="round"></path><path d="M13 11h4l3 3v3h-7z" stroke-linejoin="round"></path><circle cx="7" cy="18" r="1.6"></circle><circle cx="17" cy="18" r="1.6"></circle></svg>
+          </div>
+          <div>
+            <div style="font-size: 13px; font-weight: 600;">Envio para todo o Brasil</div>
+            <div style="font-size: 13px; color: oklch(49% 0.025 92);">Frete calculado no checkout</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 12px;">
+          <div style="width: 34px; height: 34px; border-radius: 999px; background: oklch(72% 0.055 101 / 0.18); color: oklch(36% 0.045 107); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" style="width: 17px; height: 17px;"><path d="M4 9h16v11H4z" stroke-linejoin="round"></path><path d="M4 9l2.5-4h11L20 9" stroke-linejoin="round"></path><path d="M12 5v15" stroke-linecap="round"></path></svg>
+          </div>
+          <div>
+            <div style="font-size: 13px; font-weight: 600;">Embalagem para presente</div>
+            <div style="font-size: 13px; color: oklch(49% 0.025 92);">Sem custo adicional</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width: 1024px; margin: 0 auto; padding: 52px 24px 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
+    <sc-for list="{{details}}" as="detail" hint-placeholder-count="3">
+      <div style="border: 1px solid oklch(47% 0.059 111 / 0.16); background: oklch(99% 0.005 90); border-radius: 16px; padding: 22px;">
+        <div class="fr" style="font-size: 17px; font-weight: 500;">{{detail.title}}</div>
+        <div style="margin-top: 10px; font-size: 13px; line-height: 1.7; color: oklch(49% 0.025 92);">{{detail.body}}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="max-width: 1024px; margin: 0 auto; padding: 56px 24px 0;">
+    <div style="display: flex; align-items: baseline; justify-content: space-between;">
+      <h2 class="fr" style="margin: 0; font-size: 24px; font-weight: 500;">Você também pode gostar</h2>
+      <div style="font-size: 13px; color: oklch(47% 0.059 111);">Ver todos os braceletes</div>
+    </div>
+    <div style="margin-top: 22px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px;">
+      <sc-for list="{{related}}" as="item" hint-placeholder-count="4">
+        <div style="border: 1px solid oklch(47% 0.059 111 / 0.16); background: oklch(99% 0.005 90); border-radius: 16px; padding: 14px;">
+          <div style="height: 168px; border-radius: 12px; background: oklch(96.5% 0.012 89); display: flex; align-items: center; justify-content: center;">
+            <img src="logo.png" alt="" style="width: 52px; height: 52px; opacity: 0.2;">
+          </div>
+          <div style="margin-top: 12px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(49% 0.025 92);">{{item.category}}</div>
+          <div style="margin-top: 4px; font-size: 14px; font-weight: 500;">{{item.name}}</div>
+          <div style="margin-top: 4px; font-size: 14px; color: {{accent}};">{{item.price}}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="margin-top: 64px; border-top: 1px solid oklch(47% 0.059 111 / 0.16); background: oklch(99% 0.005 90);">
+    <div style="max-width: 1024px; margin: 0 auto; padding: 40px 24px; display: flex; justify-content: space-between; align-items: flex-start; gap: 40px;">
+      <div style="max-width: 420px;">
+        <div class="fr" style="font-size: 19px; font-weight: 500;">Sobre a 3sementes</div>
+        <p style="margin: 10px 0 0; font-size: 13px; line-height: 1.7; color: oklch(49% 0.025 92);">Desde 2019, criamos joias artesanais e flores eternas em Igarassu e Recife (PE). Cada peça é feita à mão, do início ao fim.</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: oklch(49% 0.025 92);">
+        <div style="font-weight: 600; color: oklch(28% 0.026 92);">Atendimento</div>
+        <div>WhatsApp: (81) 92005-1830</div>
+        <div>@3sementes_store</div>
+        <div>@3sflores</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: oklch(49% 0.025 92);">
+        <div style="font-weight: 600; color: oklch(28% 0.026 92);">Categorias</div>
+        <div>Braceletes</div>
+        <div>Colares</div>
+        <div>Anéis</div>
+        <div>Guias</div>
+        <div>Flores Eternas</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"accent":{"editor":"color","default":"oklch(69% 0.19 53)","options":["oklch(69% 0.19 53)","oklch(47% 0.059 111)","oklch(60% 0.12 25)","oklch(55% 0.09 250)"]},"$preview":{"width":1440,"height":1960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { size: 'M', finish: 'dourado', thumb: 0, qty: 1 };
+  }
+
+  pillStyle(selected) {
+    var base = 'display: flex; align-items: center; gap: 8px; border-radius: 999px; padding: 9px 18px; font-size: 14px; cursor: pointer; ';
+    if (selected) {
+      return base + 'border: 1px solid oklch(47% 0.059 111); background: oklch(72% 0.055 101 / 0.18); color: oklch(36% 0.045 107); font-weight: 600;';
+    }
+    return base + 'border: 1px solid oklch(47% 0.059 111 / 0.16); background: oklch(99% 0.005 90); color: oklch(49% 0.025 92);';
+  }
+
+  renderVals() {
+    var self = this;
+    var accent = this.props.accent ?? 'oklch(69% 0.19 53)';
+
+    var sizes = [
+      { id: 'P', label: 'P · 15cm' },
+      { id: 'M', label: 'M · 17cm' },
+      { id: 'G', label: 'G · 19cm' },
+      { id: 'aj', label: 'Ajustável' }
+    ].map(function (s) {
+      return {
+        label: s.label,
+        style: self.pillStyle(self.state.size === s.id),
+        pick: function () { self.setState({ size: s.id }); }
+      };
+    });
+
+    var finishes = [
+      { id: 'dourado', label: 'Dourado', swatch: 'oklch(78% 0.11 85)' },
+      { id: 'prateado', label: 'Prateado', swatch: 'oklch(85% 0.01 250)' },
+      { id: 'colorido', label: 'Colorido', swatch: 'oklch(69% 0.19 53)' }
+    ].map(function (f) {
+      return {
+        label: f.label,
+        swatch: f.swatch,
+        style: self.pillStyle(self.state.finish === f.id),
+        pick: function () { self.setState({ finish: f.id }); }
+      };
+    });
+
+    var thumbs = [0, 1, 2, 3].map(function (i) {
+      var selected = self.state.thumb === i;
+      return {
+        style: 'width: 84px; height: 84px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: oklch(99% 0.005 90); border: ' +
+          (selected ? '2px solid ' + accent : '1px solid oklch(47% 0.059 111 / 0.16)') + ';',
+        pick: function () { self.setState({ thumb: i }); }
+      };
+    });
+
+    return {
+      accent: accent,
+      qty: this.state.qty,
+      inc: function () { self.setState({ qty: self.state.qty + 1 }); },
+      dec: function () { self.setState({ qty: Math.max(1, self.state.qty - 1) }); },
+      sizes: sizes,
+      finishes: finishes,
+      thumbs: thumbs,
+      navPills: [
+        { label: 'Braceletes' }, { label: 'Colares' }, { label: 'Anéis' },
+        { label: 'Guias' }, { label: 'Flores Eternas' }
+      ],
+      details: [
+        { title: 'Materiais', body: 'Fio dourado banhado, miçangas de vidro e pingente de flor em resina. Sem níquel.' },
+        { title: 'Medidas', body: 'Punho de 15 a 19 cm conforme o tamanho escolhido. Fecho ajustável de 2 cm.' },
+        { title: 'Cuidados', body: 'Evite contato com perfume e água do mar. Guarde em local seco, longe do sol.' }
+      ],
+      related: [
+        { category: 'Braceletes', name: 'Bracelete Miçanga Colorida', price: 'R$ 39,00' },
+        { category: 'Colares', name: 'Colar Flor de Fio', price: 'R$ 59,00' },
+        { category: 'Anéis', name: 'Anel Borboleta', price: 'R$ 29,00' },
+        { category: 'Guias', name: 'Guia de Proteção', price: 'R$ 69,00' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { CATEGORIES } from "@/lib/catalog";
+import Image from "next/image";
+import { CATEGORIES, getCategoryBrand } from "@/lib/catalog";
+import { BANNER_SLIDES } from "@/lib/banner";
+import HeroBanner from "@/components/HeroBanner";
 import { prisma } from "@/lib/prisma";
 import { formatPriceCents } from "@/lib/format";
 
@@ -13,6 +16,8 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
+      <HeroBanner slides={BANNER_SLIDES} />
+
       <section className="mx-auto max-w-5xl px-6 pt-16 pb-12 text-center sm:pt-20">
         <span className="rounded-full border border-border bg-surface px-4 py-1 text-xs uppercase tracking-wide text-muted">
           Feito à mão, com carinho
@@ -48,12 +53,9 @@ export default async function Home() {
               <Link
                 key={category.slug}
                 href={`/categorias/${category.slug}`}
-                className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-background px-4 py-6 text-center transition-colors hover:border-accent/40"
+                className={`${getCategoryBrand(category.slug).themeClass} flex items-center justify-center rounded-2xl border border-border bg-background px-4 py-7 text-center text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-secondary hover:text-secondary-foreground`}
               >
-                <span className="text-2xl">{category.icon}</span>
-                <span className="text-sm text-foreground">
-                  {category.name}
-                </span>
+                {category.name}
               </Link>
             ))}
           </div>
@@ -71,17 +73,21 @@ export default async function Home() {
             </p>
             <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
               {featuredProducts.map((product) => {
-                const icon =
-                  CATEGORIES.find((c) => c.slug === product.category.slug)
-                    ?.icon ?? "✨";
+                const brand = getCategoryBrand(product.category.slug);
                 return (
                   <Link
                     key={product.slug}
                     href={`/produtos/${product.slug}`}
-                    className="group rounded-2xl border border-border bg-surface p-4 transition-colors hover:border-accent/40"
+                    className={`${brand.themeClass} group rounded-2xl border border-border bg-surface p-4 transition-colors hover:border-accent/40`}
                   >
-                    <div className="flex aspect-square items-center justify-center rounded-xl bg-background text-3xl">
-                      {icon}
+                    <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-background">
+                      <Image
+                        src={brand.logo}
+                        alt=""
+                        width={52}
+                        height={52}
+                        className={brand.markClass}
+                      />
                     </div>
                     <p className="mt-3 text-xs uppercase tracking-wide text-muted">
                       {product.category.name}
@@ -93,7 +99,7 @@ export default async function Home() {
                       {formatPriceCents(product.priceCents)}
                     </p>
                   </Link>
-                );
+                  );
               })}
             </div>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { CATEGORIES } from "@/lib/catalog";
 
@@ -88,12 +89,22 @@ export default function Header() {
 
       <header className="border-b border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center gap-6 px-6 py-4">
-          <Link href="/" className="shrink-0 leading-none">
-            <span className="font-display block text-xl font-medium tracking-tight text-foreground">
-              3sementes
-            </span>
-            <span className="-mt-0.5 block text-right text-[10px] font-medium uppercase tracking-[0.25em] text-accent">
-              Store
+          <Link href="/" className="flex shrink-0 items-center gap-3">
+            <Image
+              src="/img/logo.png"
+              alt="3sementes"
+              width={56}
+              height={56}
+              priority
+              className="h-14 w-14"
+            />
+            <span className="leading-none">
+              <span className="font-display block text-3xl font-semibold tracking-tight text-foreground">
+                3sementes
+              </span>
+              <span className="mt-1 block text-xs font-medium uppercase tracking-[0.3em] text-accent">
+                Store
+              </span>
             </span>
           </Link>
 
