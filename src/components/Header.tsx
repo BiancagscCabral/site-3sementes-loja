@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { CATEGORIES } from "@/lib/catalog";
+import { CATEGORIES, WHATSAPP_URL } from "@/lib/catalog";
+import { useCart } from "@/lib/cart";
 
 function SearchIcon() {
   return (
@@ -67,8 +69,49 @@ function BagIcon() {
   );
 }
 
+function MenuIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      className="h-6 w-6"
+    >
+      {open ? (
+        <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
+      ) : (
+        <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
+      )}
+    </svg>
+  );
+}
+
+function SearchForm({ autoFocusable = false }: { autoFocusable?: boolean }) {
+  return (
+    <form
+      action="/busca"
+      className="flex w-full items-center rounded-full border border-border bg-surface px-4 py-2 text-sm text-muted"
+    >
+      <button type="submit" aria-label="Buscar" className="shrink-0">
+        <SearchIcon />
+      </button>
+      <input
+        type="search"
+        name="q"
+        autoFocus={autoFocusable}
+        placeholder="Buscar produtos..."
+        className="ml-2 w-full bg-transparent text-foreground outline-none placeholder:text-muted"
+      />
+    </form>
+  );
+}
+
 export default function Header() {
+  const { itemCount, ready } = useCart();
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -76,6 +119,10 @@ export default function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   return (
     <div className="sticky top-0 z-10">
@@ -88,21 +135,21 @@ export default function Header() {
       </div>
 
       <header className="border-b border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center gap-6 px-6 py-4">
-          <Link href="/" className="flex shrink-0 items-center gap-3">
+        <div className="mx-auto flex max-w-5xl items-center gap-3 px-5 py-4 sm:gap-6 sm:px-6">
+          <Link href="/" className="flex shrink-0 items-center gap-2 sm:gap-3">
             <Image
               src="/img/logo.png"
               alt="3sementes"
               width={56}
               height={56}
               priority
-              className="h-14 w-14"
+              className="h-10 w-10 sm:h-14 sm:w-14"
             />
             <span className="leading-none">
-              <span className="font-display block text-3xl font-semibold tracking-tight text-foreground">
+              <span className="font-display block text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                 3sementes
               </span>
-              <span className="mt-1 block text-xs font-medium uppercase tracking-[0.3em] text-accent">
+              <span className="mt-0.5 block text-[10px] font-medium uppercase tracking-[0.25em] text-accent sm:mt-1 sm:text-xs sm:tracking-[0.3em]">
                 Store
               </span>
             </span>
@@ -113,32 +160,40 @@ export default function Header() {
               scrolled ? "max-w-0 opacity-0" : "max-w-full flex-1 opacity-100"
             }`}
           >
-            <div className="hidden items-center rounded-full border border-border bg-surface px-4 py-2 text-sm text-muted sm:flex">
-              <SearchIcon />
-              <input
-                type="text"
-                placeholder="Buscar produtos..."
-                className="ml-2 w-full bg-transparent outline-none placeholder:text-muted"
-              />
+            <div className="hidden sm:flex">
+              <SearchForm />
             </div>
           </div>
 
           <div
-            className={`ml-auto flex items-center gap-4 overflow-hidden text-foreground transition-all duration-300 sm:ml-0 ${
-              scrolled ? "max-w-0 opacity-0" : "max-w-full opacity-100"
+            className={`ml-auto flex items-center gap-3 text-foreground sm:gap-4 transition-all duration-300 sm:ml-0 ${
+              scrolled
+                ? "invisible max-w-0 overflow-hidden opacity-0"
+                : "max-w-full opacity-100"
             }`}
           >
-            <button type="button" aria-label="Minha conta">
+            <button type="button" aria-label="Minha conta" className="hidden sm:block">
               <UserIcon />
             </button>
             <button type="button" aria-label="Favoritos">
               <HeartIcon />
             </button>
-            <button type="button" aria-label="Carrinho" className="relative">
+            <Link href="/carrinho" aria-label="Carrinho" className="relative">
               <BagIcon />
-              <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] text-accent-foreground">
-                0
-              </span>
+              {ready && itemCount > 0 && (
+                <span className="absolute -right-2 -top-2 flex h-[19px] min-w-[19px] items-center justify-center rounded-full bg-accent px-1 text-[11px] font-semibold leading-none text-accent-foreground ring-2 ring-background">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
+            <button
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+              aria-expanded={menuOpen}
+              className="sm:hidden"
+            >
+              <MenuIcon open={menuOpen} />
             </button>
           </div>
         </div>
@@ -154,6 +209,41 @@ export default function Header() {
             </Link>
           ))}
         </nav>
+
+        {menuOpen && (
+          <div className="border-t border-border bg-surface px-6 py-5 sm:hidden">
+            <SearchForm autoFocusable />
+
+            <nav className="mt-5 flex flex-col gap-1">
+              {CATEGORIES.map((category) => (
+                <Link
+                  key={category.slug}
+                  href={`/categorias/${category.slug}`}
+                  className="rounded-xl px-3 py-2.5 text-[15px] font-medium text-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
+                >
+                  {category.name}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="mt-5 flex flex-col gap-1 border-t border-border pt-4 text-sm text-muted">
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl px-3 py-2.5 transition-colors hover:text-foreground"
+              >
+                Falar no WhatsApp
+              </a>
+              <Link
+                href="/trocas-e-devolucoes"
+                className="rounded-xl px-3 py-2.5 transition-colors hover:text-foreground"
+              >
+                Entrega, trocas e devoluções
+              </Link>
+            </div>
+          </div>
+        )}
       </header>
     </div>
   );

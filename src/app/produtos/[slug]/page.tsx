@@ -138,6 +138,8 @@ export default async function ProductPage(
 
             <ProductPurchase
               productName={product.name}
+              productSlug={product.slug}
+              categorySlug={product.category.slug}
               priceCents={product.priceCents}
               variants={product.variants}
               stock={product.stock}

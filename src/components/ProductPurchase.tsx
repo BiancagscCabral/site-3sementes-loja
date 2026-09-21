@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { useCart } from "@/lib/cart";
 import { getWhatsAppUrl } from "@/lib/catalog";
 import { formatPriceCents } from "@/lib/format";
 
@@ -31,17 +33,23 @@ function WhatsAppIcon() {
 
 export default function ProductPurchase({
   productName,
+  productSlug,
+  categorySlug,
   priceCents,
   variants,
   stock,
 }: {
   productName: string;
+  productSlug: string;
+  categorySlug: string;
   priceCents: number;
   variants: Variant[];
   stock: number;
 }) {
+  const { addItem } = useCart();
   const [variantId, setVariantId] = useState(variants[0]?.id ?? null);
   const [quantity, setQuantity] = useState(1);
+  const [added, setAdded] = useState(false);
 
   const variant = variants.find((v) => v.id === variantId);
   const activePriceCents = variant?.priceCents ?? priceCents;
@@ -131,12 +139,32 @@ export default function ProductPurchase({
         </a>
         <button
           type="button"
-          disabled
-          className="flex h-[54px] cursor-not-allowed items-center justify-center gap-2 rounded-full border border-border text-[15px] font-medium text-muted"
+          onClick={() => {
+            addItem({
+              slug: productSlug,
+              name: productName,
+              priceCents: activePriceCents,
+              quantity,
+              categorySlug,
+              variantName: variant?.name,
+            });
+            setAdded(true);
+          }}
+          className="flex h-[54px] items-center justify-center rounded-full border border-primary text-[15px] font-medium text-primary transition-colors hover:bg-secondary"
         >
           Adicionar à sacola
-          <span className="text-xs uppercase tracking-[0.12em]">em breve</span>
         </button>
+        {added && (
+          <p className="text-center text-[13px] text-muted">
+            Adicionado.{" "}
+            <Link
+              href="/carrinho"
+              className="text-accent underline underline-offset-4"
+            >
+              Ver sacola
+            </Link>
+          </p>
+        )}
       </div>
     </>
   );

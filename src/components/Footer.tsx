@@ -92,7 +92,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 grid gap-8 border-t border-border pt-10 text-sm sm:grid-cols-3">
+        <div className="mt-12 grid gap-8 border-t border-border pt-10 text-sm sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <h3 className="font-medium text-foreground">Categorias</h3>
             <ul className="mt-3 flex flex-col gap-2 text-muted">
@@ -134,6 +134,28 @@ export default function Footer() {
                   </a>
                 </li>
               ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-medium text-foreground">Institucional</h3>
+            <ul className="mt-3 flex flex-col gap-2 text-muted">
+              <li>
+                <a
+                  href="/trocas-e-devolucoes"
+                  className="transition-colors hover:text-foreground"
+                >
+                  Entrega, trocas e devoluções
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/politica-de-privacidade"
+                  className="transition-colors hover:text-foreground"
+                >
+                  Política de privacidade
+                </a>
+              </li>
             </ul>
           </div>
 

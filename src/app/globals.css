@@ -15,6 +15,7 @@
   --accent: oklch(69% 0.19 53);
   --accent-foreground: oklch(99% 0.005 90);
   --bloom: oklch(69% 0.19 53);
+  --danger: oklch(52% 0.17 27);
   --display-font: var(--font-fraunces);
 }
 
@@ -52,6 +53,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-bloom: var(--bloom);
+  --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
   --font-display: var(--display-font);
 }
