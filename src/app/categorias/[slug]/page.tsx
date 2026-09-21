@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import ProductThumb from "@/components/ProductThumb";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatPriceCents } from "@/lib/format";
@@ -16,6 +17,7 @@ export default async function CategoryPage(
       products: {
         where: { active: true },
         orderBy: { createdAt: "desc" },
+        include: { images: { orderBy: { position: "asc" }, take: 1 } },
       },
     },
   });
@@ -71,15 +73,13 @@ export default async function CategoryPage(
                 href={`/produtos/${product.slug}`}
                 className="group rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-accent/40"
               >
-                <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-background">
-                  <Image
-                    src={brand.logo}
-                    alt=""
-                    width={56}
-                    height={56}
-                    className={brand.markClass}
-                  />
-                </div>
+                <ProductThumb
+                  image={product.images[0]}
+                  logo={brand.logo}
+                  markClass={brand.markClass}
+                  markSize={56}
+                  className="aspect-square rounded-xl"
+                />
                 <h2 className="mt-4 text-sm font-medium text-foreground">
                   {product.name}
                 </h2>

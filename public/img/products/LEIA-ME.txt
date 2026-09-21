@@ -1,0 +1,1 @@
+Fotos dos produtos. Nomeie cada arquivo com o codigo do produto (ver nomes-das-fotos.md na raiz do projeto).

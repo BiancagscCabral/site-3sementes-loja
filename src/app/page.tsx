@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import ProductThumb from "@/components/ProductThumb";
 import { CATEGORIES, getCategoryBrand } from "@/lib/catalog";
 import { BANNER_SLIDES } from "@/lib/banner";
 import HeroBanner from "@/components/HeroBanner";
@@ -11,7 +11,7 @@ export default async function Home() {
     where: { active: true },
     orderBy: { createdAt: "desc" },
     take: 4,
-    include: { category: true },
+    include: { category: true, images: { orderBy: { position: "asc" }, take: 1 } },
   });
 
   return (
@@ -80,15 +80,12 @@ export default async function Home() {
                     href={`/produtos/${product.slug}`}
                     className={`${brand.themeClass} group rounded-2xl border border-border bg-surface p-4 transition-colors hover:border-accent/40`}
                   >
-                    <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-background">
-                      <Image
-                        src={brand.logo}
-                        alt=""
-                        width={52}
-                        height={52}
-                        className={brand.markClass}
-                      />
-                    </div>
+                    <ProductThumb
+                      image={product.images[0]}
+                      logo={brand.logo}
+                      markClass={brand.markClass}
+                      className="aspect-square rounded-xl"
+                    />
                     <p className="mt-3 text-xs uppercase tracking-wide text-muted">
                       {product.category.name}
                     </p>

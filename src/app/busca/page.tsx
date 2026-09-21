@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import ProductThumb from "@/components/ProductThumb";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { formatPriceCents } from "@/lib/format";
@@ -25,7 +25,7 @@ export default async function BuscaPage(props: PageProps<"/busca">) {
   const products = term
     ? await prisma.product.findMany({
         where: { active: true },
-        include: { category: true },
+        include: { category: true, images: { orderBy: { position: "asc" }, take: 1 } },
         orderBy: { name: "asc" },
       })
     : [];
@@ -74,15 +74,12 @@ export default async function BuscaPage(props: PageProps<"/busca">) {
                   href={`/produtos/${product.slug}`}
                   className={`${brand.themeClass} rounded-2xl border border-border bg-surface p-4 transition-colors hover:border-accent/40`}
                 >
-                  <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-background">
-                    <Image
-                      src={brand.logo}
-                      alt=""
-                      width={52}
-                      height={52}
-                      className={brand.markClass}
-                    />
-                  </div>
+                  <ProductThumb
+                    image={product.images[0]}
+                    logo={brand.logo}
+                    markClass={brand.markClass}
+                    className="aspect-square rounded-xl"
+                  />
                   <p className="mt-3 text-xs uppercase tracking-wide text-muted">
                     {product.category.name}
                   </p>

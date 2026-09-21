@@ -36,12 +36,10 @@ function Placeholder({
 
 export default function ProductGallery({
   images,
-  isNew,
   logo,
   markClass,
 }: {
   images: GalleryImage[];
-  isNew: boolean;
   logo: string;
   markClass: string;
 }) {
@@ -67,11 +65,6 @@ export default function ProductGallery({
               Foto do produto
             </span>
           </>
-        )}
-        {isNew && (
-          <span className="absolute left-[18px] top-[18px] rounded-full bg-accent px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-accent-foreground">
-            Novo
-          </span>
         )}
       </div>
 

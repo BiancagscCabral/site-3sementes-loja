@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import ProductThumb from "@/components/ProductThumb";
 import { useCart, itemKey } from "@/lib/cart";
 import { formatPriceCents } from "@/lib/format";
 import { getCategoryBrand } from "@/lib/catalog";
@@ -60,14 +60,15 @@ export default function CarrinhoPage() {
                   <div className="flex gap-4">
                     <Link
                       href={`/produtos/${item.slug}`}
-                      className="flex h-[72px] w-[72px] shrink-0 items-center justify-center overflow-hidden rounded-xl bg-background sm:h-20 sm:w-20"
+                      className="shrink-0"
                     >
-                      <Image
-                        src={brand.logo}
-                        alt=""
-                        width={40}
-                        height={40}
-                        className={brand.markClass}
+                      <ProductThumb
+                        image={item.image ? { url: item.image, altText: item.name } : null}
+                        logo={brand.logo}
+                        markClass={brand.markClass}
+                        markSize={40}
+                        sizes="80px"
+                        className="h-[72px] w-[72px] rounded-xl sm:h-20 sm:w-20"
                       />
                     </Link>
 

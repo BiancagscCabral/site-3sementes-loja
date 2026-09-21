@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { CATEGORIES, WHATSAPP_URL } from "@/lib/catalog";
@@ -111,7 +110,6 @@ export default function Header() {
   const { itemCount, ready } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -119,10 +117,6 @@ export default function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
 
   return (
     <div className="sticky top-0 z-10">
@@ -214,7 +208,10 @@ export default function Header() {
           <div className="border-t border-border bg-surface px-6 py-5 sm:hidden">
             <SearchForm autoFocusable />
 
-            <nav className="mt-5 flex flex-col gap-1">
+            <nav
+              onClick={() => setMenuOpen(false)}
+              className="mt-5 flex flex-col gap-1"
+            >
               {CATEGORIES.map((category) => (
                 <Link
                   key={category.slug}
@@ -226,7 +223,10 @@ export default function Header() {
               ))}
             </nav>
 
-            <div className="mt-5 flex flex-col gap-1 border-t border-border pt-4 text-sm text-muted">
+            <div
+              onClick={() => setMenuOpen(false)}
+              className="mt-5 flex flex-col gap-1 border-t border-border pt-4 text-sm text-muted"
+            >
               <a
                 href={WHATSAPP_URL}
                 target="_blank"

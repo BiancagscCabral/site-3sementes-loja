@@ -1,13 +1,11 @@
 import Link from "next/link";
-import Image from "next/image";
+import ProductThumb from "@/components/ProductThumb";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatPriceCents } from "@/lib/format";
 import ProductGallery from "@/components/ProductGallery";
 import ProductPurchase from "@/components/ProductPurchase";
 import { getCategoryBrand } from "@/lib/catalog";
-
-const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
 function SeedlingIcon() {
   return (
@@ -91,10 +89,10 @@ export default async function ProductPage(
     },
     orderBy: { createdAt: "desc" },
     take: 4,
+    include: { images: { orderBy: { position: "asc" }, take: 1 } },
   });
 
   const brand = getCategoryBrand(product.category.slug);
-  const isNew = Date.now() - product.createdAt.getTime() < THIRTY_DAYS_MS;
   const measurements = [
     product.heightCm ? `Altura ${product.heightCm} cm` : null,
     product.widthCm ? `Largura ${product.widthCm} cm` : null,
@@ -123,7 +121,6 @@ export default async function ProductPage(
         <div className="mt-7 grid gap-14 sm:grid-cols-2">
           <ProductGallery
             images={product.images}
-            isNew={isNew}
             logo={brand.logo}
             markClass={brand.markClass}
           />
@@ -137,6 +134,7 @@ export default async function ProductPage(
             </h1>
 
             <ProductPurchase
+              image={product.images[0]?.url}
               productName={product.name}
               productSlug={product.slug}
               categorySlug={product.category.slug}
@@ -201,15 +199,12 @@ export default async function ProductPage(
                   href={`/produtos/${item.slug}`}
                   className="rounded-2xl border border-border bg-surface p-3.5 transition-colors hover:border-accent/40"
                 >
-                  <span className="flex h-[168px] items-center justify-center overflow-hidden rounded-xl bg-background">
-                    <Image
-                      src={brand.logo}
-                      alt=""
-                      width={52}
-                      height={52}
-                      className={brand.markClass}
-                    />
-                  </span>
+                  <ProductThumb
+                    image={item.images[0]}
+                    logo={brand.logo}
+                    markClass={brand.markClass}
+                    className="h-[168px] rounded-xl"
+                  />
                   <span className="mt-3 block text-[11px] uppercase tracking-[0.12em] text-muted">
                     {product.category.name}
                   </span>

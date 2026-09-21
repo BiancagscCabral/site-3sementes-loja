@@ -32,6 +32,7 @@ function WhatsAppIcon() {
 }
 
 export default function ProductPurchase({
+  image,
   productName,
   productSlug,
   categorySlug,
@@ -39,6 +40,7 @@ export default function ProductPurchase({
   variants,
   stock,
 }: {
+  image?: string;
   productName: string;
   productSlug: string;
   categorySlug: string;
@@ -146,6 +148,7 @@ export default function ProductPurchase({
               priceCents: activePriceCents,
               quantity,
               categorySlug,
+              image,
               variantName: variant?.name,
             });
             setAdded(true);
