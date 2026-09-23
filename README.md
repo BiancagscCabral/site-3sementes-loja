@@ -1,6 +1,6 @@
 # Loja 3sementes
 
-E-commerce da **3sementes**: joias artesanais (braceletes, colares, anéis, guias/artigos
+E-commerce da **3sementes**: Produtos artesanais (braceletes, colares, anéis, guias/artigos
 religiosos) e **Flores Eternas** — a linha de flores de chenille feita à mão (também conhecida
 como 3sflores). Não são duas lojas: 3sflores é uma categoria dentro da 3sementes.
 
