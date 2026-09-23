@@ -45,4 +45,4 @@ next-env.d.ts
 /src/generated/prisma
 
 # lista do que falta no site
-.PENDENCIAS.md
+PENDENCIAS.md
