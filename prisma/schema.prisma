@@ -28,6 +28,8 @@ model Product {
   priceCents  Int // preço em centavos, evita problemas de arredondamento com float
   images      ProductImage[]
   variants    ProductVariant[]
+  sizes       String[] @default([]) // ex: ["P", "M", "G", "GG"]
+  colors      String[] @default([]) // ex: ["Dourado", "Prata"]
   stock       Int           @default(0) // estoque padrão, usado se não houver variantes
   weightGrams Int? // peso em gramas, necessário para cotação de frete (SuperFrete)
   heightCm    Float?

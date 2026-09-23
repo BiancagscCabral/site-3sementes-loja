@@ -47,3 +47,21 @@ export function getCategoryBrand(categorySlug: string) {
         isFlores: false,
       };
 }
+
+// Medidas de cada tamanho de bracelete (circunferência do braço)
+export const SIZE_GUIDE: Record<string, string> = {
+  P: "20 a 25 cm",
+  M: "25 a 30 cm",
+  G: "30 a 35 cm",
+  GG: "35 a 40 cm",
+};
+
+// Tamanhos maiores levam mais material, por isso custam mais
+export const SIZE_SURCHARGE_CENTS: Record<string, number> = {
+  G: 500,
+  GG: 500,
+};
+
+export function priceForSize(priceCents: number, size: string | null) {
+  return priceCents + (size ? (SIZE_SURCHARGE_CENTS[size] ?? 0) : 0);
+}

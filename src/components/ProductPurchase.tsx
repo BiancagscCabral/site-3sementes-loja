@@ -3,15 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
-import { getWhatsAppUrl } from "@/lib/catalog";
+import { getWhatsAppUrl, priceForSize, SIZE_GUIDE } from "@/lib/catalog";
 import { formatPriceCents } from "@/lib/format";
-
-type Variant = {
-  id: string;
-  name: string;
-  priceCents: number | null;
-  stock: number;
-};
 
 function WhatsAppIcon() {
   return (
@@ -31,13 +24,39 @@ function WhatsAppIcon() {
   );
 }
 
+function OptionButton({
+  label,
+  selected,
+  onClick,
+}: {
+  label: string;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={selected}
+      className={`min-w-[52px] rounded-full px-[18px] py-[9px] text-sm transition-colors ${
+        selected
+          ? "border border-primary bg-secondary font-semibold text-secondary-foreground"
+          : "border border-border bg-surface text-muted hover:text-foreground"
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
 export default function ProductPurchase({
   image,
   productName,
   productSlug,
   categorySlug,
   priceCents,
-  variants,
+  sizes = [],
+  colors = [],
   stock,
 }: {
   image?: string;
@@ -45,56 +64,96 @@ export default function ProductPurchase({
   productSlug: string;
   categorySlug: string;
   priceCents: number;
-  variants: Variant[];
+  sizes?: string[];
+  colors?: string[];
   stock: number;
 }) {
   const { addItem } = useCart();
-  const [variantId, setVariantId] = useState(variants[0]?.id ?? null);
+  const [size, setSize] = useState<string | null>(null);
+  const [color, setColor] = useState<string | null>(colors[0] ?? null);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [erro, setErro] = useState(false);
 
-  const variant = variants.find((v) => v.id === variantId);
-  const activePriceCents = variant?.priceCents ?? priceCents;
-  const availableStock = variant ? variant.stock : stock;
+  const precoAtual = priceForSize(priceCents, size);
+  const escolhas = [color, size].filter(Boolean).join(" · ");
 
   const message = [
     `Olá! Tenho interesse em: ${productName}`,
-    variant ? `Opção: ${variant.name}` : null,
+    escolhas ? `Opção: ${escolhas}` : null,
     quantity > 1 ? `Quantidade: ${quantity}` : null,
+    `Valor: ${formatPriceCents(precoAtual * quantity)}`,
   ]
     .filter(Boolean)
     .join("\n");
 
+  const adicionar = () => {
+    if (sizes.length > 0 && !size) {
+      setErro(true);
+      return;
+    }
+    addItem({
+      slug: productSlug,
+      name: productName,
+      priceCents: precoAtual,
+      quantity,
+      categorySlug,
+      image,
+      variantName: escolhas || undefined,
+    });
+    setAdded(true);
+  };
+
   return (
     <>
-      <div className="mt-3.5 flex items-baseline gap-3">
+      <div className="mt-3.5">
         <span className="text-[30px] font-semibold text-accent">
-          {formatPriceCents(activePriceCents)}
-        </span>
-        <span className="text-[13px] text-muted">
-          peça única, feita à mão
+          {formatPriceCents(precoAtual)}
         </span>
       </div>
 
-      {variants.length > 0 && (
+      {colors.length > 0 && (
         <div className="mt-6 flex flex-col gap-2.5">
-          <span className="text-[13px] font-semibold">Opções</span>
+          <span className="text-[13px] font-semibold">Cor</span>
           <div className="flex flex-wrap gap-2.5">
-            {variants.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                onClick={() => setVariantId(option.id)}
-                className={`rounded-full px-[18px] py-[9px] text-sm transition-colors ${
-                  option.id === variantId
-                    ? "border border-primary bg-secondary font-semibold text-secondary-foreground"
-                    : "border border-border bg-surface text-muted hover:text-foreground"
-                }`}
-              >
-                {option.name}
-              </button>
+            {colors.map((option) => (
+              <OptionButton
+                key={option}
+                label={option}
+                selected={option === color}
+                onClick={() => setColor(option)}
+              />
             ))}
           </div>
+        </div>
+      )}
+
+      {sizes.length > 0 && (
+        <div className="mt-6 flex flex-col gap-2.5">
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="text-[13px] font-semibold">Tamanho</span>
+            <span className="text-[12px] text-muted">
+              {size ? SIZE_GUIDE[size] : "Meça a circunferência do braço"}
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2.5">
+            {sizes.map((option) => (
+              <OptionButton
+                key={option}
+                label={option}
+                selected={option === size}
+                onClick={() => {
+                  setSize(option);
+                  setErro(false);
+                }}
+              />
+            ))}
+          </div>
+          {erro && (
+            <span className="text-[12px] text-danger">
+              Escolha o tamanho antes de adicionar.
+            </span>
+          )}
         </div>
       )}
 
@@ -120,11 +179,11 @@ export default function ProductPurchase({
             +
           </button>
         </div>
-        {availableStock > 0 && (
+        {stock > 0 && (
           <span className="text-[13px] text-muted">
-            {availableStock === 1
+            {stock === 1
               ? "1 peça pronta em estoque"
-              : `${availableStock} peças prontas em estoque`}
+              : `${stock} peças prontas em estoque`}
           </span>
         )}
       </div>
@@ -141,18 +200,7 @@ export default function ProductPurchase({
         </a>
         <button
           type="button"
-          onClick={() => {
-            addItem({
-              slug: productSlug,
-              name: productName,
-              priceCents: activePriceCents,
-              quantity,
-              categorySlug,
-              image,
-              variantName: variant?.name,
-            });
-            setAdded(true);
-          }}
+          onClick={adicionar}
           className="flex h-[54px] items-center justify-center rounded-full border border-primary text-[15px] font-medium text-primary transition-colors hover:bg-secondary"
         >
           Adicionar à sacola

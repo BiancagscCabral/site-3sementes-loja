@@ -41,6 +41,22 @@ function TruckIcon() {
   );
 }
 
+function CardIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      className="h-[17px] w-[17px]"
+    >
+      <rect x="4" y="3" width="16" height="18" rx="2" />
+      <rect x="7" y="6" width="10" height="9" rx="1" />
+      <path d="M8 18h8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function Assurance({
   icon,
   title,
@@ -73,7 +89,6 @@ export default async function ProductPage(
     include: {
       category: true,
       images: { orderBy: { position: "asc" } },
-      variants: true,
     },
   });
 
@@ -139,11 +154,19 @@ export default async function ProductPage(
               productSlug={product.slug}
               categorySlug={product.category.slug}
               priceCents={product.priceCents}
-              variants={product.variants}
+              sizes={product.sizes}
+              colors={product.colors}
               stock={product.stock}
             />
 
             <div className="mt-7 flex flex-col gap-3.5 border-t border-border pt-6">
+              {brand.isFlores && (
+                <Assurance
+                  icon={<CardIcon />}
+                  title="Card polaroid ou cartão presente, sem custo"
+                  note="Envie a foto ou a mensagem pelo WhatsApp depois do pedido"
+                />
+              )}
               <Assurance
                 icon={<SeedlingIcon />}
                 title="Feito à mão no ateliê"

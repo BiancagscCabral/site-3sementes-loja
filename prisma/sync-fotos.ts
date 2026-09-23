@@ -15,15 +15,21 @@ const EXTENSIONS = /\.(jpe?g|png|webp|avif)$/i;
 
 async function main() {
   const files = readdirSync(FOLDER).filter((file) => EXTENSIONS.test(file));
+  const slugsExistentes = new Set(
+    (await prisma.product.findMany({ select: { slug: true } })).map((p) => p.slug),
+  );
 
   const bySlug = new Map<string, { file: string; position: number }[]>();
   const orphans: string[] = [];
 
   for (const file of files) {
     const base = file.replace(EXTENSIONS, "");
-    const match = base.match(/^(.*?)(?:-(\d+))?$/);
-    const slug = match?.[1] ?? base;
-    const position = match?.[2] ? Number(match[2]) : 1;
+    // Produtos como "bracelete-oxum-01" têm número no próprio nome, então o
+    // nome inteiro é testado antes de tratar o sufixo como número da foto.
+    const match = base.match(/^(.*?)-(\d+)$/);
+    const temSufixo = match && !slugsExistentes.has(base);
+    const slug = temSufixo ? match[1] : base;
+    const position = temSufixo ? Number(match[2]) : 1;
     const list = bySlug.get(slug) ?? [];
     list.push({ file, position });
     bySlug.set(slug, list);
