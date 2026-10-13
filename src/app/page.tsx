@@ -6,6 +6,11 @@ import { getCategoryBrand } from "@/lib/catalog";
 import { prisma } from "@/lib/prisma";
 import { listarMidiaDoHero } from "@/lib/hero";
 
+// A home busca os produtos no banco. Sem isto o Next congelaria a pagina no
+// momento da publicacao e preco novo, produto novo ou foto nova so apareceriam
+// no proximo deploy. Com 300, ela se atualiza sozinha a cada 5 minutos.
+export const revalidate = 300;
+
 // Categorias que ganham uma faixa própria na home, na ordem em que aparecem.
 const FAIXAS = ["braceletes", "guias", "flores-eternas", "colares"];
 
