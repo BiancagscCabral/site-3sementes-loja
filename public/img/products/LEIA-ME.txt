@@ -1,1 +1,9 @@
-Fotos dos produtos. Nomeie cada arquivo com o codigo do produto (ver nomes-das-fotos.md na raiz do projeto).
+Fotos dos produtos.
+
+Nomeie cada arquivo com o codigo do produto (ver nomes-das-fotos.md na raiz do projeto).
+Foto extra do mesmo produto: acrescente -2, -3 (ex: buque-enrolados-2.jpg).
+
+Subpastas podem ser usadas so para organizar (ex: products/flores/buque-enrolados.jpg).
+O que vale e o nome do arquivo, nao a pasta.
+
+Depois de adicionar as fotos, rode:  npm run fotos
