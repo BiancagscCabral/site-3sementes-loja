@@ -46,3 +46,5 @@ next-env.d.ts
 
 # lista do que falta no site
 PENDENCIAS.md
+# build de teste (NEXT_DIST_DIR)
+/.next-teste/
