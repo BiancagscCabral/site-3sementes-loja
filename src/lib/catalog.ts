@@ -65,3 +65,14 @@ export const SIZE_SURCHARGE_CENTS: Record<string, number> = {
 export function priceForSize(priceCents: number, size: string | null) {
   return priceCents + (size ? (SIZE_SURCHARGE_CENTS[size] ?? 0) : 0);
 }
+
+// "Enrolados (Rapunzel)" -> "enrolados-rapunzel". Usado para ligar o nome do
+// arquivo da foto à opção correspondente do produto.
+export function slugifyOption(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}

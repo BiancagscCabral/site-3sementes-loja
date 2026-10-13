@@ -2,8 +2,13 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useProductOption } from "@/components/ProductOptionContext";
 
-type GalleryImage = { url: string; altText: string | null };
+type GalleryImage = {
+  url: string;
+  altText: string | null;
+  optionName?: string | null;
+};
 
 function Placeholder({
   size,
@@ -43,12 +48,27 @@ export default function ProductGallery({
   logo: string;
   markClass: string;
 }) {
-  const [active, setActive] = useState(0);
+  const { option, setOption } = useProductOption();
+  // Clicar numa miniatura manda na foto até a pessoa trocar de opção de novo.
+  const [escolhaManual, setEscolhaManual] = useState<{
+    option: string | null;
+    index: number;
+  } | null>(null);
+
+  const indiceDaOpcao = option
+    ? images.findIndex((image) => image.optionName === option)
+    : -1;
+  const active =
+    escolhaManual && escolhaManual.option === option
+      ? escolhaManual.index
+      : indiceDaOpcao >= 0
+        ? indiceDaOpcao
+        : 0;
   const current = images[active];
 
   return (
     <div className="flex flex-col gap-3.5">
-      <div className="relative flex h-[360px] items-center justify-center overflow-hidden rounded-2xl border border-border bg-surface sm:h-[470px]">
+      <div className="relative flex h-[360px] items-center justify-center overflow-hidden border border-border bg-surface sm:h-[470px]">
         {current ? (
           <Image
             src={current.url}
@@ -69,14 +89,18 @@ export default function ProductGallery({
       </div>
 
       {images.length > 1 && (
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           {images.map((image, index) => (
             <button
               key={image.url}
               type="button"
-              onClick={() => setActive(index)}
-              aria-label={`Ver foto ${index + 1}`}
-              className={`relative h-[84px] w-[84px] overflow-hidden rounded-xl bg-surface ${
+              onClick={() => {
+                setEscolhaManual({ option: image.optionName ?? option, index });
+                if (image.optionName) setOption(image.optionName);
+              }}
+              aria-label={image.optionName ?? `Ver foto ${index + 1}`}
+              title={image.optionName ?? undefined}
+              className={`relative h-[84px] w-[84px] shrink-0 overflow-hidden bg-surface ${
                 index === active
                   ? "border-2 border-accent"
                   : "border border-border"

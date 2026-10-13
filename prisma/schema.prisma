@@ -30,6 +30,8 @@ model Product {
   variants    ProductVariant[]
   sizes       String[] @default([]) // ex: ["P", "M", "G", "GG"]
   colors      String[] @default([]) // ex: ["Dourado", "Prata"]
+  optionLabel String? // rótulo da lista acima quando não é cor (ex: "Tema")
+  allowsGiftCard Boolean @default(false) // mostra na página que o pedido pode levar card polaroid ou cartão presente
   stock       Int           @default(0) // estoque padrão, usado se não houver variantes
   weightGrams Int? // peso em gramas, necessário para cotação de frete (SuperFrete)
   heightCm    Float?
@@ -45,10 +47,11 @@ model Product {
 
 // Fotos do produto (galeria)
 model ProductImage {
-  id        String   @id @default(cuid())
-  url       String
-  altText   String?
-  position  Int      @default(0)
+  id         String  @id @default(cuid())
+  url        String
+  altText    String?
+  position   Int     @default(0)
+  optionName String? // foto de uma opção específica (ex: o tema "Cinderela")
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String
 }
@@ -66,14 +69,16 @@ model ProductVariant {
 // Pedido feito por um cliente
 model Order {
   id              String      @id @default(cuid())
+  code            String      @unique // código curto que a cliente usa para acompanhar (ex: 3S-K7P2QX)
   customerName    String
-  customerEmail   String
+  customerEmail   String?
   customerPhone   String
   shippingAddress Json // CEP, rua, número, bairro, cidade, estado, complemento
 
-  // Frete (SuperFrete)
-  shippingCents   Int?
-  shippingService String? // ex: "Correios PAC", "Correios SEDEX", "Jadlog"
+  // Frete
+  deliveryMethod  String? // "correios" | "uber-flash"
+  shippingCents   Int? // nulo quando o valor é combinado por fora (Uber Flash)
+  shippingService String? // ex: "PAC", "SEDEX", "Uber Flash"
 
   // Pagamento (InfinitePay)
   infinitePayOrderNsu String?  @unique // seu identificador do pedido, enviado à InfinitePay
@@ -95,6 +100,10 @@ model OrderItem {
   orderId        String
   product        Product @relation(fields: [productId], references: [id])
   productId      String
+  // Nome e variação são copiados na hora da compra: se o produto for renomeado
+  // ou sair do ar depois, o pedido antigo continua legível.
+  productName    String
+  variantName    String?
   variantId      String?
   quantity       Int
   unitPriceCents Int // preço no momento da compra (não muda se o preço do produto mudar depois)
@@ -108,6 +117,7 @@ enum PaymentStatus {
 }
 
 enum OrderStatus {
+  AWAITING_CONTACT // veio pelo site e será fechado pelo WhatsApp
   AWAITING_PAYMENT
   PAID
   SHIPPED

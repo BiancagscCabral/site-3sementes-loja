@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
+import { useProductOption } from "@/components/ProductOptionContext";
 import { getWhatsAppUrl, priceForSize, SIZE_GUIDE } from "@/lib/catalog";
 import { formatPriceCents } from "@/lib/format";
 
@@ -38,10 +39,10 @@ function OptionButton({
       type="button"
       onClick={onClick}
       aria-pressed={selected}
-      className={`min-w-[52px] rounded-full px-[18px] py-[9px] text-sm transition-colors ${
+      className={`min-w-[52px] cursor-pointer border px-[18px] py-[9px] text-sm transition-all duration-200 active:scale-95 ${
         selected
-          ? "border border-primary bg-secondary font-semibold text-secondary-foreground"
-          : "border border-border bg-surface text-muted hover:text-foreground"
+          ? "border-accent bg-accent font-semibold text-accent-foreground shadow-sm"
+          : "border-border bg-surface text-muted hover:border-foreground hover:bg-muted-bg hover:text-foreground"
       }`}
     >
       {label}
@@ -57,6 +58,8 @@ export default function ProductPurchase({
   priceCents,
   sizes = [],
   colors = [],
+  optionLabel,
+  optionImages = {},
   stock,
 }: {
   image?: string;
@@ -66,14 +69,17 @@ export default function ProductPurchase({
   priceCents: number;
   sizes?: string[];
   colors?: string[];
+  optionLabel?: string | null;
+  optionImages?: Record<string, string>;
   stock: number;
 }) {
   const { addItem } = useCart();
+  // A escolha é compartilhada com a galeria: a foto troca junto.
+  const { option: color, setOption: setColor } = useProductOption();
   const [size, setSize] = useState<string | null>(null);
-  const [color, setColor] = useState<string | null>(colors[0] ?? null);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
-  const [erro, setErro] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
 
   const precoAtual = priceForSize(priceCents, size);
   const escolhas = [color, size].filter(Boolean).join(" · ");
@@ -87,9 +93,15 @@ export default function ProductPurchase({
     .filter(Boolean)
     .join("\n");
 
+  const nomeDaOpcao = optionLabel ?? "Cor";
+
   const adicionar = () => {
+    if (colors.length > 0 && !color) {
+      setErro("opcao");
+      return;
+    }
     if (sizes.length > 0 && !size) {
-      setErro(true);
+      setErro("tamanho");
       return;
     }
     addItem({
@@ -98,8 +110,10 @@ export default function ProductPurchase({
       priceCents: precoAtual,
       quantity,
       categorySlug,
-      image,
+      image: (color ? optionImages[color] : null) ?? image,
       variantName: escolhas || undefined,
+      size,
+      color,
     });
     setAdded(true);
   };
@@ -114,17 +128,25 @@ export default function ProductPurchase({
 
       {colors.length > 0 && (
         <div className="mt-6 flex flex-col gap-2.5">
-          <span className="text-[13px] font-semibold">Cor</span>
+          <span className="text-[13px] font-semibold">{nomeDaOpcao}</span>
           <div className="flex flex-wrap gap-2.5">
             {colors.map((option) => (
               <OptionButton
                 key={option}
                 label={option}
                 selected={option === color}
-                onClick={() => setColor(option)}
+                onClick={() => {
+                  setColor(option);
+                  setErro(null);
+                }}
               />
             ))}
           </div>
+          {erro === "opcao" && (
+            <span className="text-[12px] text-danger">
+              Escolha {nomeDaOpcao.toLowerCase() === "cor" ? "a cor" : `o ${nomeDaOpcao.toLowerCase()}`} antes de adicionar.
+            </span>
+          )}
         </div>
       )}
 
@@ -144,12 +166,12 @@ export default function ProductPurchase({
                 selected={option === size}
                 onClick={() => {
                   setSize(option);
-                  setErro(false);
+                  setErro(null);
                 }}
               />
             ))}
           </div>
-          {erro && (
+          {erro === "tamanho" && (
             <span className="text-[12px] text-danger">
               Escolha o tamanho antes de adicionar.
             </span>
@@ -158,7 +180,7 @@ export default function ProductPurchase({
       )}
 
       <div className="mt-6 flex items-center gap-3.5">
-        <div className="flex items-center overflow-hidden rounded-full border border-border bg-surface">
+        <div className="flex items-center overflow-hidden border border-border bg-surface">
           <button
             type="button"
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -193,7 +215,7 @@ export default function ProductPurchase({
           href={getWhatsAppUrl(message)}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex h-[54px] items-center justify-center gap-2.5 rounded-full bg-accent text-[15px] font-semibold text-accent-foreground transition-opacity hover:opacity-90"
+          className="flex h-[54px] items-center justify-center gap-2.5 bg-accent text-[15px] font-semibold text-accent-foreground transition-opacity hover:opacity-90"
         >
           <WhatsAppIcon />
           Comprar pelo WhatsApp
@@ -201,7 +223,7 @@ export default function ProductPurchase({
         <button
           type="button"
           onClick={adicionar}
-          className="flex h-[54px] items-center justify-center rounded-full border border-primary text-[15px] font-medium text-primary transition-colors hover:bg-secondary"
+          className="flex h-[54px] items-center justify-center border border-primary text-[15px] font-medium text-primary transition-colors hover:bg-secondary"
         >
           Adicionar à sacola
         </button>

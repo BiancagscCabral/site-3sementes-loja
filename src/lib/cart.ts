@@ -9,7 +9,11 @@ export type CartItem = {
   quantity: number;
   categorySlug: string;
   image?: string;
-  variantName?: string;
+  variantName?: string; // texto mostrado na tela, ex: "Dourado · G"
+  // Guardados separados porque o servidor precisa deles para recalcular o preço
+  // (o tamanho G e GG custam mais) sem confiar no valor vindo do navegador.
+  size?: string | null;
+  color?: string | null;
 };
 
 type Snapshot = { items: CartItem[]; ready: boolean };
