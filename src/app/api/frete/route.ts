@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { embalagemDaCategoria, type Embalagem } from "@/lib/embalagem";
+import { passouDoLimite, quemEstaChamando } from "@/lib/limite";
 import {
   cotarFrete,
   ErroDeFrete,
@@ -13,6 +14,13 @@ type ItemRecebido = { slug: string; quantidade: number };
 // O navegador manda só o que o cliente escolheu; o peso e as medidas vêm do
 // banco, para ninguém poder forjar uma caixa menor e pagar menos frete.
 export async function POST(request: Request) {
+  if (passouDoLimite(`frete:${quemEstaChamando(request)}`, 30, 60)) {
+    return NextResponse.json(
+      { erro: "Muitas consultas seguidas. Espere um minuto." },
+      { status: 429 },
+    );
+  }
+
   if (!freteConfigurado()) {
     return NextResponse.json({ configurado: false, opcoes: [] });
   }

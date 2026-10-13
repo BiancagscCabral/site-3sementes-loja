@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { priceForSize } from "@/lib/catalog";
+import { passouDoLimite, quemEstaChamando } from "@/lib/limite";
 
 type ItemRecebido = {
   slug: string;
@@ -46,6 +47,13 @@ async function codigoInedito() {
 // Grava o pedido assim que a cliente finaliza no site, antes mesmo de ir para o
 // WhatsApp. Os preços vêm do banco: o navegador só diz o que foi escolhido.
 export async function POST(request: Request) {
+  if (passouDoLimite(`pedido:${quemEstaChamando(request)}`, 5, 60)) {
+    return NextResponse.json(
+      { erro: "Muitos pedidos seguidos. Espere um minuto." },
+      { status: 429 },
+    );
+  }
+
   let corpo: Corpo;
   try {
     corpo = await request.json();
