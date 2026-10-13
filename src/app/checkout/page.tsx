@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/lib/cart";
 import { formatPriceCents } from "@/lib/format";
 import { getWhatsAppUrl } from "@/lib/catalog";
+import { aceitaUberFlash, UBER_FLASH } from "@/lib/entrega";
 
 type Form = {
   nome: string;
@@ -43,6 +44,14 @@ const REQUIRED: (keyof Form)[] = [
   "estado",
 ];
 
+type OpcaoFrete = {
+  id: number;
+  nome: string;
+  empresa: string;
+  precoCents: number;
+  prazoDias: number;
+};
+
 function onlyDigits(value: string) {
   return value.replace(/\D/g, "");
 }
@@ -70,7 +79,7 @@ function Field({
         {...rest}
         value={value}
         onChange={(event) => onChange(name, event.target.value)}
-        className={`h-11 rounded-xl border bg-surface px-3.5 text-sm text-foreground outline-none transition-colors placeholder:text-muted focus:border-accent ${
+        className={`h-11 border bg-surface px-3.5 text-sm text-foreground outline-none transition-colors placeholder:text-muted focus:border-accent ${
           error ? "border-danger" : "border-border"
         }`}
       />
@@ -86,6 +95,55 @@ export default function CheckoutPage() {
   const [cepStatus, setCepStatus] = useState<"idle" | "loading" | "notFound">(
     "idle",
   );
+  const [opcoesFrete, setOpcoesFrete] = useState<OpcaoFrete[]>([]);
+  const [freteStatus, setFreteStatus] = useState<
+    "idle" | "calculando" | "indisponivel"
+  >("idle");
+  const [freteEscolhido, setFreteEscolhido] = useState<OpcaoFrete | null>(null);
+  const [temUberFlash, setTemUberFlash] = useState(false);
+  const [uberFlashEscolhido, setUberFlashEscolhido] = useState(false);
+  const [enviando, setEnviando] = useState(false);
+
+  const fretecents = uberFlashEscolhido ? 0 : (freteEscolhido?.precoCents ?? 0);
+  const totalComFrete = totalCents + fretecents;
+
+  // Busca as opções de entrega assim que o CEP fica completo.
+  const calcularFrete = async (rawCep: string) => {
+    const cep = onlyDigits(rawCep);
+    if (cep.length !== 8 || items.length === 0) return;
+
+    setFreteStatus("calculando");
+    setOpcoesFrete([]);
+    setFreteEscolhido(null);
+    setUberFlashEscolhido(false);
+
+    try {
+      const resposta = await fetch("/api/frete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cep,
+          itens: items.map((item) => ({
+            slug: item.slug,
+            quantidade: item.quantity,
+          })),
+        }),
+      });
+      const dados = await resposta.json();
+
+      if (!resposta.ok || !dados.configurado || !dados.opcoes?.length) {
+        setFreteStatus("indisponivel");
+        return;
+      }
+
+      setOpcoesFrete(dados.opcoes);
+      setFreteEscolhido(dados.opcoes[0]);
+      setFreteStatus("idle");
+    } catch {
+      // sem internet ou SuperFrete fora do ar: o frete fica para o WhatsApp
+      setFreteStatus("indisponivel");
+    }
+  };
 
   const update = (name: keyof Form, value: string) => {
     setForm((current) => ({ ...current, [name]: value }));
@@ -104,6 +162,7 @@ export default function CheckoutPage() {
         return;
       }
       setCepStatus("idle");
+      setTemUberFlash(aceitaUberFlash(data.localidade ?? "", data.uf ?? ""));
       setForm((current) => ({
         ...current,
         rua: data.logradouro || current.rua,
@@ -135,10 +194,63 @@ export default function CheckoutPage() {
     return Object.keys(found).length === 0;
   };
 
-  const finish = () => {
+  const finish = async () => {
     if (!validate()) return;
+    setEnviando(true);
+
+    // Grava o pedido antes de sair do site. Se der erro, o pedido ainda vai
+    // para o WhatsApp: a venda não pode se perder por causa disso.
+    let codigo: string | null = null;
+    try {
+      const resposta = await fetch("/api/pedidos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cliente: {
+            nome: form.nome,
+            telefone: form.telefone,
+            email: form.email,
+          },
+          endereco: {
+            cep: form.cep,
+            rua: form.rua,
+            numero: form.numero,
+            complemento: form.complemento,
+            bairro: form.bairro,
+            cidade: form.cidade,
+            estado: form.estado,
+          },
+          entrega: uberFlashEscolhido
+            ? { metodo: "uber-flash", servico: UBER_FLASH.nome, precoCents: null }
+            : freteEscolhido
+              ? {
+                  metodo: "correios",
+                  servico: freteEscolhido.nome,
+                  precoCents: freteEscolhido.precoCents,
+                }
+              : { metodo: null, servico: null, precoCents: null },
+          itens: items.map((item) => ({
+            slug: item.slug,
+            quantidade: item.quantity,
+            tamanho: item.size ?? null,
+            variacao: item.variantName ?? null,
+          })),
+        }),
+      });
+      const dados = await resposta.json();
+      if (resposta.ok && dados.codigo) codigo = dados.codigo;
+    } catch {
+      // sem internet ou banco fora do ar: segue para o WhatsApp mesmo assim
+    }
+
+    const entregaEscolhida = uberFlashEscolhido
+      ? `Entrega: ${UBER_FLASH.nome} — valor a combinar`
+      : freteEscolhido
+        ? `Entrega: ${freteEscolhido.nome}, ${freteEscolhido.prazoDias} dia(s) úteis — ${formatPriceCents(freteEscolhido.precoCents)}`
+        : null;
+
     const message = [
-      "Olá! Quero fechar este pedido:",
+      codigo ? `Olá! Quero fechar o pedido ${codigo}:` : "Olá! Quero fechar este pedido:",
       "",
       ...items.map(
         (item) =>
@@ -148,6 +260,10 @@ export default function CheckoutPage() {
       ),
       "",
       `Total dos produtos: ${formatPriceCents(totalCents)}`,
+      entregaEscolhida,
+      freteEscolhido && !uberFlashEscolhido
+        ? `Total com frete: ${formatPriceCents(totalComFrete)}`
+        : null,
       "",
       `Nome: ${form.nome}`,
       `Telefone: ${form.telefone}`,
@@ -178,8 +294,8 @@ export default function CheckoutPage() {
           Sua sacola está vazia. Escolha suas peças primeiro.
         </p>
         <Link
-          href="/#categorias"
-          className="mt-6 inline-flex h-11 items-center rounded-full bg-accent px-6 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90"
+          href="/#catalogo"
+          className="mt-6 inline-flex h-11 items-center bg-accent px-6 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90"
         >
           Ver categorias
         </Link>
@@ -244,7 +360,10 @@ export default function CheckoutPage() {
                   onChange={(name, value) => {
                     update(name, value);
                     setCepStatus("idle");
-                    if (onlyDigits(value).length === 8) lookupCep(value);
+                    if (onlyDigits(value).length === 8) {
+                      lookupCep(value);
+                      calcularFrete(value);
+                    }
                   }}
                   error={errors.cep}
                   inputMode="numeric"
@@ -315,16 +434,109 @@ export default function CheckoutPage() {
               />
             </div>
           </section>
+
+          {(freteStatus !== "idle" || opcoesFrete.length > 0 || temUberFlash) && (
+            <section>
+              <h2 className="font-display text-lg font-medium text-foreground">
+                Entrega
+              </h2>
+
+              {freteStatus === "calculando" && (
+                <p className="mt-3 text-sm text-muted">Calculando o frete...</p>
+              )}
+
+              {freteStatus === "indisponivel" && (
+                <p className="mt-3 text-sm text-muted">
+                  Não deu para calcular o frete agora. Pode seguir assim mesmo:
+                  a gente combina o valor da entrega pelo WhatsApp.
+                </p>
+              )}
+
+              {opcoesFrete.length > 0 && (
+                <div className="mt-4 flex flex-col gap-2.5">
+                  {opcoesFrete.map((opcao) => {
+                    const escolhida = freteEscolhido?.id === opcao.id;
+                    return (
+                      <label
+                        key={opcao.id}
+                        className={`flex cursor-pointer items-center gap-3 border p-3.5 transition-colors ${
+                          escolhida
+                            ? "border-accent bg-muted-bg"
+                            : "border-border bg-surface hover:border-foreground"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="frete"
+                          checked={escolhida}
+                          onChange={() => setFreteEscolhido(opcao)}
+                          className="accent-accent"
+                        />
+                        <span className="flex-1">
+                          <span className="block text-sm font-medium text-foreground">
+                            {opcao.nome}
+                          </span>
+                          <span className="block text-[13px] text-muted">
+                            {opcao.prazoDias > 0
+                              ? `chega em até ${opcao.prazoDias} dia(s) úteis`
+                              : "prazo informado na postagem"}
+                          </span>
+                        </span>
+                        <span className="text-sm font-semibold text-foreground">
+                          {formatPriceCents(opcao.precoCents)}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
+
+              {temUberFlash && (
+                <label
+                  className={`mt-2.5 flex cursor-pointer items-center gap-3 border p-3.5 transition-colors ${
+                    uberFlashEscolhido
+                      ? "border-accent bg-muted-bg"
+                      : "border-border bg-surface hover:border-foreground"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="frete"
+                    checked={uberFlashEscolhido}
+                    onChange={() => {
+                      setUberFlashEscolhido(true);
+                      setFreteEscolhido(null);
+                    }}
+                    className="accent-accent"
+                  />
+                  <span className="flex-1">
+                    <span className="block text-sm font-medium text-foreground">
+                      {UBER_FLASH.nome}
+                    </span>
+                    <span className="block text-[13px] text-muted">
+                      {UBER_FLASH.descricao}
+                    </span>
+                  </span>
+                  <span className="text-sm font-semibold text-foreground">
+                    a combinar
+                  </span>
+                </label>
+              )}
+            </section>
+          )}
         </div>
 
-        <aside className="rounded-2xl border border-border bg-surface p-5">
+        <aside className="border border-border bg-surface p-5">
           <h2 className="font-display text-lg font-medium text-foreground">
             Seu pedido
           </h2>
 
           <ul className="mt-4 flex flex-col gap-2 text-[13px]">
             {items.map((item) => (
-              <li key={`${item.slug}-${item.variantName ?? ""}`} className="flex gap-3">
+              <li
+                key={`${item.slug}-${item.variantName ?? ""}`}
+                className="flex gap-3"
+              >
                 <span className="flex-1 text-muted">
                   {item.quantity}x {item.name}
                 </span>
@@ -335,24 +547,42 @@ export default function CheckoutPage() {
             ))}
           </ul>
 
-          <div className="mt-4 flex items-baseline justify-between border-t border-border pt-3">
-            <span className="text-[13px] text-muted">Total dos produtos</span>
-            <span className="text-lg font-semibold text-foreground">
-              {formatPriceCents(totalCents)}
-            </span>
+          <div className="mt-4 flex flex-col gap-2 border-t border-border pt-3">
+            <div className="flex items-baseline justify-between text-[13px]">
+              <span className="text-muted">Produtos</span>
+              <span className="font-medium text-foreground">
+                {formatPriceCents(totalCents)}
+              </span>
+            </div>
+            <div className="flex items-baseline justify-between text-[13px]">
+              <span className="text-muted">Frete</span>
+              <span className="font-medium text-foreground">
+                {freteEscolhido && !uberFlashEscolhido
+                  ? formatPriceCents(freteEscolhido.precoCents)
+                  : "a combinar"}
+              </span>
+            </div>
+            <div className="mt-1 flex items-baseline justify-between border-t border-border pt-2.5">
+              <span className="text-[13px] text-muted">Total</span>
+              <span className="text-lg font-semibold text-foreground">
+                {formatPriceCents(totalComFrete)}
+              </span>
+            </div>
           </div>
 
           <button
             type="button"
             onClick={finish}
-            className="mt-5 flex h-11 w-full items-center justify-center rounded-full bg-accent px-5 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90"
+            disabled={enviando}
+            className="mt-5 flex h-11 w-full items-center justify-center bg-accent px-5 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
           >
-            Enviar pedido
+            {enviando ? "Enviando..." : "Enviar pedido"}
           </button>
 
           <p className="mt-3 text-[13px] leading-6 text-muted">
-            O pedido vai pro nosso WhatsApp com seus dados preenchidos. Lá a
-            gente calcula o frete e combina o pagamento.
+            {freteEscolhido
+              ? "O pedido vai pro nosso WhatsApp com seus dados e a entrega escolhida. Lá a gente combina o pagamento."
+              : "O pedido vai pro nosso WhatsApp com seus dados preenchidos. Lá a gente calcula o frete e combina o pagamento."}
           </p>
 
           <Link
