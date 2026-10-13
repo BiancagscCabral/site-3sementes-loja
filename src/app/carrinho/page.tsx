@@ -29,10 +29,15 @@ export default function CarrinhoPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-12 sm:py-16">
-      <h1 className="font-display text-3xl font-medium text-foreground">
-        Sua sacola
-      </h1>
+    <div className="mx-auto max-w-5xl px-5 py-10 sm:px-6 sm:py-14">
+      <div className="flex items-baseline gap-4 border-b-2 border-foreground pb-2.5">
+        <h1 className="text-[15px] font-bold uppercase tracking-[0.18em] text-foreground">
+          Sua sacola
+        </h1>
+        <span className="ml-auto shrink-0 text-[13px] text-muted">
+          {itemCount === 1 ? "1 peça" : `${itemCount} peças`}
+        </span>
+      </div>
 
       {items.length === 0 ? (
         <div className="mt-6">
@@ -40,8 +45,8 @@ export default function CarrinhoPage() {
             Sua sacola está vazia por enquanto.
           </p>
           <Link
-            href="/#categorias"
-            className="mt-6 inline-flex h-11 items-center rounded-full bg-accent px-6 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90"
+            href="/#catalogo"
+            className="mt-6 inline-flex h-11 items-center bg-accent px-6 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90"
           >
             Ver categorias
           </Link>
@@ -55,7 +60,7 @@ export default function CarrinhoPage() {
               return (
                 <li
                   key={key}
-                  className={`${brand.themeClass} rounded-2xl border border-border bg-surface p-4 transition-colors hover:border-accent/40`}
+                  className={`${brand.themeClass} border border-border bg-surface p-4 transition-colors hover:border-accent/40`}
                 >
                   <div className="flex gap-4">
                     <Link
@@ -68,7 +73,7 @@ export default function CarrinhoPage() {
                         markClass={brand.markClass}
                         markSize={40}
                         sizes="80px"
-                        className="h-[72px] w-[72px] rounded-xl sm:h-20 sm:w-20"
+                        className="h-[72px] w-[72px] sm:h-20 sm:w-20"
                       />
                     </Link>
 
@@ -82,7 +87,7 @@ export default function CarrinhoPage() {
                             {item.name}
                           </Link>
                           {item.variantName && (
-                            <span className="mt-1 inline-block rounded-full bg-secondary px-2.5 py-0.5 text-[11px] font-medium text-secondary-foreground">
+                            <span className="mt-1 inline-block bg-secondary px-2.5 py-0.5 text-[11px] font-medium text-secondary-foreground">
                               {item.variantName}
                             </span>
                           )}
@@ -97,12 +102,12 @@ export default function CarrinhoPage() {
                       </span>
 
                       <div className="mt-3 flex items-center gap-3">
-                        <div className="flex items-center rounded-full border border-border">
+                        <div className="flex items-center border border-border">
                           <button
                             type="button"
                             onClick={() => setQuantity(key, item.quantity - 1)}
                             aria-label="Diminuir quantidade"
-                            className="flex h-8 w-8 items-center justify-center rounded-l-full text-muted transition-colors hover:bg-background hover:text-foreground"
+                            className="flex h-8 w-8 items-center justify-center text-muted transition-colors hover:bg-background hover:text-foreground"
                           >
                             &minus;
                           </button>
@@ -113,7 +118,7 @@ export default function CarrinhoPage() {
                             type="button"
                             onClick={() => setQuantity(key, item.quantity + 1)}
                             aria-label="Aumentar quantidade"
-                            className="flex h-8 w-8 items-center justify-center rounded-r-full text-muted transition-colors hover:bg-background hover:text-foreground"
+                            className="flex h-8 w-8 items-center justify-center text-muted transition-colors hover:bg-background hover:text-foreground"
                           >
                             +
                           </button>
@@ -122,7 +127,7 @@ export default function CarrinhoPage() {
                           type="button"
                           onClick={() => removeItem(key)}
                           aria-label={`Remover ${item.name}`}
-                          className="flex h-8 w-8 items-center justify-center rounded-full text-danger transition-colors hover:bg-danger/10"
+                          className="flex h-8 w-8 items-center justify-center text-danger transition-colors hover:bg-danger/10"
                         >
                           <TrashIcon />
                         </button>
@@ -134,7 +139,7 @@ export default function CarrinhoPage() {
             })}
           </ul>
 
-          <aside className="rounded-2xl border border-border bg-surface p-5">
+          <aside className="border border-border bg-surface p-5">
             <h2 className="font-display text-lg font-medium text-foreground">
               Resumo
             </h2>
@@ -155,13 +160,13 @@ export default function CarrinhoPage() {
 
             <Link
               href="/checkout"
-              className="mt-4 flex h-11 w-full items-center justify-center rounded-full bg-accent px-5 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90"
+              className="mt-4 flex h-11 w-full items-center justify-center bg-accent px-5 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90"
             >
               Fechar pedido
             </Link>
 
             <Link
-              href="/#categorias"
+              href="/#catalogo"
               className="mt-3 block text-center text-[13px] text-muted transition-colors hover:text-foreground"
             >
               Continuar comprando

@@ -1,40 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  --background: oklch(96.5% 0.012 89);
-  --surface: oklch(99% 0.005 90);
-  --foreground: oklch(28% 0.026 92);
-  --muted: oklch(49% 0.025 92);
-  --muted-bg: oklch(92% 0.018 91);
-  --border: oklch(47% 0.059 111 / 0.16);
-  --primary: oklch(47% 0.059 111);
-  --primary-dark: oklch(40% 0.06 111);
-  --primary-foreground: oklch(96.5% 0.012 89);
-  --secondary: oklch(72% 0.055 101 / 0.18);
-  --secondary-foreground: oklch(36% 0.045 107);
-  --accent: oklch(69% 0.19 53);
-  --accent-foreground: oklch(99% 0.005 90);
-  --bloom: oklch(69% 0.19 53);
-  --danger: oklch(52% 0.17 27);
-  --display-font: var(--font-fraunces);
+  --background: #fff8f1;
+  --surface: #ffffff;
+  --foreground: #262719;
+  --muted: #4f5139;
+  --muted-bg: #f1ead9;
+  --border: #c9c2ac;
+  --primary: #3e4229;
+  --primary-dark: #2e3120;
+  --primary-foreground: #fff8f1;
+  --secondary: #e4e0cd;
+  --secondary-foreground: #343721;
+  --accent: #c4611a;
+  --accent-foreground: #fff8f1;
+  --bloom: #c4611a;
+  --danger: #a32b1c;
+  --hero: #8e8a69;
+  --display-font: var(--font-libre);
 }
 
 /* 3sflores: rosa #d08678 é decorativo; texto e botões usam um tom mais fechado dele para manter contraste legível */
 .theme-flores {
-  --background: #fff8f1;
-  --surface: #fffdfa;
-  --foreground: #4e5236;
-  --muted: #76795c;
-  --muted-bg: #f6ebe2;
-  --border: #d0867840;
-  --primary: #606542;
-  --primary-dark: #4a4e32;
+  --background: #fbeee9;
+  --surface: #ffffff;
+  --foreground: #3a2420;
+  --muted: #6b4038;
+  --muted-bg: #f3ddd5;
+  --border: #ddbdb2;
+  --primary: #6b4038;
+  --primary-dark: #4a1f18;
   --primary-foreground: #fff8f1;
-  --secondary: #d0867824;
-  --secondary-foreground: #8e4c40;
-  --accent: #a95c4f;
+  --secondary: #f3ddd5;
+  --secondary-foreground: #6b4038;
+  --accent: #9c4a3c;
   --accent-foreground: #fff8f1;
   --bloom: #d08678;
+  --hero: #c99c8f;
   --display-font: var(--font-cormorant);
 }
 
@@ -54,11 +56,91 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-bloom: var(--bloom);
   --color-danger: var(--danger);
-  --font-sans: var(--font-geist-sans);
+  --color-hero: var(--hero);
+  --font-sans: var(--font-karla);
   --font-display: var(--display-font);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* Card da vitrine: a seta aparece e o card ganha sombra no hover. */
+.product-card {
+  transition: box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.product-card:hover {
+  box-shadow: 0 10px 20px 4px rgb(35 35 35 / 0.15);
+}
+
+.product-card .card-icon {
+  opacity: 0;
+  transform: translateX(-20%);
+  transition: all 0.3s ease-in-out;
+}
+
+.product-card:hover .card-icon {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Card que vira: frente com ícone e título, verso com a explicação. */
+.flip-card {
+  background-color: transparent;
+  perspective: 1000px;
+  outline: none;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner,
+.flip-card:focus-visible .flip-card-inner,
+.flip-card:focus-within .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+  border-radius: 2em;
+  border: 3px solid var(--accent);
+  background-color: var(--primary);
+  backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+.flip-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flip-card-inner {
+    transition: none;
+  }
+}
+
+/* Tudo que é clicável mostra a mãozinha: o padrão do navegador em <button> é
+   a seta, o que faz os seletores de cor e tamanho parecerem texto. */
+button:not(:disabled),
+summary,
+[role="button"] {
+  cursor: pointer;
 }

@@ -1,24 +1,31 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
-import { Cormorant_Garamond, Fraunces } from "next/font/google";
+import localFont from "next/font/local";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// Fontes guardadas dentro do projeto: além de não depender da internet para
+// compilar, o site carrega sem buscar nada em servidor externo.
+const karla = localFont({
+  variable: "--font-karla",
+  display: "swap",
+  src: [{ path: "../fonts/Karla.woff2", weight: "400 700", style: "normal" }],
 });
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
+const libreBaskerville = localFont({
+  variable: "--font-libre",
+  display: "swap",
+  src: [
+    { path: "../fonts/LibreBaskerville.woff2", weight: "400 700", style: "normal" },
+  ],
 });
 
-const cormorant = Cormorant_Garamond({
+const cormorant = localFont({
   variable: "--font-cormorant",
-  subsets: ["latin"],
-  weight: ["500", "600"],
+  display: "swap",
+  src: [
+    { path: "../fonts/CormorantGaramond.woff2", weight: "400 700", style: "normal" },
+  ],
 });
 
 export const metadata: Metadata = {
@@ -31,7 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${fraunces.variable} ${cormorant.variable} h-full antialiased`}
+      className={`${karla.variable} ${libreBaskerville.variable} ${cormorant.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         <Header />

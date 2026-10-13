@@ -1,0 +1,9 @@
+Fotos e videos do fundo do topo da home (atras do texto "Produtos feitos a mao").
+
+Aceita .jpg .png .webp .avif .mp4 .webm
+A ordem e a alfabetica do nome do arquivo: use 01-, 02-, 03- para mandar na ordem.
+Cada um fica 6 segundos na tela. Com um arquivo so, ele fica parado.
+Nao precisa mexer no codigo: e so colocar os arquivos aqui.
+
+Dica: fotos deitadas (paisagem) e de pelo menos 1600px de largura ficam melhores.
+Video: deixe curto (ate ~15s) e sem audio, porque ele toca mudo e em repeticao.

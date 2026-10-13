@@ -1,8 +1,7 @@
 import Link from "next/link";
-import ProductThumb from "@/components/ProductThumb";
+import ProductCard from "@/components/ProductCard";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
-import { formatPriceCents } from "@/lib/format";
 import { getCategoryBrand } from "@/lib/catalog";
 
 export const metadata: Metadata = {
@@ -10,10 +9,7 @@ export const metadata: Metadata = {
 };
 
 function normalize(text: string) {
-  return text
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase();
+  return text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 }
 
 export default async function BuscaPage(props: PageProps<"/busca">) {
@@ -25,7 +21,10 @@ export default async function BuscaPage(props: PageProps<"/busca">) {
   const products = term
     ? await prisma.product.findMany({
         where: { active: true },
-        include: { category: true, images: { orderBy: { position: "asc" }, take: 1 } },
+        include: {
+          category: true,
+          images: { orderBy: { position: "asc" }, take: 1 },
+        },
         orderBy: { name: "asc" },
       })
     : [];
@@ -38,8 +37,8 @@ export default async function BuscaPage(props: PageProps<"/busca">) {
   );
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-16">
-      <h1 className="font-display text-3xl font-medium text-foreground">
+    <div className="mx-auto max-w-5xl px-5 py-10 sm:px-6 sm:py-14">
+      <h1 className="font-display text-[26px] font-bold text-foreground sm:text-[30px]">
         {term ? `Resultados para "${term}"` : "Buscar produtos"}
       </h1>
 
@@ -51,7 +50,7 @@ export default async function BuscaPage(props: PageProps<"/busca">) {
         <p className="mt-4 text-sm text-muted">
           Não encontramos nenhuma peça com esse nome. Tente outra palavra ou{" "}
           <Link
-            href="/#categorias"
+            href="/#catalogo"
             className="text-accent underline underline-offset-4"
           >
             veja todas as categorias
@@ -65,31 +64,20 @@ export default async function BuscaPage(props: PageProps<"/busca">) {
               ? "1 peça encontrada"
               : `${results.length} peças encontradas`}
           </p>
-          <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-4">
+          <div className="mt-7 grid grid-cols-2 gap-5 sm:grid-cols-4 sm:gap-[26px]">
             {results.map((product) => {
               const brand = getCategoryBrand(product.category.slug);
               return (
-                <Link
-                  key={product.slug}
-                  href={`/produtos/${product.slug}`}
-                  className={`${brand.themeClass} rounded-2xl border border-border bg-surface p-4 transition-colors hover:border-accent/40`}
-                >
-                  <ProductThumb
+                <div key={product.slug} className={brand.themeClass}>
+                  <ProductCard
+                    slug={product.slug}
+                    name={product.name}
+                    priceCents={product.priceCents}
                     image={product.images[0]}
                     logo={brand.logo}
                     markClass={brand.markClass}
-                    className="aspect-square rounded-xl"
                   />
-                  <p className="mt-3 text-xs uppercase tracking-wide text-muted">
-                    {product.category.name}
-                  </p>
-                  <h2 className="mt-1 text-sm font-medium text-foreground">
-                    {product.name}
-                  </h2>
-                  <p className="mt-1 text-sm text-accent">
-                    {formatPriceCents(product.priceCents)}
-                  </p>
-                </Link>
+                </div>
               );
             })}
           </div>

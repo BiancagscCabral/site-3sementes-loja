@@ -1,9 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
-import ProductThumb from "@/components/ProductThumb";
+import ProductCard from "@/components/ProductCard";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { formatPriceCents } from "@/lib/format";
 import { getCategoryBrand } from "@/lib/catalog";
 
 export default async function CategoryPage(
@@ -30,35 +28,26 @@ export default async function CategoryPage(
 
   return (
     <div className={`${brand.themeClass} bg-background text-foreground`}>
-      <div className="mx-auto max-w-5xl px-6 py-16">
-        <Link href="/" className="text-sm text-muted hover:text-foreground">
+      <div className="mx-auto max-w-5xl px-5 py-10 sm:px-6 sm:py-14">
+        <Link href="/" className="text-[13px] text-muted hover:text-foreground">
           &larr; Voltar
         </Link>
 
-        {brand.isFlores ? (
-          <div className="mt-6 flex items-center gap-6">
-            <Image
-              src={brand.logo}
-              alt="3sflores"
-              width={120}
-              height={120}
-              priority
-              className="h-[120px] w-[120px]"
-            />
-            <div>
-              <h1 className="font-display text-4xl font-semibold text-foreground">
-                {category.name}
-              </h1>
-              <p className="mt-1 max-w-md text-sm text-muted">
-                Flores de chenille feitas à mão, do primeiro ateliê de flores
-                eternas de Recife.
-              </p>
-            </div>
-          </div>
-        ) : (
-          <h1 className="font-display mt-4 text-3xl font-medium text-foreground">
+        <div className="mt-6 flex items-baseline gap-4 border-b-2 border-foreground pb-2.5">
+          <h1 className="text-[15px] font-bold uppercase tracking-[0.18em]">
             {category.name}
           </h1>
+          <span className="ml-auto shrink-0 text-[13px] text-muted">
+            {category.products.length}{" "}
+            {category.products.length === 1 ? "peça" : "peças"}
+          </span>
+        </div>
+
+        {brand.isFlores && (
+          <p className="mt-5 max-w-[58ch] text-base leading-8 text-muted">
+            Flores de chenille feitas à mão, do primeiro ateliê de flores
+            eternas de Recife.
+          </p>
         )}
 
         {category.products.length === 0 ? (
@@ -66,29 +55,17 @@ export default async function CategoryPage(
             Ainda não temos produtos cadastrados nessa categoria.
           </p>
         ) : (
-          <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3">
+          <div className="mt-7 grid grid-cols-2 gap-5 sm:grid-cols-4 sm:gap-[26px]">
             {category.products.map((product) => (
-              <Link
+              <ProductCard
                 key={product.slug}
-                href={`/produtos/${product.slug}`}
-                className="group rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-accent/40"
-              >
-                <ProductThumb
-                  image={product.images[0]}
-                  logo={brand.logo}
-                  markClass={brand.markClass}
-                  markSize={56}
-                  className="aspect-square rounded-xl"
-                />
-                <h2 className="mt-4 text-sm font-medium text-foreground">
-                  {product.name}
-                </h2>
-                <p
-                  className={`mt-1 text-sm ${brand.isFlores ? "text-accent" : "text-muted"}`}
-                >
-                  {formatPriceCents(product.priceCents)}
-                </p>
-              </Link>
+                slug={product.slug}
+                name={product.name}
+                priceCents={product.priceCents}
+                image={product.images[0]}
+                logo={brand.logo}
+                markClass={brand.markClass}
+              />
             ))}
           </div>
         )}
