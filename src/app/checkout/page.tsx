@@ -89,7 +89,7 @@ function Field({
 }
 
 export default function CheckoutPage() {
-  const { items, totalCents, ready } = useCart();
+  const { items, totalCents, ready, clear } = useCart();
   const [form, setForm] = useState<Form>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof Form, string>>>({});
   const [cepStatus, setCepStatus] = useState<"idle" | "loading" | "notFound">(
@@ -103,6 +103,8 @@ export default function CheckoutPage() {
   const [temUberFlash, setTemUberFlash] = useState(false);
   const [uberFlashEscolhido, setUberFlashEscolhido] = useState(false);
   const [enviando, setEnviando] = useState(false);
+  const [pagando, setPagando] = useState(false);
+  const [erroPagamento, setErroPagamento] = useState<string | null>(null);
 
   const fretecents = uberFlashEscolhido ? 0 : (freteEscolhido?.precoCents ?? 0);
   const totalComFrete = totalCents + fretecents;
@@ -194,6 +196,70 @@ export default function CheckoutPage() {
     return Object.keys(found).length === 0;
   };
 
+  const corpoDoPedido = () => ({
+    cliente: {
+      nome: form.nome,
+      telefone: form.telefone,
+      email: form.email,
+    },
+    endereco: {
+      cep: form.cep,
+      rua: form.rua,
+      numero: form.numero,
+      complemento: form.complemento,
+      bairro: form.bairro,
+      cidade: form.cidade,
+      estado: form.estado,
+    },
+    entrega: uberFlashEscolhido
+      ? { metodo: "uber-flash", servico: UBER_FLASH.nome, precoCents: null }
+      : freteEscolhido
+        ? {
+            metodo: "correios",
+            servico: freteEscolhido.nome,
+            precoCents: freteEscolhido.precoCents,
+          }
+        : { metodo: null, servico: null, precoCents: null },
+    itens: items.map((item) => ({
+      slug: item.slug,
+      quantidade: item.quantity,
+      tamanho: item.size ?? null,
+      variacao: item.variantName ?? null,
+    })),
+  });
+
+  const pagarNoSite = async () => {
+    if (!validate()) return;
+    setErroPagamento(null);
+    setPagando(true);
+
+    try {
+      const resposta = await fetch("/api/pagamento", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(corpoDoPedido()),
+      });
+      const dados = await resposta.json();
+
+      if (resposta.ok && dados.url) {
+        clear();
+        window.location.href = dados.url;
+        return;
+      }
+
+      setErroPagamento(
+        dados.codigo
+          ? `Seu pedido ${dados.codigo} foi registrado, mas o pagamento não abriu. Feche pelo WhatsApp que a gente resolve.`
+          : "Não conseguimos abrir o pagamento agora. Use o WhatsApp.",
+      );
+    } catch {
+      setErroPagamento(
+        "Não conseguimos abrir o pagamento agora. Use o WhatsApp.",
+      );
+    }
+    setPagando(false);
+  };
+
   const finish = async () => {
     if (!validate()) return;
     setEnviando(true);
@@ -205,37 +271,7 @@ export default function CheckoutPage() {
       const resposta = await fetch("/api/pedidos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          cliente: {
-            nome: form.nome,
-            telefone: form.telefone,
-            email: form.email,
-          },
-          endereco: {
-            cep: form.cep,
-            rua: form.rua,
-            numero: form.numero,
-            complemento: form.complemento,
-            bairro: form.bairro,
-            cidade: form.cidade,
-            estado: form.estado,
-          },
-          entrega: uberFlashEscolhido
-            ? { metodo: "uber-flash", servico: UBER_FLASH.nome, precoCents: null }
-            : freteEscolhido
-              ? {
-                  metodo: "correios",
-                  servico: freteEscolhido.nome,
-                  precoCents: freteEscolhido.precoCents,
-                }
-              : { metodo: null, servico: null, precoCents: null },
-          itens: items.map((item) => ({
-            slug: item.slug,
-            quantidade: item.quantity,
-            tamanho: item.size ?? null,
-            variacao: item.variantName ?? null,
-          })),
-        }),
+        body: JSON.stringify(corpoDoPedido()),
       });
       const dados = await resposta.json();
       if (resposta.ok && dados.codigo) codigo = dados.codigo;
@@ -250,7 +286,9 @@ export default function CheckoutPage() {
         : null;
 
     const message = [
-      codigo ? `Olá! Quero fechar o pedido ${codigo}:` : "Olá! Quero fechar este pedido:",
+      codigo
+        ? `Olá! Quero fechar o pedido ${codigo}:`
+        : "Olá! Quero fechar este pedido:",
       "",
       ...items.map(
         (item) =>
@@ -435,7 +473,9 @@ export default function CheckoutPage() {
             </div>
           </section>
 
-          {(freteStatus !== "idle" || opcoesFrete.length > 0 || temUberFlash) && (
+          {(freteStatus !== "idle" ||
+            opcoesFrete.length > 0 ||
+            temUberFlash) && (
             <section>
               <h2 className="font-display text-lg font-medium text-foreground">
                 Entrega
@@ -572,17 +612,32 @@ export default function CheckoutPage() {
 
           <button
             type="button"
-            onClick={finish}
-            disabled={enviando}
+            onClick={pagarNoSite}
+            disabled={pagando || enviando}
             className="mt-5 flex h-11 w-full items-center justify-center bg-accent px-5 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
           >
-            {enviando ? "Enviando..." : "Enviar pedido"}
+            {pagando ? "Abrindo pagamento..." : "Pagar agora"}
           </button>
 
+          <button
+            type="button"
+            onClick={finish}
+            disabled={pagando || enviando}
+            className="mt-2.5 flex h-11 w-full items-center justify-center border border-primary px-5 text-sm font-medium text-primary transition-colors hover:bg-secondary disabled:opacity-60"
+          >
+            {enviando ? "Enviando..." : "Fechar pelo WhatsApp"}
+          </button>
+
+          {erroPagamento && (
+            <p className="mt-3 text-[13px] leading-6 text-danger">
+              {erroPagamento}
+            </p>
+          )}
+
           <p className="mt-3 text-[13px] leading-6 text-muted">
-            {freteEscolhido
-              ? "O pedido vai pro nosso WhatsApp com seus dados e a entrega escolhida. Lá a gente combina o pagamento."
-              : "O pedido vai pro nosso WhatsApp com seus dados preenchidos. Lá a gente calcula o frete e combina o pagamento."}
+            No <strong>Pagar agora</strong> você paga por Pix ou cartão e o
+            pedido entra na fila na hora. No WhatsApp a gente combina tudo na
+            conversa.
           </p>
 
           <Link
