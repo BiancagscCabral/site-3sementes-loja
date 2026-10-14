@@ -70,6 +70,9 @@ model ProductVariant {
 model Order {
   id              String      @id @default(cuid())
   code            String      @unique // código curto que a cliente usa para acompanhar (ex: 3S-K7P2QX)
+  // Conta da cliente no Supabase Auth, quando ela estava logada ao comprar.
+  // Pedido feito sem conta fica nulo e é reconhecido depois pelo e-mail.
+  customerUserId  String?
   customerName    String
   customerEmail   String?
   customerPhone   String
@@ -92,6 +95,9 @@ model Order {
   totalCents Int
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+
+  @@index([customerUserId])
+  @@index([customerEmail])
 }
 
 model OrderItem {
@@ -104,6 +110,7 @@ model OrderItem {
   // ou sair do ar depois, o pedido antigo continua legível.
   productName    String
   variantName    String?
+  size           String? // P, M, G, GG — guardado separado porque muda o preço
   variantId      String?
   quantity       Int
   unitPriceCents Int // preço no momento da compra (não muda se o preço do produto mudar depois)

@@ -158,6 +158,10 @@ export default function Header() {
             <Link href="/#sobre" className="hover:text-accent">
               Sobre a 3sementes
             </Link>
+
+            <Link href="/minha-conta" className="hover:text-accent">
+              Minha conta
+            </Link>
           </nav>
 
           <div className="ml-auto flex items-center gap-4 sm:gap-[18px]">
@@ -215,6 +219,12 @@ export default function Header() {
               >
                 Falar no WhatsApp
               </a>
+              <Link
+                href="/minha-conta"
+                className="transition-colors hover:text-foreground"
+              >
+                Minha conta
+              </Link>
               <Link
                 href="/prazo-entrega"
                 className="transition-colors hover:text-foreground"

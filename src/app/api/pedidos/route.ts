@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { priceForSize } from "@/lib/catalog";
 import { passouDoLimite, quemEstaChamando } from "@/lib/limite";
+import { usuarioAtual } from "@/lib/supabase/servidor";
 
 type ItemRecebido = {
   slug: string;
@@ -69,6 +70,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ erro: "Dados incompletos." }, { status: 400 });
   }
 
+  // A conta vem da sessão no servidor, nunca do que o navegador mandou.
+  const usuario = await usuarioAtual();
+
   const produtos = await prisma.product.findMany({
     where: { slug: { in: itens.map((item) => String(item.slug)) } },
     select: { id: true, slug: true, name: true, priceCents: true },
@@ -86,6 +90,7 @@ export async function POST(request: Request) {
       productId: produto.id,
       productName: produto.name,
       variantName: item.variacao ? String(item.variacao) : null,
+      size: tamanho,
       quantity: quantidade,
       // O preço sai do banco, com o acréscimo do tamanho: assim ninguém fecha
       // um pedido com valor adulterado no navegador.
@@ -110,9 +115,10 @@ export async function POST(request: Request) {
     const pedido = await prisma.order.create({
       data: {
         code: await codigoInedito(),
+        customerUserId: usuario?.id ?? null,
         customerName: nome,
         customerPhone: telefone,
-        customerEmail: corpo.cliente?.email?.trim() || null,
+        customerEmail: corpo.cliente?.email?.trim() || usuario?.email || null,
         shippingAddress: corpo.endereco ?? {},
         deliveryMethod: corpo.entrega?.metodo ?? null,
         shippingService: corpo.entrega?.servico ?? null,

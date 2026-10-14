@@ -3,12 +3,12 @@
 import { useRouter } from "next/navigation";
 import { criarClienteNavegador } from "@/lib/supabase/navegador";
 
-export default function Sair() {
+export default function Sair({ destino = "/admin/entrar" }: { destino?: string }) {
   const router = useRouter();
 
   const sair = async () => {
     await criarClienteNavegador().auth.signOut();
-    router.replace("/admin/entrar");
+    router.replace(destino);
     router.refresh();
   };
 
