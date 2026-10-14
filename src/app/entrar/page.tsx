@@ -44,7 +44,7 @@ export default function EntrarClientePage() {
         </h1>
         <p className="mt-3 text-sm leading-7 text-muted">
           Mandamos um link para <strong>{email}</strong>. Abra o e-mail e clique
-          nele para entrar não precisa de senha.
+          nele para entrar. Não precisa de senha.
         </p>
         <p className="mt-3 text-[13px] leading-6 text-muted">
           Não chegou? Dê uma olhada no spam e, se não estiver lá,{" "}
