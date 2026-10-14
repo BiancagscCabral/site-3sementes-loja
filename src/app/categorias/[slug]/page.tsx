@@ -43,13 +43,6 @@ export default async function CategoryPage(
           </span>
         </div>
 
-        {brand.isFlores && (
-          <p className="mt-5 max-w-[58ch] text-base leading-8 text-muted">
-            Flores de chenille feitas à mão, do primeiro ateliê de flores
-            eternas de Recife.
-          </p>
-        )}
-
         {category.products.length === 0 ? (
           <p className="mt-8 text-sm text-muted">
             Ainda não temos produtos cadastrados nessa categoria.
