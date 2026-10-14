@@ -1,0 +1,18 @@
+Modelos de e-mail do Supabase, na identidade da 3sementes.
+
+Onde colar: Supabase > Authentication > Emails > Templates.
+Cada arquivo corresponde a um modelo:
+
+  confirmar-cadastro.html  ->  Confirm signup
+  link-de-acesso.html      ->  Magic Link
+  recuperar-senha.html     ->  Reset Password
+
+Como usar: abra o arquivo, copie TODO o conteudo e cole no campo
+"Message body" do modelo correspondente. Troque tambem o "Subject heading"
+pelo assunto sugerido no comeco de cada arquivo.
+
+As marcacoes {{ .ConfirmationURL }} e {{ .Email }} sao do Supabase: ele troca
+pelo link e pelo e-mail de verdade na hora do envio. Nao mexa nelas.
+
+E-mail nao tem as mesmas regras de um site: as cores vao escritas em cada
+etiqueta e o desenho usa tabelas, porque e o que o Gmail e o Outlook entendem.
