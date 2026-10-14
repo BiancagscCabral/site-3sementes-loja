@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     // O frete vai como uma linha a mais, para o total cobrado bater com o pedido.
     if (pedido.shippingCents && pedido.shippingCents > 0) {
       itens.push({
-        description: `Entrega — ${pedido.shippingService ?? "frete"}`,
+        description: `Entrega: ${pedido.shippingService ?? "frete"}`,
         quantity: 1,
         price: pedido.shippingCents,
       });

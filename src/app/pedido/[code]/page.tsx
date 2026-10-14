@@ -54,7 +54,7 @@ export default async function PedidoPage(props: PageProps<"/pedido/[code]">) {
         {pedido.shippingService && (
           <div className="mt-3 flex gap-3 border-t border-border pt-3 text-[15px]">
             <span className="flex-1 text-muted">
-              Entrega — {pedido.shippingService}
+              Entrega: {pedido.shippingService}
             </span>
             <span className="font-medium text-foreground">
               {pedido.shippingCents != null

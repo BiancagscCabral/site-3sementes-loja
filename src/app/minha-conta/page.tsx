@@ -115,8 +115,8 @@ export default async function MinhaContaPage() {
                 <p className="mt-1.5 text-[13px] text-muted">
                   Entrega: {pedido.shippingService}
                   {pedido.shippingCents != null
-                    ? ` — ${formatPriceCents(pedido.shippingCents)}`
-                    : " — a combinar"}
+                    ? `, ${formatPriceCents(pedido.shippingCents)}`
+                    : ", a combinar"}
                 </p>
               )}
 

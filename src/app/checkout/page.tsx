@@ -280,7 +280,7 @@ export default function CheckoutPage() {
     }
 
     const entregaEscolhida = uberFlashEscolhido
-      ? `Entrega: ${UBER_FLASH.nome} — valor a combinar`
+      ? `Entrega: ${UBER_FLASH.nome}, valor a combinar`
       : freteEscolhido
         ? `Entrega: ${freteEscolhido.nome}, ${freteEscolhido.prazoDias} dia(s) úteis — ${formatPriceCents(freteEscolhido.precoCents)}`
         : null;

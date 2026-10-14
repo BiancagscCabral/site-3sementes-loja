@@ -166,9 +166,9 @@ export default async function AdminPage() {
                       Entrega:{" "}
                       {pedido.shippingService ?? "não escolhida"}
                       {pedido.shippingCents != null
-                        ? ` — ${formatPriceCents(pedido.shippingCents)}`
+                        ? `, ${formatPriceCents(pedido.shippingCents)}`
                         : pedido.deliveryMethod === "uber-flash"
-                          ? " — a combinar"
+                          ? ", a combinar"
                           : ""}
                     </span>
                   </div>
