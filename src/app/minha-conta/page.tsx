@@ -57,11 +57,15 @@ export default async function MinhaContaPage() {
     take: 50,
   });
 
+  // O nome vem do pedido mais recente: a conta é criada só com o e-mail, então
+  // é a única forma de a gente saber como a cliente se chama.
+  const primeiroNome = pedidos[0]?.customerName.trim().split(/\s+/)[0] ?? null;
+
   return (
     <div className="mx-auto max-w-3xl px-5 py-10 sm:px-6 sm:py-14">
       <div className="flex flex-wrap items-baseline gap-4 border-b-2 border-foreground pb-2.5">
         <h1 className="text-[15px] font-bold uppercase tracking-[0.18em]">
-          Meus pedidos
+          {primeiroNome ? `Oi, ${primeiroNome}` : "Minha conta"}
         </h1>
         <span className="text-[13px] text-muted">{usuario.email}</span>
         <div className="ml-auto">
@@ -72,9 +76,14 @@ export default async function MinhaContaPage() {
       {pedidos.length === 0 ? (
         <div className="mt-8">
           <p className="text-sm leading-7 text-muted">
-            Você ainda não tem pedidos por aqui. Se já comprou com a gente antes
-            de criar a conta, use o mesmo e-mail que passou no pedido que eles
-            aparecem automaticamente.
+            Ainda não há pedidos nesta conta. Os seus aparecem aqui assim que
+            você comprar.
+          </p>
+          <p className="mt-3 text-[13px] leading-6 text-muted">
+            Já comprou com a gente antes de criar a conta? Entre com o mesmo
+            e-mail que você informou no pedido que ele aparece sozinho. Se tiver
+            usado outro e-mail, ou nenhum, chame a gente no WhatsApp que a gente
+            acha pelo seu telefone.
           </p>
           <Link
             href="/#catalogo"
