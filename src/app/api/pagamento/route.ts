@@ -4,6 +4,7 @@ import { passouDoLimite, quemEstaChamando } from "@/lib/limite";
 import { criarPedido, ErroDePedido, type CorpoDoPedido } from "@/lib/pedidos";
 import {
   criarLinkDePagamento,
+  diagnosticoDoHandle,
   ErroDePagamento,
   pagamentoConfigurado,
 } from "@/lib/infinitepay";
@@ -19,7 +20,10 @@ export async function POST(request: Request) {
   }
 
   if (!pagamentoConfigurado()) {
-    return NextResponse.json({ configurado: false }, { status: 503 });
+    return NextResponse.json(
+      { configurado: false, ...diagnosticoDoHandle() },
+      { status: 503 },
+    );
   }
 
   let corpo: CorpoDoPedido;

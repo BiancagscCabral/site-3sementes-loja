@@ -27,8 +27,32 @@ export type DadosDoLink = {
 export class ErroDePagamento extends Error {}
 
 export function pagamentoConfigurado() {
-  const handle = (process.env.INFINITEPAY_HANDLE ?? "").trim();
-  return handle.length > 2 && !/^(sua|seu|cole|troque)/i.test(handle);
+  return diagnosticoDoHandle().ok;
+}
+
+// Diz POR QUE o pagamento está desligado, sem expor o valor. O handle não é
+// segredo (ele aparece no endereço de pagamento que a cliente vê), mas uma
+// rota que devolve variável de ambiente é um péssimo hábito: aqui vão só o
+// tamanho e as três primeiras letras, que bastam para achar o problema.
+export function diagnosticoDoHandle() {
+  const bruto = process.env.INFINITEPAY_HANDLE;
+  if (bruto == null) {
+    return { ok: false, motivo: "variavel ausente neste ambiente" as const };
+  }
+
+  const handle = bruto.trim();
+  if (handle.length <= 2) {
+    return { ok: false, motivo: "variavel vazia ou curta demais" as const, tamanho: handle.length };
+  }
+  if (/^(sua|seu|cole|troque)/i.test(handle)) {
+    return {
+      ok: false,
+      motivo: "ainda com o valor de exemplo" as const,
+      tamanho: handle.length,
+      comeca: handle.slice(0, 3),
+    };
+  }
+  return { ok: true as const, tamanho: handle.length, comeca: handle.slice(0, 3) };
 }
 
 function enderecoDoSite() {
