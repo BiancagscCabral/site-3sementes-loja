@@ -282,7 +282,7 @@ export default function CheckoutPage() {
     const entregaEscolhida = uberFlashEscolhido
       ? `Entrega: ${UBER_FLASH.nome}, valor a combinar`
       : freteEscolhido
-        ? `Entrega: ${freteEscolhido.nome}, ${freteEscolhido.prazoDias} dia(s) úteis — ${formatPriceCents(freteEscolhido.precoCents)}`
+        ? `Entrega: ${freteEscolhido.nome}, ${freteEscolhido.prazoDias} dia(s) úteis, ${formatPriceCents(freteEscolhido.precoCents)}`
         : null;
 
     const message = [
@@ -294,7 +294,7 @@ export default function CheckoutPage() {
         (item) =>
           `• ${item.quantity}x ${item.name}${
             item.variantName ? ` (${item.variantName})` : ""
-          } — ${formatPriceCents(item.priceCents * item.quantity)}`,
+          }: ${formatPriceCents(item.priceCents * item.quantity)}`,
       ),
       "",
       `Total dos produtos: ${formatPriceCents(totalCents)}`,
