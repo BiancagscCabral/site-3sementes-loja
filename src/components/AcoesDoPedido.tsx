@@ -2,6 +2,15 @@
 
 import { useState, useTransition } from "react";
 import { excluirPedido, mudarStatusDoPedido } from "@/app/admin/acoes";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const STATUS = [
   { valor: "AWAITING_CONTACT", nome: "Aguardando contato" },
@@ -52,21 +61,27 @@ export default function AcoesDoPedido({
 
   return (
     <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-border pt-3">
-      <label className="flex items-center gap-2 text-[13px] text-muted">
-        Situação
-        <select
-          value={status}
-          disabled={salvando}
-          onChange={(evento) => trocarStatus(evento.target.value)}
-          className="cursor-pointer border border-border bg-surface px-2.5 py-1.5 text-[13px] text-foreground outline-none transition-colors focus:border-accent disabled:opacity-60"
-        >
-          {STATUS.map((item) => (
-            <option key={item.valor} value={item.valor}>
-              {item.nome}
-            </option>
-          ))}
-        </select>
-      </label>
+      <div className="flex items-center gap-2 text-[13px] text-muted">
+        <span id={`situacao-${id}`}>Situação</span>
+        <Select value={status} onValueChange={trocarStatus} disabled={salvando}>
+          <SelectTrigger
+            aria-labelledby={`situacao-${id}`}
+            className="w-[200px]"
+          >
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Situação do pedido</SelectLabel>
+              {STATUS.map((item) => (
+                <SelectItem key={item.valor} value={item.valor}>
+                  {item.nome}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
 
       <div className="ml-auto flex items-center gap-3">
         {erro && <span className="text-[13px] text-danger">{erro}</span>}

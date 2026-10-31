@@ -161,7 +161,7 @@ export default async function AdminPage() {
                       {pedido.items.map((item) => (
                         <li key={item.id}>
                           {item.quantity}x {item.productName}
-                          {item.variantName ? ` (${item.variantName})` : ""} —{" "}
+                          {item.variantName ? ` (${item.variantName})` : ""}:{" "}
                           {formatPriceCents(item.unitPriceCents * item.quantity)}
                         </li>
                       ))}
