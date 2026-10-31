@@ -211,22 +211,22 @@ export default function ProductPurchase({
       </div>
 
       <div className="mt-5 flex flex-col gap-3">
+        <button
+          type="button"
+          onClick={adicionar}
+          className="flex h-[54px] cursor-pointer items-center justify-center bg-accent text-[15px] font-semibold text-accent-foreground transition-opacity hover:opacity-90"
+        >
+          Adicionar à sacola
+        </button>
         <a
           href={getWhatsAppUrl(message)}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex h-[54px] items-center justify-center gap-2.5 bg-accent text-[15px] font-semibold text-accent-foreground transition-opacity hover:opacity-90"
+          className="flex h-[54px] items-center justify-center gap-2.5 border border-primary text-[15px] font-medium text-primary transition-colors hover:bg-secondary"
         >
           <WhatsAppIcon />
-          Comprar pelo WhatsApp
+          Falar no WhatsApp
         </a>
-        <button
-          type="button"
-          onClick={adicionar}
-          className="flex h-[54px] items-center justify-center border border-primary text-[15px] font-medium text-primary transition-colors hover:bg-secondary"
-        >
-          Adicionar à sacola
-        </button>
         {added && (
           <p className="text-center text-[13px] text-muted">
             Adicionado.{" "}

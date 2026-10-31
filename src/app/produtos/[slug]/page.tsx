@@ -73,7 +73,7 @@ function Assurance({
 }: {
   icon: React.ReactNode;
   title: string;
-  note: string;
+  note?: string;
 }) {
   return (
     <div className="flex items-start gap-3">
@@ -82,7 +82,7 @@ function Assurance({
       </span>
       <span>
         <span className="block text-[13px] font-semibold">{title}</span>
-        <span className="block text-[13px] text-muted">{note}</span>
+        {note && <span className="block text-[13px] text-muted">{note}</span>}
       </span>
     </div>
   );
@@ -192,7 +192,6 @@ export default async function ProductPage(
                 <Assurance
                   icon={<TruckIcon />}
                   title="Envio para todo o Brasil"
-                  note="Combine o frete pelo WhatsApp"
                 />
               </div>
             </div>
