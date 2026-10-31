@@ -105,7 +105,7 @@ export default function EntrarPage() {
 
     const supabase = criarClienteNavegador();
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}/admin/nova-senha`,
+      redirectTo: `${window.location.origin}/auth/callback?next=/admin/nova-senha`,
     });
 
     setCarregando(false);

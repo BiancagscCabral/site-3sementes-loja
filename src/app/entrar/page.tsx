@@ -20,7 +20,7 @@ export default function EntrarClientePage() {
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim(),
       options: {
-        emailRedirectTo: `${window.location.origin}/minha-conta`,
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=/minha-conta`,
       },
     });
 
