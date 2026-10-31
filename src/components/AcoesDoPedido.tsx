@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { podeExcluir, statusPermitidos } from "@/lib/pedidos";
 
 const STATUS = [
   { valor: "AWAITING_CONTACT", nome: "Aguardando contato" },
@@ -32,6 +33,12 @@ export default function AcoesDoPedido({
   codigo: string;
   foiPago: boolean;
 }) {
+  const permitidos = statusPermitidos({
+    paymentStatus: foiPago ? "PAID" : "PENDING",
+  });
+  const opcoes = STATUS.filter((item) => permitidos.includes(item.valor));
+  const excluivel = podeExcluir({ paymentStatus: foiPago ? "PAID" : "PENDING" });
+
   const [confirmando, setConfirmando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [salvando, iniciarSalvamento] = useTransition();
@@ -73,7 +80,7 @@ export default function AcoesDoPedido({
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Situação do pedido</SelectLabel>
-              {STATUS.map((item) => (
+              {opcoes.map((item) => (
                 <SelectItem key={item.valor} value={item.valor}>
                   {item.nome}
                 </SelectItem>
@@ -86,12 +93,14 @@ export default function AcoesDoPedido({
       <div className="ml-auto flex items-center gap-3">
         {erro && <span className="text-[13px] text-danger">{erro}</span>}
 
-        {confirmando ? (
+        {!excluivel ? (
+          <span className="text-[13px] text-muted">
+            Pedido pago: não dá para excluir
+          </span>
+        ) : confirmando ? (
           <>
             <span className="text-[13px] text-danger">
-              {foiPago
-                ? `Apagar ${codigo}? Ele foi PAGO — some o registro da venda.`
-                : `Apagar ${codigo} de vez?`}
+              Apagar {codigo} de vez?
             </span>
             <button
               type="button"

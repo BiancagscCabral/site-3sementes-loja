@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { ehAdmin, usuarioAtual } from "@/lib/supabase/servidor";
+import { podeExcluir, statusPermitidos } from "@/lib/pedidos";
 
 // Ações do painel. Rodam no servidor, e cada uma confere de novo quem está
 // pedindo: o navegador não decide quem é administradora.
@@ -31,6 +32,20 @@ export async function mudarStatusDoPedido(id: string, status: string) {
     throw new Error("Status inválido.");
   }
 
+  const pedido = await prisma.order.findUnique({
+    where: { id },
+    select: { paymentStatus: true },
+  });
+  if (!pedido) throw new Error("Pedido não encontrado.");
+
+  // A tela já esconde o que não pode, mas quem decide é o servidor: botão
+  // escondido continua sendo só um botão escondido.
+  if (!statusPermitidos(pedido).includes(status)) {
+    throw new Error(
+      "Pedido pago não volta para uma situação de não pago.",
+    );
+  }
+
   await prisma.order.update({
     where: { id },
     data: { status: status as Status },
@@ -44,6 +59,18 @@ export async function mudarStatusDoPedido(id: string, status: string) {
 // registro de venda —, por isso a tela avisa antes.
 export async function excluirPedido(id: string) {
   await exigirAdmin();
+
+  const pedido = await prisma.order.findUnique({
+    where: { id },
+    select: { paymentStatus: true },
+  });
+  if (!pedido) throw new Error("Pedido não encontrado.");
+
+  if (!podeExcluir(pedido)) {
+    throw new Error(
+      "Pedido pago não pode ser excluído. Use \"Cancelado\" se a venda não foi adiante.",
+    );
+  }
 
   await prisma.order.delete({ where: { id } });
 
