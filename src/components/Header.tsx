@@ -54,6 +54,24 @@ function ChevronIcon({ aberto }: { aberto: boolean }) {
   );
 }
 
+function SacolaIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      className="h-[22px] w-[22px]"
+    >
+      <path
+        d="M5.4 8h13.2l1 12.2a1 1 0 0 1-1 1.08H5.4a1 1 0 0 1-1-1.08L5.4 8Z"
+        strokeLinejoin="round"
+      />
+      <path d="M8.8 10.4V6.6a3.2 3.2 0 0 1 6.4 0v3.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function SearchForm({ autoFocusable = false }: { autoFocusable?: boolean }) {
   return (
     <form
@@ -123,6 +141,10 @@ export default function Header() {
           </Link>
 
           <nav className="hidden items-center gap-7 text-sm font-bold uppercase tracking-[0.06em] lg:ml-8 lg:flex">
+            <Link href="/#sobre" className="hover:text-accent">
+              Sobre a 3sementes
+            </Link>
+
             <div ref={categoriasRef} className="relative">
               <button
                 type="button"
@@ -154,14 +176,6 @@ export default function Header() {
                 </div>
               )}
             </div>
-
-            <Link href="/#sobre" className="hover:text-accent">
-              Sobre a 3sementes
-            </Link>
-
-            <Link href="/minha-conta" className="hover:text-accent">
-              Minha conta
-            </Link>
           </nav>
 
           <div className="ml-auto flex items-center gap-4 sm:gap-[18px]">
@@ -169,10 +183,23 @@ export default function Header() {
               <SearchForm />
             </div>
             <Link
-              href="/carrinho"
-              className="text-[13px] font-bold text-foreground hover:text-accent"
+              href="/minha-conta"
+              className="hidden text-[13px] font-bold uppercase tracking-[0.06em] text-foreground hover:text-accent lg:block"
             >
-              Sacola{ready && itemCount > 0 ? ` (${itemCount})` : " (0)"}
+              Minha conta
+            </Link>
+
+            <Link
+              href="/carrinho"
+              aria-label={`Sacola com ${ready ? itemCount : 0} ${
+                ready && itemCount === 1 ? "peça" : "peças"
+              }`}
+              className="flex flex-col items-center leading-none text-foreground transition-colors hover:text-accent"
+            >
+              <SacolaIcon />
+              <span className="mt-0.5 text-[12px] font-bold tabular-nums">
+                ({ready ? itemCount : 0})
+              </span>
             </Link>
             <button
               type="button"
