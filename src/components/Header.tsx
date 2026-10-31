@@ -90,7 +90,7 @@ function SearchForm({ autoFocusable = false }: { autoFocusable?: boolean }) {
         name="q"
         autoFocus={autoFocusable}
         placeholder="bracelete, guia, buquê"
-        className="w-full bg-transparent text-[13px] text-foreground outline-none placeholder:text-muted sm:w-[180px]"
+        className="w-full min-w-0 bg-transparent text-[13px] text-foreground outline-none placeholder:text-muted"
       />
     </form>
   );
@@ -130,7 +130,7 @@ export default function Header() {
       </div>
 
       <header className="border-b border-border bg-background">
-        <div className="mx-auto flex max-w-5xl items-center gap-6 px-5 py-4 sm:px-6 sm:py-5">
+        <div className="mx-auto flex max-w-5xl items-center gap-5 px-5 py-3.5 sm:px-6 sm:py-4">
           <Link href="/" className="flex shrink-0 items-baseline gap-2.5">
             <span className="font-display text-[26px] font-bold leading-none tracking-tight text-foreground sm:text-[30px]">
               3sementes
@@ -140,7 +140,7 @@ export default function Header() {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-7 text-sm font-bold uppercase tracking-[0.06em] lg:ml-8 lg:flex">
+          <nav className="hidden items-center gap-6 whitespace-nowrap text-sm font-bold uppercase tracking-[0.06em] lg:ml-7 lg:flex">
             <Link href="/#sobre" className="hover:text-accent">
               Sobre a 3sementes
             </Link>
@@ -178,17 +178,10 @@ export default function Header() {
             </div>
           </nav>
 
-          <div className="ml-auto flex items-center gap-4 sm:gap-[18px]">
-            <div className="hidden sm:block">
+          <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-4 sm:gap-5">
+            <div className="hidden min-w-0 flex-1 sm:block sm:max-w-[260px]">
               <SearchForm />
             </div>
-            <Link
-              href="/minha-conta"
-              className="hidden text-[13px] font-bold uppercase tracking-[0.06em] text-foreground hover:text-accent lg:block"
-            >
-              Minha conta
-            </Link>
-
             <Link
               href="/carrinho"
               aria-label={`Sacola com ${ready ? itemCount : 0} ${
@@ -197,10 +190,18 @@ export default function Header() {
               className="flex flex-col items-center leading-none text-foreground transition-colors hover:text-accent"
             >
               <SacolaIcon />
-              <span className="mt-0.5 text-[12px] font-bold tabular-nums">
-                ({ready ? itemCount : 0})
+              <span className="mt-1 whitespace-nowrap text-[12px] font-bold tabular-nums">
+                Sacola ({ready ? itemCount : 0})
               </span>
             </Link>
+
+            <Link
+              href="/minha-conta"
+              className="hidden whitespace-nowrap text-[13px] font-bold uppercase tracking-[0.06em] text-foreground hover:text-accent lg:block"
+            >
+              Minha conta
+            </Link>
+
             <button
               type="button"
               onClick={() => setMenuOpen((open) => !open)}
