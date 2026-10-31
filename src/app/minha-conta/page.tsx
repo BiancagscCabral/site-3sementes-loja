@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatPriceCents } from "@/lib/format";
 import { usuarioAtual } from "@/lib/supabase/servidor";
+import { filtroDePedidosDaCliente } from "@/lib/pedidos";
 import RepetirPedido from "@/components/RepetirPedido";
 import Sair from "@/components/Sair";
 
@@ -37,6 +38,8 @@ export default async function MinhaContaPage() {
         { customerUserId: usuario.id },
         usuario.email ? { customerEmail: usuario.email } : { id: "" },
       ],
+      // Pagamento começado e abandonado não polui o histórico dela.
+      ...filtroDePedidosDaCliente(),
     },
     orderBy: { createdAt: "desc" },
     include: {

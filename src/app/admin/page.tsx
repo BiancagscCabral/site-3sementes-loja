@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatPriceCents } from "@/lib/format";
 import { ehAdmin, usuarioAtual } from "@/lib/supabase/servidor";
+import { pedidoExpirou } from "@/lib/pedidos";
 import AtualizaSozinho from "@/components/AtualizaSozinho";
 import Sair from "@/components/Sair";
 
@@ -118,7 +119,9 @@ export default async function AdminPage() {
                     {pedido.code}
                   </span>
                   <span className="border border-border px-2 py-0.5 text-[12px] text-muted">
-                    {STATUS[pedido.status] ?? pedido.status}
+                    {pedidoExpirou(pedido)
+                      ? "Pagamento abandonado"
+                      : (STATUS[pedido.status] ?? pedido.status)}
                   </span>
                   <span className="text-[13px] text-muted">
                     {quando(pedido.createdAt)}

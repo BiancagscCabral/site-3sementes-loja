@@ -106,3 +106,28 @@ export async function criarPedido(
     include: { items: true },
   });
 }
+
+// Horas que um pedido fica esperando o pagamento antes de ser considerado
+// desistência. O link do Pix da InfinitePay vence bem antes disso.
+const HORAS_ATE_EXPIRAR = 24;
+
+// Carrinho que foi até o pagamento e não voltou. Some do histórico da cliente,
+// mas continua no banco e visível no painel: é dado de venda perdida.
+//
+// Cuidado deliberado: isto NÃO alcança os pedidos de WhatsApp
+// (AWAITING_CONTACT). Eles nunca constam como pagos aqui, porque o pagamento
+// acontece na conversa — expirá-los apagaria o canal que mais vende.
+export function filtroDePedidosDaCliente() {
+  const limite = new Date(Date.now() - HORAS_ATE_EXPIRAR * 60 * 60 * 1000);
+  return {
+    NOT: {
+      AND: [{ status: "AWAITING_PAYMENT" as const }, { createdAt: { lt: limite } }],
+    },
+  };
+}
+
+export function pedidoExpirou(pedido: { status: string; createdAt: Date }) {
+  if (pedido.status !== "AWAITING_PAYMENT") return false;
+  const horas = (Date.now() - pedido.createdAt.getTime()) / (1000 * 60 * 60);
+  return horas > HORAS_ATE_EXPIRAR;
+}
