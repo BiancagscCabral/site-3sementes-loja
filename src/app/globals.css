@@ -17,7 +17,7 @@
   --bloom: #c4611a;
   --danger: #a32b1c;
   --hero: #8e8a69;
-  --display-font: var(--font-libre);
+  --display-font: var(--font-Inter);
 }
 
 /* 3sflores: rosa #d08678 é decorativo; texto e botões usam um tom mais fechado dele para manter contraste legível */

@@ -642,7 +642,7 @@ export default function CheckoutPage() {
 
           <Link
             href="/carrinho"
-            className="mt-3 block text-center text-[13px] text-muted transition-colors hover:text-foreground"
+            className="mt-3 block text-center text-[13px] text-muted underline underline-offset-4 transition-colors hover:text-foreground"
           >
             Voltar para a sacola
           </Link>
