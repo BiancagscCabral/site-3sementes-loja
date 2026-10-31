@@ -5,6 +5,7 @@ import { ehAdmin, usuarioAtual } from "@/lib/supabase/servidor";
 import { pedidoExpirou } from "@/lib/pedidos";
 import AtualizaSozinho from "@/components/AtualizaSozinho";
 import Sair from "@/components/Sair";
+import AcoesDoPedido from "@/components/AcoesDoPedido";
 
 export const dynamic = "force-dynamic";
 
@@ -12,8 +13,8 @@ const STATUS: Record<string, string> = {
   AWAITING_CONTACT: "Aguardando contato",
   AWAITING_PAYMENT: "Aguardando pagamento",
   PAID: "Pago",
-  SHIPPED: "Enviado",
-  DELIVERED: "Entregue",
+  SHIPPED: "Postado",
+  DELIVERED: "Finalizado",
   CANCELLED: "Cancelado",
 };
 
@@ -176,6 +177,13 @@ export default async function AdminPage() {
                     </span>
                   </div>
                 </div>
+
+                <AcoesDoPedido
+                  id={pedido.id}
+                  status={pedido.status}
+                  codigo={pedido.code}
+                  foiPago={pedido.paymentStatus === "PAID"}
+                />
               </li>
             );
           })}
