@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { ehAdmin, usuarioAtual } from "@/lib/supabase/servidor";
-import { podeExcluir, statusPermitidos } from "@/lib/pedidos";
+import { podeExcluir, statusPermitidos } from "@/lib/regras-pedido";
 
 // Ações do painel. Rodam no servidor, e cada uma confere de novo quem está
 // pedindo: o navegador não decide quem é administradora.

@@ -107,60 +107,10 @@ export async function criarPedido(
   });
 }
 
-// Horas que um pedido fica esperando o pagamento antes de ser considerado
-// desistência. O link do Pix da InfinitePay vence bem antes disso.
-const HORAS_ATE_EXPIRAR = 24;
-
-// Carrinho que foi até o pagamento e não voltou. Some do histórico da cliente,
-// mas continua no banco e visível no painel: é dado de venda perdida.
-//
-// Cuidado deliberado: isto NÃO alcança os pedidos de WhatsApp
-// (AWAITING_CONTACT). Eles nunca constam como pagos aqui, porque o pagamento
-// acontece na conversa — expirá-los apagaria o canal que mais vende.
-export function filtroDePedidosDaCliente() {
-  const limite = new Date(Date.now() - HORAS_ATE_EXPIRAR * 60 * 60 * 1000);
-  return {
-    NOT: {
-      AND: [{ status: "AWAITING_PAYMENT" as const }, { createdAt: { lt: limite } }],
-    },
-  };
-}
-
-export function pedidoExpirou(pedido: { status: string; createdAt: Date }) {
-  if (pedido.status !== "AWAITING_PAYMENT") return false;
-  const horas = (Date.now() - pedido.createdAt.getTime()) / (1000 * 60 * 60);
-  return horas > HORAS_ATE_EXPIRAR;
-}
-
-// Regras de proteção do pedido pago.
-//
-// Depois que o dinheiro entra, o pedido deixa de ser rascunho e passa a ser
-// registro de venda. O que ele ainda precisa é andar — pago, postado,
-// finalizado. O que ele não pode é ser apagado nem voltar a parecer que nunca
-// foi pago.
-export type PedidoProtegido = { paymentStatus: string };
-
-export function pedidoFoiPago(pedido: PedidoProtegido) {
-  return pedido.paymentStatus === "PAID";
-}
-
-export function podeExcluir(pedido: PedidoProtegido) {
-  return !pedidoFoiPago(pedido);
-}
-
-// Em pedido pago, sumem as situações que o fariam parecer não pago.
-// "Cancelado" continua disponível: estorno acontece, e é melhor registrar do
-// que deixar você sem saída.
-export function statusPermitidos(pedido: PedidoProtegido) {
-  if (!pedidoFoiPago(pedido)) {
-    return [
-      "AWAITING_CONTACT",
-      "AWAITING_PAYMENT",
-      "PAID",
-      "SHIPPED",
-      "DELIVERED",
-      "CANCELLED",
-    ];
-  }
-  return ["PAID", "SHIPPED", "DELIVERED", "CANCELLED"];
-}
+export {
+  filtroDePedidosDaCliente,
+  pedidoExpirou,
+  pedidoFoiPago,
+  podeExcluir,
+  statusPermitidos,
+} from "@/lib/regras-pedido";

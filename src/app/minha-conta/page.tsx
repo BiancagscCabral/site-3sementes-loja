@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatPriceCents } from "@/lib/format";
 import { usuarioAtual } from "@/lib/supabase/servidor";
-import { filtroDePedidosDaCliente } from "@/lib/pedidos";
+import { filtroDePedidosDaCliente } from "@/lib/regras-pedido";
 import RepetirPedido from "@/components/RepetirPedido";
 import Sair from "@/components/Sair";
 

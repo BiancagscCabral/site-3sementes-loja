@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { podeExcluir, statusPermitidos } from "@/lib/pedidos";
+import { podeExcluir, statusPermitidos } from "@/lib/regras-pedido";
 
 const STATUS = [
   { valor: "AWAITING_CONTACT", nome: "Aguardando contato" },

@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatPriceCents } from "@/lib/format";
 import { ehAdmin, usuarioAtual } from "@/lib/supabase/servidor";
-import { pedidoExpirou } from "@/lib/pedidos";
+import { pedidoExpirou } from "@/lib/regras-pedido";
 import AtualizaSozinho from "@/components/AtualizaSozinho";
 import Sair from "@/components/Sair";
 import AcoesDoPedido from "@/components/AcoesDoPedido";
