@@ -5,7 +5,11 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { createClient } from "@supabase/supabase-js";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { slugifyOption } from "../src/lib/catalog";
-import { BUCKET_FOTOS, urlPublicaDaFoto } from "../src/lib/storage";
+import {
+  BUCKET_FOTOS,
+  ehFotoEnviadaPeloPainel,
+  urlPublicaDaFoto,
+} from "../src/lib/storage";
 
 // Sobe as fotos de public/img/products para o Supabase Storage e liga cada uma
 // ao produto do banco.
@@ -211,6 +215,7 @@ async function main() {
   }
 
   let linked = 0;
+  let preservadas = 0;
 
   for (const [slug, images] of bySlug) {
     const product = await prisma.product.findUnique({ where: { slug } });
@@ -228,7 +233,20 @@ async function main() {
         ordemDaOpcao(a) - ordemDaOpcao(b) || a.position - b.position,
     );
 
-    await prisma.productImage.deleteMany({ where: { productId: product.id } });
+    // Este comando reconstrói as fotos a partir da pasta local, então ele só
+    // pode apagar o que a pasta local sabe recriar. Foto enviada pelo painel
+    // não tem original aqui: apagá-la seria perdê-la do site de vez.
+    const jaNoBanco = await prisma.productImage.findMany({
+      where: { productId: product.id },
+      select: { id: true, url: true },
+    });
+    const doPainel = jaNoBanco.filter((f) => ehFotoEnviadaPeloPainel(f.url));
+    const daPasta = jaNoBanco.filter((f) => !ehFotoEnviadaPeloPainel(f.url));
+
+    await prisma.productImage.deleteMany({
+      where: { id: { in: daPasta.map((f) => f.id) } },
+    });
+
     await prisma.productImage.createMany({
       data: images.map((image, index) => ({
         productId: product.id,
@@ -241,15 +259,32 @@ async function main() {
       })),
     });
 
+    // As do painel ficam depois das da pasta, mantendo a ordem entre elas.
+    for (const [posicao, foto] of doPainel.entries()) {
+      await prisma.productImage.update({
+        where: { id: foto.id },
+        data: { position: images.length + posicao },
+      });
+    }
+
     linked += images.length;
+    preservadas += doPainel.length;
     const comOpcao = images.filter((i) => i.optionName).length;
     console.log(
       `${product.name}: ${images.length} foto(s)` +
-        (comOpcao ? ` (${comOpcao} ligada(s) a uma opção)` : ""),
+        (comOpcao ? ` (${comOpcao} ligada(s) a uma opção)` : "") +
+        (doPainel.length
+          ? ` + ${doPainel.length} do painel, mantida(s)`
+          : ""),
     );
   }
 
-  console.log(`\n${linked} foto(s) ligadas a ${bySlug.size - orphans.length} produto(s).`);
+  console.log(
+    `\n${linked} foto(s) da pasta ligadas a ${bySlug.size - orphans.length} produto(s).` +
+      (preservadas
+        ? `\n${preservadas} foto(s) enviadas pelo painel foram mantidas.`
+        : ""),
+  );
 
   if (orphans.length) {
     console.log("\nArquivos sem produto correspondente:");

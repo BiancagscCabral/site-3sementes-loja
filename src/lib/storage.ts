@@ -29,3 +29,48 @@ export function urlPublicaDaFoto(caminho: string) {
 export function ehFotoNoStorage(url: string) {
   return /^https?:\/\//.test(url);
 }
+
+// As fotos enviadas pelo painel moram numa pasta só delas dentro do bucket.
+//
+// Isso não é organização: é o que impede o "npm run fotos" de apagá-las. Ele
+// reconstrói as fotos a partir da pasta local, e sem essa separação uma foto
+// que você mandou do celular sumiria do site na próxima vez que alguém
+// rodasse o comando.
+export const PASTA_ENVIADAS = "enviadas";
+
+export function ehFotoEnviadaPeloPainel(url: string) {
+  return caminhoDentroDoBucket(url)?.startsWith(`${PASTA_ENVIADAS}/`) ?? false;
+}
+
+// De volta da URL para o caminho no bucket, que é o que a API de remoção pede.
+// Devolve null se a URL não for deste bucket.
+export function caminhoDentroDoBucket(url: string) {
+  const marca = `/storage/v1/object/public/${BUCKET_FOTOS}/`;
+  const corte = url.indexOf(marca);
+  if (corte === -1) return null;
+  return decodeURIComponent(url.slice(corte + marca.length));
+}
+
+const EXTENSOES_ACEITAS = new Set(["jpg", "jpeg", "png", "webp", "avif"]);
+
+export function extensaoAceita(nomeDoArquivo: string) {
+  const extensao = nomeDoArquivo.split(".").pop()?.toLowerCase() ?? "";
+  return EXTENSOES_ACEITAS.has(extensao) ? extensao : null;
+}
+
+// Nome único e previsível para a foto que chega pelo painel. O horário na
+// frente evita que duas fotos do mesmo produto briguem pelo mesmo nome, e
+// manter o slug na pasta deixa o bucket legível por produto.
+export function caminhoDaFotoEnviada(slug: string, nomeDoArquivo: string) {
+  const extensao = extensaoAceita(nomeDoArquivo);
+  if (!extensao) throw new Error(`Extensão não aceita: ${nomeDoArquivo}`);
+
+  const agora = new Date()
+    .toISOString()
+    .replace(/[-:T]/g, "")
+    .slice(0, 14);
+
+  return `${PASTA_ENVIADAS}/${slug}/${agora}-${Math.random()
+    .toString(36)
+    .slice(2, 8)}.${extensao}`;
+}
