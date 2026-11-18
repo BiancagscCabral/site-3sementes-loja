@@ -65,7 +65,7 @@ export default function ProductCard({
         </span>
         <span
           aria-hidden
-          className="card-icon hidden h-8 w-8 shrink-0 sm:flex items-center justify-center rounded-full bg-accent text-accent-foreground"
+          className="card-icon hidden h-8 w-8 shrink-0 lg:flex items-center justify-center rounded-full bg-accent text-accent-foreground"
         >
           <ArrowIcon />
         </span>

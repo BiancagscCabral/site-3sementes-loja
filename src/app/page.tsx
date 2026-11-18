@@ -130,7 +130,7 @@ export default async function Home() {
                 </div>
 
                 <div className="mt-4">
-                  <ProductCarousel rotulo={categoria.name}>
+                  <ProductCarousel rotulo={categoria.name} automatico>
                     {categoria.products.slice(0, 12).map((produto) => (
                       <div
                         key={produto.slug}
