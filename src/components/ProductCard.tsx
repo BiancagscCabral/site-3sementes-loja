@@ -56,7 +56,7 @@ export default function ProductCard({
 
       <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-foreground/90 via-foreground/55 to-transparent p-4 pt-12">
         <span className="min-w-0">
-          <span className="line-clamp-2 block text-[15px] font-bold leading-snug text-background">
+          <span className="line-clamp-2 text-[15px] font-bold leading-snug text-background">
             {name}
           </span>
           <span className="mt-0.5 block text-sm font-medium text-background/85">
@@ -65,7 +65,7 @@ export default function ProductCard({
         </span>
         <span
           aria-hidden
-          className="card-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground"
+          className="card-icon hidden h-8 w-8 shrink-0 sm:flex items-center justify-center rounded-full bg-accent text-accent-foreground"
         >
           <ArrowIcon />
         </span>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import FlipCard from "@/components/FlipCard";
+import ProductCarousel from "@/components/ProductCarousel";
 import HeroCarousel from "@/components/HeroCarousel";
 import { getCategoryBrand } from "@/lib/catalog";
 import { prisma } from "@/lib/prisma";
@@ -128,18 +129,25 @@ export default async function Home() {
                   </Link>
                 </div>
 
-                <div className="mt-7 grid grid-cols-2 gap-5 sm:grid-cols-4 sm:gap-[26px]">
-                  {categoria.products.slice(0, 4).map((produto) => (
-                    <ProductCard
-                      key={produto.slug}
-                      slug={produto.slug}
-                      name={produto.name}
-                      priceCents={produto.priceCents}
-                      image={produto.images[0]}
-                      logo={brand.logo}
-                      markClass={brand.markClass}
-                    />
-                  ))}
+                <div className="mt-4">
+                  <ProductCarousel rotulo={categoria.name}>
+                    {categoria.products.slice(0, 12).map((produto) => (
+                      <div
+                        key={produto.slug}
+                        className="w-[44%] shrink-0 snap-start sm:w-[calc((100%-78px)/4)]"
+                      >
+                        <ProductCard
+                          slug={produto.slug}
+                          name={produto.name}
+                          priceCents={produto.priceCents}
+                          image={produto.images[0]}
+                          logo={brand.logo}
+                          markClass={brand.markClass}
+                          sizes="(max-width: 640px) 44vw, 240px"
+                        />
+                      </div>
+                    ))}
+                  </ProductCarousel>
                 </div>
               </div>
             </section>

@@ -66,6 +66,15 @@ body {
   color: var(--foreground);
 }
 
+/* Fileira de produtos da home: desliza sem mostrar a barra de rolagem. */
+.carousel-scroll {
+  scrollbar-width: none;
+}
+
+.carousel-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 /* Card da vitrine: a seta aparece e o card ganha sombra no hover. */
 .product-card {
   transition: box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
