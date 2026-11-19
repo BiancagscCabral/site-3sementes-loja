@@ -14,7 +14,8 @@
     "db:studio": "prisma studio",
     "fotos": "tsx prisma/sync-fotos.ts",
     "fotos:otimizar": "tsx prisma/otimizar-fotos.ts",
-    "frete:testar": "tsx scripts/testar-frete.ts"
+    "frete:testar": "tsx scripts/testar-frete.ts",
+    "medidas": "tsx prisma/medidas-das-caixas.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
