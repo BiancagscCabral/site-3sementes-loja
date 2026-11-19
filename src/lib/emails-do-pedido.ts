@@ -60,7 +60,7 @@ function linhasDosItens(itens: ItemDoEmail[]) {
 
       return `
         <tr>
-          <td style="padding:10px 0;border-bottom:1px solid ${BORDA};font-size:14px;color:${TEXTO}">
+          <td style="padding:10px 0;border-bottom:1px solid ${BORDA};font-size:14px;color:${TEXTO};text-align:left">
             ${item.quantity}x ${escapar(item.productName)}
             ${detalhes ? `<br><span style="font-size:12px;color:#8a8463">${detalhes}</span>` : ""}
           </td>
@@ -76,13 +76,13 @@ function resumoDoPedido(pedido: PedidoDoEmail) {
   const frete =
     pedido.shippingCents === null
       ? `<tr>
-          <td style="padding:10px 0;font-size:14px;color:${TEXTO}">Entrega${
+          <td style="padding:10px 0;font-size:14px;color:${TEXTO};text-align:left">Entrega${
             pedido.shippingService ? ` (${escapar(pedido.shippingService)})` : ""
           }</td>
           <td style="padding:10px 0;font-size:14px;color:${TEXTO};text-align:right">a combinar</td>
         </tr>`
       : `<tr>
-          <td style="padding:10px 0;font-size:14px;color:${TEXTO}">Entrega${
+          <td style="padding:10px 0;font-size:14px;color:${TEXTO};text-align:left">Entrega${
             pedido.shippingService ? ` (${escapar(pedido.shippingService)})` : ""
           }</td>
           <td style="padding:10px 0;font-size:14px;color:${TEXTO};text-align:right">${formatPriceCents(
@@ -95,7 +95,7 @@ function resumoDoPedido(pedido: PedidoDoEmail) {
       ${linhasDosItens(pedido.items)}
       ${frete}
       <tr>
-        <td style="padding:12px 0 0;font-size:15px;font-weight:bold;color:${ESCURO}">Total</td>
+        <td style="padding:12px 0 0;font-size:15px;font-weight:bold;color:${ESCURO};text-align:left">Total</td>
         <td style="padding:12px 0 0;font-size:15px;font-weight:bold;color:${ESCURO};text-align:right">
           ${formatPriceCents(pedido.totalCents)}
         </td>
@@ -103,9 +103,11 @@ function resumoDoPedido(pedido: PedidoDoEmail) {
     </table>`;
 }
 
+// A tabela do botão precisa de margin auto E do align: o Outlook ignora a
+// margem, e alguns clientes ignoram o align.
 function botao(texto: string, endereco: string) {
   return `
-    <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:22px">
+    <table role="presentation" align="center" cellpadding="0" cellspacing="0" style="margin:22px auto 0">
       <tr>
         <td style="background-color:${LARANJA}">
           <a href="${endereco}" style="display:inline-block;padding:14px 30px;font-size:15px;font-weight:bold;color:${CREME};text-decoration:none">
@@ -124,20 +126,20 @@ function moldura(conteudo: string) {
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background-color:#ffffff;border:1px solid ${BORDA}">
 
         <tr>
-          <td style="background-color:${OLIVA};padding:22px 28px">
+          <td align="center" style="background-color:${OLIVA};padding:22px 28px;text-align:center">
             <span style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:bold;color:${CREME}">3sementes</span>
             <span style="font-size:11px;letter-spacing:3px;color:${AREIA};margin-left:6px">STORE</span>
           </td>
         </tr>
 
         <tr>
-          <td style="padding:32px 28px">
+          <td align="center" style="padding:32px 28px;text-align:center">
             ${conteudo}
           </td>
         </tr>
 
         <tr>
-          <td style="background-color:${RODAPE};padding:18px 28px">
+          <td align="center" style="background-color:${RODAPE};padding:18px 28px;text-align:center">
             <p style="margin:0;font-size:12px;line-height:1.7;color:${TEXTO}">
               Peças feitas à mão em Pernambuco &middot; enviamos para todo o Brasil<br>
               Dúvidas? Chame no WhatsApp (81) 92005-1830
