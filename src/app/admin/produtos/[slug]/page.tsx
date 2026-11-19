@@ -3,7 +3,9 @@ import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ehAdmin, usuarioAtual } from "@/lib/supabase/servidor";
 import { ehFotoEnviadaPeloPainel } from "@/lib/storage";
+import { embalagemDaCategoria } from "@/lib/embalagem";
 import FotosDoProduto from "@/components/FotosDoProduto";
+import EmbalagemDoProduto from "@/components/EmbalagemDoProduto";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +27,17 @@ export default async function FotosDeUmProduto({
       slug: true,
       colors: true,
       optionLabel: true,
-      category: { select: { name: true } },
+      weightGrams: true,
+      heightCm: true,
+      widthCm: true,
+      lengthCm: true,
+      category: {
+        select: {
+          name: true,
+          slug: true,
+          _count: { select: { products: true } },
+        },
+      },
       images: {
         orderBy: { position: "asc" },
         select: {
@@ -39,6 +51,8 @@ export default async function FotosDeUmProduto({
   });
 
   if (!produto) notFound();
+
+  const estimativa = embalagemDaCategoria(produto.category.slug);
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-10 sm:px-6 sm:py-14">
@@ -67,6 +81,24 @@ export default async function FotosDeUmProduto({
           ...foto,
           veioDoPainel: ehFotoEnviadaPeloPainel(foto.url),
         }))}
+      />
+
+      <EmbalagemDoProduto
+        slug={produto.slug}
+        categoria={produto.category.name}
+        produtosNaCategoria={produto.category._count.products}
+        atual={{
+          peso: produto.weightGrams,
+          altura: produto.heightCm,
+          largura: produto.widthCm,
+          comprimento: produto.lengthCm,
+        }}
+        estimativa={{
+          peso: estimativa.pesoGramas,
+          altura: estimativa.alturaCm,
+          largura: estimativa.larguraCm,
+          comprimento: estimativa.comprimentoCm,
+        }}
       />
     </div>
   );

@@ -122,12 +122,11 @@ export default async function ProductPage(
       .filter((image) => image.optionName)
       .map((image) => [image.optionName as string, image.url]),
   );
-  const measurements = [
-    product.heightCm ? `Altura ${product.heightCm} cm` : null,
-    product.widthCm ? `Largura ${product.widthCm} cm` : null,
-    product.lengthCm ? `Comprimento ${product.lengthCm} cm` : null,
-    product.weightGrams ? `Peso ${product.weightGrams} g` : null,
-  ].filter(Boolean);
+  // Os campos de peso e dimensão do produto descrevem a EMBALAGEM, porque é
+  // sobre ela que os Correios cobram, e é dela que o cálculo do frete precisa.
+  // Já foram mostrados aqui como "Medidas", o que fazia a cliente ler o
+  // tamanho do envelope como se fosse o da peça. O tamanho da peça vive na
+  // descrição, onde cabe dizer que um bracelete é ajustável.
 
   return (
     <div className={`${brand.themeClass} bg-background text-foreground`}>
@@ -198,24 +197,14 @@ export default async function ProductPage(
           </div>
         </ProductOptionProvider>
 
-        {(product.description || measurements.length > 0) && (
+        {product.description && (
           <div className="mt-14 grid gap-5 sm:grid-cols-2">
-            {product.description && (
-              <div className="border border-border p-5 sm:p-6">
-                <h2 className="font-display text-lg font-bold">Sobre a peça</h2>
-                <p className="mt-2.5 text-[13px] leading-[1.7] text-muted">
-                  {product.description}
-                </p>
-              </div>
-            )}
-            {measurements.length > 0 && (
-              <div className="border border-border p-5 sm:p-6">
-                <h2 className="font-display text-lg font-bold">Medidas</h2>
-                <p className="mt-2.5 text-[13px] leading-[1.7] text-muted">
-                  {measurements.join(" · ")}
-                </p>
-              </div>
-            )}
+            <div className="border border-border p-5 sm:p-6">
+              <h2 className="font-display text-lg font-bold">Sobre a peça</h2>
+              <p className="mt-2.5 text-[13px] leading-[1.7] text-muted">
+                {product.description}
+              </p>
+            </div>
           </div>
         )}
 

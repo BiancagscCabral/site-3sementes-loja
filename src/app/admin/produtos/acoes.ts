@@ -36,7 +36,7 @@ const TIPOS: Record<string, string> = {
   avif: "image/avif",
 };
 
-type Resultado = { ok: true } | { ok: false; erro: string };
+type Resultado = { ok: true; aviso?: string } | { ok: false; erro: string };
 
 async function exigirAdmin() {
   const usuario = await usuarioAtual();
@@ -127,6 +127,101 @@ export async function subirFotoDoProduto(
   revalidatePath("/");
 
   return { ok: true };
+}
+
+// Peso e medidas da EMBALAGEM, não da peça: é a caixa ou o envelope que vai
+// ao correio, porque é sobre ela que o frete é cobrado.
+//
+// Enquanto ficam vazios, o cálculo usa a estimativa por categoria que está em
+// lib/embalagem.ts. Estimativa menor que a realidade significa frete cobrado a
+// menos, e a diferença sai do bolso da loja em toda venda.
+
+// Limites dos Correios para encomenda, com uma folga de bom senso.
+const LIMITES = {
+  pesoGramas: { minimo: 1, maximo: 30000 },
+  cm: { minimo: 1, maximo: 100 },
+};
+
+function numeroOuNulo(valor: FormDataEntryValue | null) {
+  const texto = String(valor ?? "").trim().replace(",", ".");
+  if (!texto) return null;
+  const numero = Number(texto);
+  return Number.isFinite(numero) ? numero : NaN;
+}
+
+export async function salvarEmbalagem(
+  _anterior: Resultado | null,
+  dados: FormData,
+): Promise<Resultado> {
+  await exigirAdmin();
+
+  const slug = String(dados.get("slug") ?? "");
+  const aplicarNaCategoria = dados.get("aplicarNaCategoria") === "on";
+
+  const campos = {
+    weightGrams: numeroOuNulo(dados.get("peso")),
+    heightCm: numeroOuNulo(dados.get("altura")),
+    widthCm: numeroOuNulo(dados.get("largura")),
+    lengthCm: numeroOuNulo(dados.get("comprimento")),
+  };
+
+  for (const [campo, valor] of Object.entries(campos)) {
+    if (valor === null) continue;
+    if (Number.isNaN(valor)) {
+      return { ok: false, erro: "Use só números, com vírgula ou ponto." };
+    }
+    const limite = campo === "weightGrams" ? LIMITES.pesoGramas : LIMITES.cm;
+    if (valor < limite.minimo || valor > limite.maximo) {
+      return {
+        ok: false,
+        erro:
+          campo === "weightGrams"
+            ? "O peso precisa ficar entre 1 g e 30 kg."
+            : "Cada medida precisa ficar entre 1 cm e 100 cm.",
+      };
+    }
+  }
+
+  // Os Correios somam as três dimensões e recusam acima de 200 cm.
+  const soma =
+    (campos.heightCm ?? 0) + (campos.widthCm ?? 0) + (campos.lengthCm ?? 0);
+  if (soma > 200) {
+    return {
+      ok: false,
+      erro: `A soma das três medidas deu ${soma} cm e os Correios aceitam até 200 cm.`,
+    };
+  }
+
+  const produto = await prisma.product.findUnique({
+    where: { slug },
+    select: { id: true, categoryId: true },
+  });
+  if (!produto) return { ok: false, erro: "Produto não encontrado." };
+
+  // O peso vai como inteiro: grama quebrada não ajuda ninguém.
+  const valores = {
+    weightGrams:
+      campos.weightGrams === null ? null : Math.round(campos.weightGrams),
+    heightCm: campos.heightCm,
+    widthCm: campos.widthCm,
+    lengthCm: campos.lengthCm,
+  };
+
+  const alcance = aplicarNaCategoria
+    ? { categoryId: produto.categoryId }
+    : { id: produto.id };
+
+  const { count } = await prisma.product.updateMany({
+    where: alcance,
+    data: valores,
+  });
+
+  revalidatePath("/admin/produtos");
+  revalidatePath(`/admin/produtos/${slug}`);
+
+  return count > 1
+    ? { ok: true, aviso: `Salvo em ${count} produtos da categoria.` }
+    : { ok: true };
 }
 
 export async function excluirFotoDoProduto(id: string): Promise<Resultado> {

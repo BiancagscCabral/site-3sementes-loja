@@ -16,6 +16,7 @@ export default async function ProdutosDoAdmin() {
     select: {
       slug: true,
       name: true,
+      weightGrams: true,
       category: { select: { name: true } },
       images: {
         orderBy: { position: "asc" },
@@ -29,6 +30,7 @@ export default async function ProdutosDoAdmin() {
   // Quem não tem foto vem primeiro: é o que falta resolver.
   const semFoto = produtos.filter((p) => p._count.images === 0);
   const comFoto = produtos.filter((p) => p._count.images > 0);
+  const semPeso = produtos.filter((p) => p.weightGrams === null).length;
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-10 sm:px-6 sm:py-14">
@@ -47,6 +49,16 @@ export default async function ProdutosDoAdmin() {
         </Link>
       </div>
 
+      {semPeso > 0 && (
+        <p className="mt-5 rounded-lg border border-border bg-muted-bg/60 px-3 py-2.5 text-[12px] leading-[1.6] text-muted">
+          <strong>{semPeso}</strong> produto{semPeso > 1 ? "s" : ""} ainda{" "}
+          {semPeso > 1 ? "usam" : "usa"} peso e medida estimados no cálculo do
+          frete. Se a estimativa for menor que a embalagem real, a diferença sai
+          do seu bolso em cada venda. Abra um produto para cadastrar, e lá dá
+          para aplicar à categoria inteira de uma vez.
+        </p>
+      )}
+
       {semFoto.length > 0 && (
         <Secao titulo="Ainda sem foto" produtos={semFoto} />
       )}
@@ -58,6 +70,7 @@ export default async function ProdutosDoAdmin() {
 type ProdutoDaLista = {
   slug: string;
   name: string;
+  weightGrams: number | null;
   category: { name: string };
   images: { url: string; altText: string | null }[];
   _count: { images: number };
