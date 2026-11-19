@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const INTERVALO = 4; // segundos entre uma peça e outra
+const INTERVALO = 2.5; // segundos entre uma peça e outra
 const PAUSA_APOS_TOQUE = 8; // segundos parado depois que a pessoa encosta
 
 function SetaIcon({ direcao }: { direcao: "anterior" | "proxima" }) {
