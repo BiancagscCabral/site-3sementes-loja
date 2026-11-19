@@ -48,7 +48,7 @@ export default function BarraDoAdmin({ logado }: { logado: boolean }) {
               <Link
                 href="/admin/produtos"
                 aria-current={emProdutos ? "page" : undefined}
-                className="inline-flex h-10 flex-1 cursor-pointer items-center justify-center rounded-lg bg-accent px-5 text-[13px] font-bold text-accent-foreground transition-opacity hover:opacity-90 sm:flex-none"
+                className="inline-flex h-10 flex-1 cursor-pointer items-center justify-center rounded-lg bg-primary px-5 text-[13px] font-bold text-primary-foreground transition-colors hover:bg-primary-dark sm:flex-none"
               >
                 Adicionar fotos de produtos
               </Link>
