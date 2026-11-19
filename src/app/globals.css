@@ -40,6 +40,17 @@
   --display-font: var(--font-cormorant);
 }
 
+/* Painel da loja: fundo mais baixo e menos claro que o creme da vitrine, para
+   cansar menos a vista em quem passa o dia nele. Só troca as superfícies; a
+   cor de texto, o verde e o laranja seguem os da loja. */
+.tema-painel {
+  --background: #e9e6d6;
+  --surface: #f4f1e5;
+  --muted-bg: #dcd8c2;
+  --secondary: #dcd8c2;
+  --border: #bcb69b;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
