@@ -1,6 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { priceForSize } from "@/lib/catalog";
 import { usuarioAtual } from "@/lib/supabase/servidor";
+import { enviarEmailSemEsperar } from "@/lib/email";
+import {
+  emailNovoPedidoParaLoja,
+  emailPedidoRecebido,
+} from "@/lib/emails-do-pedido";
 
 export type ItemRecebido = {
   slug: string;
@@ -88,7 +93,7 @@ export async function criarPedido(
   // A conta vem da sessão no servidor, nunca do que o navegador mandou.
   const usuario = await usuarioAtual();
 
-  return prisma.order.create({
+  const pedido = await prisma.order.create({
     data: {
       code: await codigoInedito(),
       customerUserId: usuario?.id ?? null,
@@ -105,6 +110,57 @@ export async function criarPedido(
     },
     include: { items: true },
   });
+
+  avisarDoPedidoNovo(pedido);
+
+  return pedido;
+}
+
+// Avisa a cliente e a loja. Sem esperar resposta de propósito: o pedido já
+// está gravado, e ninguém deveria olhar para uma tela de carregamento porque
+// o servidor de e-mail está lento.
+function avisarDoPedidoNovo(
+  pedido: Awaited<ReturnType<typeof prisma.order.create>> & {
+    items: { productName: string; variantName: string | null; size: string | null; quantity: number; unitPriceCents: number }[];
+  },
+) {
+  const dados = {
+    code: pedido.code,
+    customerName: pedido.customerName,
+    totalCents: pedido.totalCents,
+    shippingCents: pedido.shippingCents,
+    shippingService: pedido.shippingService,
+    items: pedido.items,
+  };
+
+  if (pedido.customerEmail) {
+    const { assunto, html } = emailPedidoRecebido(dados);
+    enviarEmailSemEsperar({ para: pedido.customerEmail, assunto, html });
+  }
+
+  const { assunto, html } = emailNovoPedidoParaLoja({
+    ...dados,
+    customerPhone: pedido.customerPhone,
+    customerEmail: pedido.customerEmail,
+  });
+
+  for (const endereco of enderecosDaLoja()) {
+    enviarEmailSemEsperar({
+      para: endereco,
+      assunto,
+      html,
+      // Responder o aviso vai direto para a cliente, quando ela deixou e-mail.
+      responderPara: pedido.customerEmail ?? undefined,
+    });
+  }
+}
+
+// ADMIN_EMAIL aceita mais de um endereço separado por vírgula.
+function enderecosDaLoja() {
+  return (process.env.ADMIN_EMAIL ?? "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
 export {

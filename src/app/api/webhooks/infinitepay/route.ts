@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { conferirPagamento } from "@/lib/infinitepay";
+import { enviarEmailSemEsperar } from "@/lib/email";
+import { emailPagamentoConfirmado } from "@/lib/emails-do-pedido";
 
 // Aviso de pagamento da InfinitePay.
 //
@@ -66,6 +68,33 @@ export async function POST(request: Request) {
       console.warn(
         `[infinitepay] pedido ${orderNsu}: pago ${valorPago} de ${pedido.totalCents}`,
       );
+    }
+
+    // Avisa a cliente, mas só quando o valor fecha: dizer "pagamento
+    // confirmado" para quem pagou a menos criaria uma expectativa errada, e
+    // esse caso vai para conferência manual no painel.
+    if (valorConfere && pedido.customerEmail) {
+      const itens = await prisma.orderItem.findMany({
+        where: { orderId: pedido.id },
+        select: {
+          productName: true,
+          variantName: true,
+          size: true,
+          quantity: true,
+          unitPriceCents: true,
+        },
+      });
+
+      const { assunto, html } = emailPagamentoConfirmado({
+        code: pedido.code,
+        customerName: pedido.customerName,
+        totalCents: pedido.totalCents,
+        shippingCents: pedido.shippingCents,
+        shippingService: pedido.shippingService,
+        items: itens,
+      });
+
+      enviarEmailSemEsperar({ para: pedido.customerEmail, assunto, html });
     }
 
     return NextResponse.json({ ok: true });
