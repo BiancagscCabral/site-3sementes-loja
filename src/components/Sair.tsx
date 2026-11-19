@@ -3,7 +3,16 @@
 import { useRouter } from "next/navigation";
 import { criarClienteNavegador } from "@/lib/supabase/navegador";
 
-export default function Sair({ destino = "/admin/entrar" }: { destino?: string }) {
+const ESTILO_PADRAO =
+  "cursor-pointer text-[13px] text-muted underline underline-offset-4 transition-colors hover:text-foreground";
+
+export default function Sair({
+  destino = "/admin/entrar",
+  className = ESTILO_PADRAO,
+}: {
+  destino?: string;
+  className?: string;
+}) {
   const router = useRouter();
 
   const sair = async () => {
@@ -16,7 +25,7 @@ export default function Sair({ destino = "/admin/entrar" }: { destino?: string }
     <button
       type="button"
       onClick={sair}
-      className="text-[13px] text-muted underline underline-offset-4 transition-colors hover:text-foreground"
+      className={className}
     >
       Sair
     </button>

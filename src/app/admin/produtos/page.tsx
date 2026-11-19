@@ -41,12 +41,6 @@ export default async function ProdutosDoAdmin() {
         <span className="text-[13px] text-muted">
           {semFoto.length} sem foto, {comFoto.length} com foto
         </span>
-        <Link
-          href="/admin"
-          className="ml-auto text-[13px] text-muted underline underline-offset-4 transition-colors hover:text-foreground"
-        >
-          Ver pedidos
-        </Link>
       </div>
 
       {semPeso > 0 && (

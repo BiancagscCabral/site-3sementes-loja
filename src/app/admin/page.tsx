@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatPriceCents } from "@/lib/format";
@@ -77,15 +76,6 @@ export default async function AdminPage() {
         <span className="text-[13px] text-muted">
           atualiza sozinho a cada 30s
         </span>
-        <Link
-          href="/admin/produtos"
-          className="ml-auto text-[13px] text-muted underline underline-offset-4 transition-colors hover:text-foreground"
-        >
-          Fotos dos produtos
-        </Link>
-        <div>
-          <Sair />
-        </div>
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">

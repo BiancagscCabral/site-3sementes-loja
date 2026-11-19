@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import BarraDeCarregamento from "@/components/BarraDeCarregamento";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SoForaDoAdmin from "@/components/SoForaDoAdmin";
 import "./globals.css";
 
 // Fontes guardadas dentro do projeto: além de não depender da internet para
@@ -43,9 +44,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         <BarraDeCarregamento />
-        <Header />
+        <SoForaDoAdmin>
+          <Header />
+        </SoForaDoAdmin>
         <main className="flex-1">{children}</main>
-        <Footer />
+        <SoForaDoAdmin>
+          <Footer />
+        </SoForaDoAdmin>
       </body>
     </html>
   );
