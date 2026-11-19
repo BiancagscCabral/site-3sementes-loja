@@ -45,12 +45,25 @@ export default function EmbalagemDoProduto({
 
       {!cadastrado && (
         <p className="mt-3 rounded-lg border border-border bg-muted-bg/60 px-3 py-2.5 text-[12px] leading-[1.6] text-muted">
-          Hoje este produto usa uma <strong>estimativa</strong> de{" "}
-          {estimativa.altura} × {estimativa.largura} × {estimativa.comprimento}{" "}
-          cm e {estimativa.peso} g, que eu chutei para o cálculo funcionar. Se o
-          real for maior, a diferença do frete sai do seu bolso em cada venda.
+          Hoje este produto usa o padrão da categoria:{" "}
+          <strong>
+            {estimativa.altura} × {estimativa.largura} × {estimativa.comprimento}{" "}
+            cm e {estimativa.peso} g
+          </strong>
+          . Errar para menos faz a loja cobrar frete abaixo do custo, e a
+          diferença sai do seu bolso. Errar para mais encarece e espanta o
+          pedido grande.
         </p>
       )}
+
+      <p className="mt-3 rounded-lg border border-border px-3 py-2.5 text-[12px] leading-[1.6] text-muted">
+        <strong>Vale saber:</strong> uma encomenda de até{" "}
+        <strong>300 g</strong> numa caixa de até{" "}
+        <strong>4 × 16 × 24 cm</strong> entra no Mini Envios, que custa cerca de
+        R$ 24 em vez de R$ 32 no PAC. Acima de qualquer um dos dois limites, a
+        opção some. Entre 1 g e 300 g, na mesma caixa, o preço é o mesmo: peso
+        só muda o valor quando cruza uma faixa.
+      </p>
 
       <form action={salvar} className="mt-4">
         <input type="hidden" name="slug" value={slug} />
