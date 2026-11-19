@@ -14,6 +14,13 @@ const karla = localFont({
   src: [{ path: "../fonts/Karla.woff2", weight: "400 700", style: "normal" }],
 });
 
+// Fonte dos títulos e dos nomes de produto. O texto corrido segue na Karla.
+const outfit = localFont({
+  variable: "--font-outfit",
+  display: "swap",
+  src: [{ path: "../fonts/Outfit.woff2", weight: "100 900", style: "normal" }],
+});
+
 const libreBaskerville = localFont({
   variable: "--font-libre",
   display: "swap",
@@ -40,7 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-BR"
-      className={`${karla.variable} ${libreBaskerville.variable} ${cormorant.variable} h-full antialiased`}
+      className={`${karla.variable} ${outfit.variable} ${libreBaskerville.variable} ${cormorant.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         <BarraDeCarregamento />

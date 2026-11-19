@@ -17,7 +17,7 @@
   --bloom: #c4611a;
   --danger: #a32b1c;
   --hero: #8e8a69;
-  --display-font: var(--font-Inter);
+  --display-font: var(--font-outfit);
 }
 
 /* 3sflores: rosa #d08678 é decorativo; texto e botões usam um tom mais fechado dele para manter contraste legível */
@@ -76,11 +76,22 @@
   --color-hero: var(--hero);
   --font-sans: var(--font-karla);
   --font-display: var(--display-font);
+  --font-titulos: var(--font-outfit);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* Títulos em Outfit. Fica na camada base para que a classe font-display (que
+   no tema 3sflores usa a Cormorant) continue valendo onde já foi escolhida. */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-titulos);
+  }
 }
 
 /* Fileira de produtos da home: desliza sem mostrar a barra de rolagem. */
