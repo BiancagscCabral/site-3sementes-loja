@@ -143,6 +143,8 @@ export default async function Home() {
                           image={produto.images[0]}
                           logo={brand.logo}
                           markClass={brand.markClass}
+                          colors={produto.colors}
+                          optionLabel={produto.optionLabel}
                           sizes="(max-width: 640px) 44vw, 240px"
                         />
                       </div>

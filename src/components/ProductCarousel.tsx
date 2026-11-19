@@ -108,7 +108,7 @@ export default function ProductCarousel({
   }, [automatico]);
 
   const botao =
-    "absolute top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-border bg-background text-foreground shadow-md transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:flex";
+    "absolute top-1/2 z-10 hidden h-16 w-9 -translate-y-1/2 cursor-pointer items-center justify-center bg-background/95 text-foreground shadow-md transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:flex";
 
   return (
     <div
@@ -134,7 +134,7 @@ export default function ProductCarousel({
           type="button"
           aria-label="Produtos anteriores"
           onClick={() => mover(-1)}
-          className={`${botao} -left-5`}
+          className={`${botao} left-0 rounded-r-xl`}
         >
           <SetaIcon direcao="anterior" />
         </button>
@@ -144,7 +144,7 @@ export default function ProductCarousel({
           type="button"
           aria-label="Próximos produtos"
           onClick={() => mover(1)}
-          className={`${botao} -right-5`}
+          className={`${botao} right-0 rounded-l-xl`}
         >
           <SetaIcon direcao="proxima" />
         </button>

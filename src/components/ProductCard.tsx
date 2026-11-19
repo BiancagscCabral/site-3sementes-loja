@@ -16,6 +16,14 @@ function ArrowIcon() {
   );
 }
 
+// "2 cores" para cor; "3 opções" quando a lista é de outra coisa (ex: Tema).
+// Com uma opção só ou nenhuma, não há o que avisar.
+function textoDasOpcoes(opcoes: string[], rotulo?: string | null) {
+  if (opcoes.length < 2) return null;
+  const ehCor = !rotulo || rotulo.trim().toLowerCase() === "cor";
+  return `${opcoes.length} ${ehCor ? "cores" : "opções"}`;
+}
+
 // Card da vitrine: a foto ocupa o card inteiro e o nome e o preço ficam por
 // cima dela, sobre um degradê que garante a leitura em qualquer foto.
 export default function ProductCard({
@@ -25,6 +33,8 @@ export default function ProductCard({
   image,
   logo,
   markClass,
+  colors = [],
+  optionLabel,
   sizes = "(max-width: 640px) 50vw, 260px",
 }: {
   slug: string;
@@ -33,13 +43,22 @@ export default function ProductCard({
   image?: { url: string; altText: string | null } | null;
   logo: string;
   markClass: string;
+  colors?: string[];
+  optionLabel?: string | null;
   sizes?: string;
 }) {
+  const opcoes = textoDasOpcoes(colors, optionLabel);
+
   return (
     <Link
       href={`/produtos/${slug}`}
       className="product-card relative block aspect-[3/4] overflow-hidden rounded-2xl bg-muted-bg"
     >
+      {opcoes && (
+        <span className="absolute left-3 top-3 z-10 rounded-full bg-background/90 px-2.5 py-1 text-[11px] font-bold leading-none text-foreground">
+          {opcoes}
+        </span>
+      )}
       {image ? (
         <Image
           src={image.url}

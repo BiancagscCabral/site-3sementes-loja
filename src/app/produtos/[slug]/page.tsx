@@ -231,6 +231,8 @@ export default async function ProductPage(
                   image={item.images[0]}
                   logo={brand.logo}
                   markClass={brand.markClass}
+                  colors={item.colors}
+                  optionLabel={item.optionLabel}
                 />
               ))}
             </div>

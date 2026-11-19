@@ -58,6 +58,8 @@ export default async function CategoryPage(
                 image={product.images[0]}
                 logo={brand.logo}
                 markClass={brand.markClass}
+                colors={product.colors}
+                optionLabel={product.optionLabel}
               />
             ))}
           </div>

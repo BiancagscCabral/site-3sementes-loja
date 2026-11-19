@@ -76,6 +76,8 @@ export default async function BuscaPage(props: PageProps<"/busca">) {
                     image={product.images[0]}
                     logo={brand.logo}
                     markClass={brand.markClass}
+                    colors={product.colors}
+                    optionLabel={product.optionLabel}
                   />
                 </div>
               );
