@@ -103,24 +103,13 @@ body {
   display: none;
 }
 
-/* Card da vitrine: a seta aparece e o card ganha sombra no hover. */
+/* Card da vitrine: ganha sombra no hover. */
 .product-card {
   transition: box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .product-card:hover {
   box-shadow: 0 10px 20px 4px rgb(35 35 35 / 0.15);
-}
-
-.product-card .card-icon {
-  opacity: 0;
-  transform: translateX(-20%);
-  transition: all 0.3s ease-in-out;
-}
-
-.product-card:hover .card-icon {
-  opacity: 1;
-  transform: translateX(0);
 }
 
 /* Card que vira: frente com ícone e título, verso com a explicação. */

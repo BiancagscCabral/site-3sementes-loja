@@ -2,20 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatPriceCents } from "@/lib/format";
 
-function ArrowIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.2}
-      className="h-[18px] w-[18px]"
-    >
-      <path d="M5 12h13M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 // "2 cores" para cor; "3 opções" quando a lista é de outra coisa (ex: Tema).
 // Com uma opção só ou nenhuma, não há o que avisar.
 function textoDasOpcoes(opcoes: string[], rotulo?: string | null) {
@@ -73,20 +59,12 @@ export default function ProductCard({
         </span>
       )}
 
-      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-foreground/90 via-foreground/55 to-transparent p-4 pt-12">
-        <span className="min-w-0">
-          <span className="line-clamp-2 font-titulos text-[15px] font-bold leading-snug text-background">
-            {name}
-          </span>
-          <span className="mt-0.5 block text-sm font-medium text-background/85">
-            {formatPriceCents(priceCents)}
-          </span>
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/90 via-foreground/55 to-transparent p-4 pt-12">
+        <span className="line-clamp-2 font-titulos text-[15px] font-bold leading-snug text-background">
+          {name}
         </span>
-        <span
-          aria-hidden
-          className="card-icon hidden h-8 w-8 shrink-0 lg:flex items-center justify-center rounded-full bg-accent text-accent-foreground"
-        >
-          <ArrowIcon />
+        <span className="mt-0.5 block text-sm font-medium text-background/85">
+          {formatPriceCents(priceCents)}
         </span>
       </div>
     </Link>
