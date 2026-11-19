@@ -40,21 +40,21 @@
   --display-font: var(--font-cormorant);
 }
 
-/* Painel da loja: base neutra (cinza, branco e preto), sem a paleta creme da
-   vitrine, para cansar menos a vista em quem passa o dia nele. As cores da 3s
+/* Painel da loja: só preto e branco, sem a paleta creme da vitrine e sem
+   cinza, para cansar menos a vista em quem passa o dia nele. As cores da 3s
    entram só como detalhe: o verde-oliva vira a cor dos botões (--accent) e o
    laranja (--bloom) fica para pequenos toques e nomes. */
 .tema-painel {
-  --background: #f1f1f1;
-  --surface: #fafafa;
-  --foreground: #1c1c1c;
-  --muted: #565656;
-  --muted-bg: #e6e6e6;
-  --border: #d0d0d0;
-  --secondary: #e6e6e6;
-  --secondary-foreground: #2a2a2a;
+  --background: #ffffff;
+  --surface: #ffffff;
+  --foreground: #000000;
+  --muted: #000000;
+  --muted-bg: #ffffff;
+  --border: #000000;
+  --secondary: #ffffff;
+  --secondary-foreground: #000000;
   --accent: #3e4229;
-  --accent-foreground: #fff8f1;
+  --accent-foreground: #ffffff;
 }
 
 @theme inline {
