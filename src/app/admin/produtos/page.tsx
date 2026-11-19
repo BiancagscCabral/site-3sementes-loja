@@ -27,10 +27,18 @@ export default async function ProdutosDoAdmin() {
     },
   });
 
-  // Quem não tem foto vem primeiro: é o que falta resolver.
   const semFoto = produtos.filter((p) => p._count.images === 0);
   const comFoto = produtos.filter((p) => p._count.images > 0);
   const semPeso = produtos.filter((p) => p.weightGrams === null).length;
+
+  // Uma seção por categoria, com ou sem foto. A lista já vem ordenada por
+  // categoria e nome, então basta agrupar na ordem em que chegou.
+  const porCategoria = new Map<string, ProdutoDaLista[]>();
+  for (const produto of produtos) {
+    const lista = porCategoria.get(produto.category.name) ?? [];
+    lista.push(produto);
+    porCategoria.set(produto.category.name, lista);
+  }
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-10 sm:px-6 sm:py-14">
@@ -53,10 +61,9 @@ export default async function ProdutosDoAdmin() {
         </p>
       )}
 
-      {semFoto.length > 0 && (
-        <Secao titulo="Ainda sem foto" produtos={semFoto} />
-      )}
-      {comFoto.length > 0 && <Secao titulo="Já com foto" produtos={comFoto} />}
+      {[...porCategoria].map(([categoria, lista]) => (
+        <Secao key={categoria} titulo={categoria} produtos={lista} />
+      ))}
     </div>
   );
 }
@@ -79,8 +86,11 @@ function Secao({
 }) {
   return (
     <section className="mt-8">
-      <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
+      <h2 className="flex items-baseline gap-3 border-b border-border pb-2 text-[13px] font-bold uppercase tracking-[0.14em]">
         {titulo}
+        <span className="text-[11px] font-normal normal-case tracking-normal text-muted">
+          {produtos.length} produto{produtos.length > 1 ? "s" : ""}
+        </span>
       </h2>
 
       <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
