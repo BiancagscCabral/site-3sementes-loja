@@ -40,15 +40,21 @@
   --display-font: var(--font-cormorant);
 }
 
-/* Painel da loja: fundo mais baixo e menos claro que o creme da vitrine, para
-   cansar menos a vista em quem passa o dia nele. Só troca as superfícies; a
-   cor de texto, o verde e o laranja seguem os da loja. */
+/* Painel da loja: base neutra (cinza, branco e preto), sem a paleta creme da
+   vitrine, para cansar menos a vista em quem passa o dia nele. As cores da 3s
+   entram só como detalhe: o verde-oliva vira a cor dos botões (--accent) e o
+   laranja (--bloom) fica para pequenos toques e nomes. */
 .tema-painel {
-  --background: #e9e6d6;
-  --surface: #f4f1e5;
-  --muted-bg: #dcd8c2;
-  --secondary: #dcd8c2;
-  --border: #bcb69b;
+  --background: #f1f1f1;
+  --surface: #fafafa;
+  --foreground: #1c1c1c;
+  --muted: #565656;
+  --muted-bg: #e6e6e6;
+  --border: #d0d0d0;
+  --secondary: #e6e6e6;
+  --secondary-foreground: #2a2a2a;
+  --accent: #3e4229;
+  --accent-foreground: #fff8f1;
 }
 
 @theme inline {

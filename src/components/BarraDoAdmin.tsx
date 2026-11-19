@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import Sair from "@/components/Sair";
 
 const ESTILO_LINK =
-  "cursor-pointer whitespace-nowrap text-[13px] font-bold uppercase tracking-[0.06em] text-foreground transition-colors hover:text-accent";
+  "cursor-pointer whitespace-nowrap text-[13px] font-bold uppercase tracking-[0.06em] text-foreground transition-colors hover:text-bloom";
 
 // Barra do topo do painel. No lugar do cabeçalho da loja, traz o que se usa
 // aqui: pedidos, o botão que leva aos produtos para adicionar fotos, e o Sair.
@@ -22,10 +22,10 @@ export default function BarraDoAdmin({ logado }: { logado: boolean }) {
           href={logado ? "/admin" : "/"}
           className="flex shrink-0 items-baseline gap-2.5"
         >
-          <span className="font-display text-[24px] font-bold leading-none tracking-tight text-foreground sm:text-[28px]">
+          <span className="font-display text-[24px] font-bold leading-none tracking-tight text-primary sm:text-[28px]">
             3sementes
           </span>
-          <span className="text-[10px] font-bold uppercase leading-none tracking-[0.3em] text-accent sm:text-[11px]">
+          <span className="text-[10px] font-bold uppercase leading-none tracking-[0.3em] text-bloom sm:text-[11px]">
             painel
           </span>
         </Link>
@@ -38,7 +38,7 @@ export default function BarraDoAdmin({ logado }: { logado: boolean }) {
                 aria-current={emPedidos ? "page" : undefined}
                 className={`${ESTILO_LINK} ${
                   emPedidos
-                    ? "underline decoration-accent decoration-2 underline-offset-[10px]"
+                    ? "underline decoration-bloom decoration-2 underline-offset-[10px]"
                     : ""
                 }`}
               >
@@ -48,7 +48,7 @@ export default function BarraDoAdmin({ logado }: { logado: boolean }) {
               <Link
                 href="/admin/produtos"
                 aria-current={emProdutos ? "page" : undefined}
-                className="inline-flex h-10 flex-1 cursor-pointer items-center justify-center rounded-lg bg-primary px-5 text-[13px] font-bold text-primary-foreground transition-colors hover:bg-primary-dark sm:flex-none"
+                className="inline-flex h-10 flex-1 cursor-pointer items-center justify-center rounded-lg bg-accent px-5 text-[13px] font-bold text-accent-foreground transition-opacity hover:opacity-85 sm:flex-none"
               >
                 Adicionar fotos de produtos
               </Link>
