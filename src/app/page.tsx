@@ -4,16 +4,16 @@ import ProductCard from "@/components/ProductCard";
 import ProductCarousel from "@/components/ProductCarousel";
 import FlipCard from "@/components/FlipCard";
 import BannerDoTopo from "@/components/BannerDoTopo";
-import { Flor, FormaDeFlor, Mancha } from "@/components/Grafismos";
+import BannerDaFlores from "@/components/BannerDaFlores";
+import { Flor, FormaDeFlor } from "@/components/Grafismos";
 import {
   IconeAcessorios,
+  IconeAjustes,
   IconeBraceletes,
   IconeBuque,
   IconeCaminhao,
-  IconeCartao,
   IconeColares,
   IconeGuias,
-  IconeCoracao,
   IconeFolha,
   IconeSeta,
   IconeWhatsApp,
@@ -75,10 +75,21 @@ const ATALHOS = [
 ];
 
 const BENEFICIOS = [
-  { Icone: IconeFolha, texto: "Produção artesanal" },
-  { Icone: IconeCoracao, texto: "Personalização exclusiva" },
-  { Icone: IconeCartao, texto: "Pagamento seguro" },
-  { Icone: IconeCaminhao, texto: "Envio para todo o Brasil" },
+  {
+    Icone: IconeCaminhao,
+    titulo: "Envio para todo o Brasil",
+    texto: "com rastreamento",
+  },
+  {
+    Icone: IconeFolha,
+    titulo: "Produção artesanal",
+    texto: "peças únicas e feitas à mão",
+  },
+  {
+    Icone: IconeAjustes,
+    titulo: "Personalização exclusiva",
+    texto: "do seu jeito",
+  },
 ];
 
 function PolaroidIcon() {
@@ -131,6 +142,33 @@ function RulerIcon() {
   );
 }
 
+// Título de seção com uma linha curta de cada lado.
+function TituloDeSecao({
+  children,
+  className = "text-[26px] sm:text-[34px]",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className="flex items-center justify-center gap-4 sm:gap-6">
+      <span
+        aria-hidden
+        className="h-0.5 w-8 rounded-full bg-primary/70 sm:w-16"
+      />
+      <h2
+        className={`text-center font-display font-semibold leading-tight text-primary ${className}`}
+      >
+        {children}
+      </h2>
+      <span
+        aria-hidden
+        className="h-0.5 w-8 rounded-full bg-primary/70 sm:w-16"
+      />
+    </div>
+  );
+}
+
 type ProdutoDaVitrine = {
   slug: string;
   name: string;
@@ -153,9 +191,7 @@ function Vitrine({
   return (
     <section id={id} className="scroll-mt-28 px-5 py-10 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-5xl">
-        <h2 className="text-center font-display text-[26px] font-semibold leading-tight text-primary sm:text-[34px]">
-          {titulo}
-        </h2>
+        <TituloDeSecao>{titulo}</TituloDeSecao>
 
         <div className="mt-7">
           <ProductCarousel rotulo={titulo} automatico>
@@ -260,7 +296,20 @@ export default async function Home() {
           return foto ? [{ ...foto, tipo: "imagem" as const }] : [];
         });
 
-  const fotoDoBanner = fotoDaCategoria("flores-eternas");
+  // Banner da 3SFlores: prefere a foto de um buquê; senão, a primeira peça com foto.
+  const produtosDeFlores =
+    faixas.find((categoria) => categoria.slug === "flores-eternas")?.products ??
+    [];
+  const pecaDoBanner =
+    produtosDeFlores.find(
+      (item) => /buqu/i.test(item.name) && item.images[0],
+    ) ?? produtosDeFlores.find((item) => item.images[0]);
+  const fotoDoBanner = pecaDoBanner
+    ? {
+        url: pecaDoBanner.images[0].url,
+        alt: pecaDoBanner.images[0].altText ?? pecaDoBanner.name,
+      }
+    : null;
 
   return (
     <div className="flex flex-col">
@@ -299,17 +348,20 @@ export default async function Home() {
       </section>
 
       <section className="px-5 py-4 sm:px-6">
-        <ul className="mx-auto grid max-w-5xl grid-cols-2 gap-x-4 gap-y-4 rounded-3xl bg-muted-bg px-5 py-4 sm:grid-cols-4 sm:rounded-full sm:px-8">
-          {BENEFICIOS.map(({ Icone, texto }, indice) => (
+        <ul className="mx-auto grid max-w-5xl gap-4 rounded-3xl bg-muted-bg px-6 py-5 sm:grid-cols-3 sm:gap-0 sm:px-4">
+          {BENEFICIOS.map(({ Icone, titulo, texto }, indice) => (
             <li
-              key={texto}
-              className={`flex items-center gap-3 ${
-                indice > 0 ? "sm:border-l sm:border-border sm:pl-5" : ""
+              key={titulo}
+              className={`flex items-center gap-4 sm:justify-center ${
+                indice > 0 ? "sm:border-l sm:border-border" : ""
               }`}
             >
-              <Icone className="h-8 w-8 shrink-0 text-primary" />
-              <span className="text-[13px] font-semibold leading-tight sm:text-sm">
-                {texto}
+              <Icone className="h-9 w-9 shrink-0 text-primary" />
+              <span className="leading-tight">
+                <span className="block text-[15px] font-bold text-foreground">
+                  {titulo}
+                </span>
+                <span className="block text-[13px] text-muted">{texto}</span>
               </span>
             </li>
           ))}
@@ -324,48 +376,7 @@ export default async function Home() {
         />
       )}
 
-      <section className="theme-flores px-5 py-4 sm:px-6">
-        <div className="relative mx-auto grid max-w-5xl overflow-hidden rounded-3xl bg-rose/35 md:grid-cols-2">
-          <Mancha
-            forma={1}
-            className="pointer-events-none absolute -left-20 -top-16 h-60 w-60 text-rose"
-          />
-          <Mancha
-            forma={0}
-            className="pointer-events-none absolute -bottom-20 left-16 h-52 w-52 text-sun/80"
-          />
-          <Flor
-            miolo="var(--sun)"
-            className="pointer-events-none absolute left-5 top-8 hidden h-14 w-14 text-primary sm:block"
-          />
-          <div className="relative z-10 p-8 sm:p-10 md:pl-24">
-            <h2 className="font-display text-[44px] font-semibold leading-none text-primary sm:text-[52px]">
-              3SFlores
-            </h2>
-            <p className="mt-3 max-w-[22ch] text-lg leading-snug text-foreground sm:text-xl">
-              Flores eternas para momentos únicos.
-            </p>
-            <Link
-              href="/categorias/flores-eternas"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-[15px] font-semibold text-primary-foreground transition-colors hover:bg-primary-dark"
-            >
-              Ver coleção
-              <IconeSeta className="h-[18px] w-[18px]" />
-            </Link>
-          </div>
-          <div className="relative min-h-[230px] md:min-h-[300px]">
-            {fotoDoBanner && (
-              <Image
-                src={fotoDoBanner.url}
-                alt={fotoDoBanner.alt}
-                fill
-                sizes="(min-width: 768px) 500px, 100vw"
-                className="object-cover"
-              />
-            )}
-          </div>
-        </div>
-      </section>
+      <BannerDaFlores foto={fotoDoBanner} />
 
       {novidades.length > 0 && (
         <Vitrine id="novidades" titulo="Novidades" produtos={novidades} />
@@ -373,9 +384,9 @@ export default async function Home() {
 
       <section className="px-5 py-10 sm:px-6 sm:py-12">
         <div className="mx-auto max-w-5xl">
-          <h2 className="text-center font-display text-[26px] font-semibold text-primary sm:text-[30px]">
+          <TituloDeSecao className="text-[24px] sm:text-[30px]">
             Acompanha no seu pedido
-          </h2>
+          </TituloDeSecao>
           <div className="mt-7 grid gap-5 sm:grid-cols-3 sm:gap-[26px]">
             <FlipCard icon={<PolaroidIcon />} title="Card polaroid nas Flores">
               Mande a foto no WhatsApp depois do pedido.

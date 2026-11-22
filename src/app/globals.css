@@ -30,6 +30,14 @@
    de propósito não troca nenhuma cor. Se um dia for preciso um toque próprio,
    é aqui que ele entra. O rosa (--rose) fica só para grafismos e banners. */
 
+/* Foto do banner da 3SFlores: no desktop a borda esquerda é ondulada (o
+   desenho do recorte está em BannerDaFlores). No celular a foto fica inteira. */
+@media (min-width: 768px) {
+  .recorte-flores {
+    clip-path: url(#recorte-flores);
+  }
+}
+
 /* Painel da loja: só preto e branco, sem a paleta creme da vitrine e sem
    cinza, para cansar menos a vista em quem passa o dia nele. As cores da 3s
    entram só como detalhe: o verde-oliva vira a cor dos botões (--accent) e o

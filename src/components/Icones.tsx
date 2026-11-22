@@ -103,6 +103,17 @@ export function IconeCoracao({ className }: Props) {
   );
 }
 
+// Dois controles deslizantes: personalizar do seu jeito.
+export function IconeAjustes({ className }: Props) {
+  return (
+    <Base className={className}>
+      <path d="M4 7h16M4 17h16" />
+      <circle cx="9" cy="7" r="2.4" fill="var(--background)" />
+      <circle cx="15" cy="17" r="2.4" fill="var(--background)" />
+    </Base>
+  );
+}
+
 export function IconeCartao({ className }: Props) {
   return (
     <Base className={className}>
