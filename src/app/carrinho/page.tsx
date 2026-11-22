@@ -82,7 +82,7 @@ export default function CarrinhoPage() {
                         <div className="min-w-0">
                           <Link
                             href={`/produtos/${item.slug}`}
-                            className="block font-titulos text-[15px] font-medium leading-snug text-foreground hover:underline"
+                            className="block text-[15px] font-semibold leading-snug text-foreground hover:underline"
                           >
                             {item.name}
                           </Link>

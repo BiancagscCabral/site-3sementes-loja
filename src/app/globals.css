@@ -1,49 +1,55 @@
 @import "tailwindcss";
 
+/* Identidade 3Sementes Store: Groovy / Retro Pop com acabamento contemporâneo.
+   Quatro cores da marca (terracota, rosa, amarelo manteiga e creme) mais o
+   marrom funcional dos textos. O terracota usa o mesmo vinho da logo
+   (#a52800), que também dá contraste de 6,5:1 com o creme. */
 :root {
-  --background: #fff8f1;
-  --surface: #ffffff;
-  --foreground: #262719;
-  --muted: #4f5139;
-  --muted-bg: #f1ead9;
-  --border: #c9c2ac;
-  --primary: #3e4229;
-  --primary-dark: #2e3120;
-  --primary-foreground: #fff8f1;
-  --secondary: #e4e0cd;
-  --secondary-foreground: #343721;
-  --accent: #c4611a;
-  --accent-foreground: #fff8f1;
-  --bloom: #c4611a;
-  --danger: #a32b1c;
-  --hero: #8e8a69;
-  --display-font: var(--font-outfit);
+  --background: #fff0dc;
+  --surface: #fff8ee;
+  --foreground: #49352e;
+  --muted: #6b4e43;
+  --muted-bg: #f8e2c8;
+  --border: #dcc2a2;
+  --primary: #a52800;
+  --primary-dark: #861f00;
+  --primary-foreground: #fff8f0;
+  --secondary: #f9dcc4;
+  --secondary-foreground: #49352e;
+  --accent: #a52800;
+  --accent-foreground: #fff8f0;
+  --bloom: #f2c65d;
+  --danger: #9b1c1c;
+  --sun: #f2c65d;
+  --rose: #e8a6b8;
 }
 
-/* 3sflores: rosa #d08678 é decorativo; texto e botões usam um tom mais fechado dele para manter contraste legível */
+/* 3SFlores: categoria da marca principal, mesma tipografia e mesma linguagem
+   gráfica, com o rosa como cor de destaque. O rosa claro (#e8a6b8) é para
+   fundos e grafismos; texto e botões usam um tom mais fechado para manter
+   o contraste. */
 .theme-flores {
-  --background: #fbeee9;
-  --surface: #ffffff;
-  --foreground: #3a2420;
-  --muted: #6b4038;
-  --muted-bg: #f3ddd5;
-  --border: #ddbdb2;
-  --primary: #6b4038;
-  --primary-dark: #4a1f18;
-  --primary-foreground: #fff8f1;
-  --secondary: #f3ddd5;
-  --secondary-foreground: #6b4038;
-  --accent: #9c4a3c;
-  --accent-foreground: #fff8f1;
-  --bloom: #d08678;
-  --hero: #c99c8f;
-  --display-font: var(--font-cormorant);
+  --background: #fce8ec;
+  --surface: #fff7f9;
+  --foreground: #49352e;
+  --muted: #6b4e43;
+  --muted-bg: #f8d3dc;
+  --border: #e6b8c4;
+  --primary: #a83358;
+  --primary-dark: #86294a;
+  --primary-foreground: #fff8f0;
+  --secondary: #f8d3dc;
+  --secondary-foreground: #49352e;
+  --accent: #a83358;
+  --accent-foreground: #fff8f0;
+  --bloom: #e8a6b8;
 }
 
 /* Painel da loja: só preto e branco, sem a paleta creme da vitrine e sem
    cinza, para cansar menos a vista em quem passa o dia nele. As cores da 3s
    entram só como detalhe: o verde-oliva vira a cor dos botões (--accent) e o
-   laranja (--bloom) fica para pequenos toques e nomes. */
+   laranja (--bloom) fica para pequenos toques e nomes. Os valores de verde e
+   laranja ficam fixos aqui: o painel não acompanha a paleta da vitrine. */
 .tema-painel {
   --background: #ffffff;
   --surface: #ffffff;
@@ -53,8 +59,12 @@
   --border: #000000;
   --secondary: #ffffff;
   --secondary-foreground: #000000;
+  --primary: #3e4229;
+  --primary-dark: #2e3120;
+  --primary-foreground: #fff8f1;
   --accent: #3e4229;
   --accent-foreground: #ffffff;
+  --bloom: #c4611a;
 }
 
 @theme inline {
@@ -73,10 +83,11 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-bloom: var(--bloom);
   --color-danger: var(--danger);
-  --color-hero: var(--hero);
-  --font-sans: var(--font-karla);
-  --font-display: var(--display-font);
-  --font-titulos: var(--font-outfit);
+  --color-sun: var(--sun);
+  --color-rose: var(--rose);
+  --font-sans: var(--font-dm-sans);
+  --font-display: var(--font-fredoka);
+  --font-titulos: var(--font-fredoka);
 }
 
 body {
@@ -84,8 +95,7 @@ body {
   color: var(--foreground);
 }
 
-/* Títulos em Outfit. Fica na camada base para que a classe font-display (que
-   no tema 3sflores usa a Cormorant) continue valendo onde já foi escolhida. */
+/* Títulos em Fredoka (arredondada, com ar retrô); o resto do texto, em DM Sans. */
 @layer base {
   h1,
   h2,
@@ -103,13 +113,26 @@ body {
   display: none;
 }
 
-/* Card da vitrine: ganha sombra no hover. */
+/* Card da vitrine: sobe um pouco e ganha uma sombra leve no hover. */
 .product-card {
-  transition: box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition:
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
 }
 
 .product-card:hover {
-  box-shadow: 0 10px 20px 4px rgb(35 35 35 / 0.15);
+  box-shadow: 0 10px 22px -6px rgb(73 53 46 / 0.22);
+  transform: translateY(-2px);
+}
+
+/* Atalho de categoria em forma de flor: gira de leve no hover. */
+.atalho-flor .atalho-forma {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.atalho-flor:hover .atalho-forma,
+.atalho-flor:focus-visible .atalho-forma {
+  transform: rotate(8deg) scale(1.04);
 }
 
 /* Card que vira: frente com ícone e título, verso com a explicação. */
@@ -143,7 +166,7 @@ body {
   padding: 1.5rem;
   text-align: center;
   border-radius: 2em;
-  border: 3px solid var(--accent);
+  border: 3px solid var(--sun);
   background-color: var(--primary);
   backface-visibility: hidden;
 }
@@ -158,8 +181,15 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flip-card-inner {
+  .flip-card-inner,
+  .atalho-flor .atalho-forma,
+  .product-card {
     transition: none;
+  }
+
+  .product-card:hover,
+  .atalho-flor:hover .atalho-forma {
+    transform: none;
   }
 }
 

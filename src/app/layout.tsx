@@ -8,33 +8,17 @@ import "./globals.css";
 
 // Fontes guardadas dentro do projeto: além de não depender da internet para
 // compilar, o site carrega sem buscar nada em servidor externo.
-const karla = localFont({
-  variable: "--font-karla",
+// Fredoka nos títulos e DM Sans no texto corrido (identidade 3Sementes Store).
+const fredoka = localFont({
+  variable: "--font-fredoka",
   display: "swap",
-  src: [{ path: "../fonts/Karla.woff2", weight: "400 700", style: "normal" }],
+  src: [{ path: "../fonts/Fredoka.woff2", weight: "300 700", style: "normal" }],
 });
 
-// Fonte dos títulos e dos nomes de produto. O texto corrido segue na Karla.
-const outfit = localFont({
-  variable: "--font-outfit",
+const dmSans = localFont({
+  variable: "--font-dm-sans",
   display: "swap",
-  src: [{ path: "../fonts/Outfit.woff2", weight: "100 900", style: "normal" }],
-});
-
-const libreBaskerville = localFont({
-  variable: "--font-libre",
-  display: "swap",
-  src: [
-    { path: "../fonts/LibreBaskerville.woff2", weight: "400 700", style: "normal" },
-  ],
-});
-
-const cormorant = localFont({
-  variable: "--font-cormorant",
-  display: "swap",
-  src: [
-    { path: "../fonts/CormorantGaramond.woff2", weight: "400 700", style: "normal" },
-  ],
+  src: [{ path: "../fonts/DMSans.woff2", weight: "100 1000", style: "normal" }],
 });
 
 export const metadata: Metadata = {
@@ -47,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-BR"
-      className={`${karla.variable} ${outfit.variable} ${libreBaskerville.variable} ${cormorant.variable} h-full antialiased`}
+      className={`${fredoka.variable} ${dmSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         <BarraDeCarregamento />

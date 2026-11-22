@@ -13,7 +13,7 @@ export default function FlipCard({
     <div className="flip-card h-[250px]" tabIndex={0}>
       <div className="flip-card-inner">
         <div className="flip-card-face flip-card-front">
-          <span className="flex h-[70px] w-[70px] items-center justify-center rounded-full border-2 border-accent text-accent">
+          <span className="flex h-[70px] w-[70px] items-center justify-center rounded-full border-2 border-sun text-sun">
             {icon}
           </span>
           <h3 className="font-display mt-5 text-[22px] font-bold text-primary-foreground">
