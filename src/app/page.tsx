@@ -6,6 +6,7 @@ import FlipCard from "@/components/FlipCard";
 import BannerDoTopo from "@/components/BannerDoTopo";
 import { Flor, FormaDeFlor, Mancha } from "@/components/Grafismos";
 import {
+  IconeBraceletes,
   IconeBrilhos,
   IconeBuque,
   IconeCaminhao,
@@ -14,7 +15,6 @@ import {
   IconeCoracao,
   IconeFolha,
   IconeGuia,
-  IconePulseira,
   IconeSeta,
   IconeWhatsApp,
 } from "@/components/Icones";
@@ -32,11 +32,33 @@ const FAIXAS = ["braceletes", "guias", "flores-eternas", "colares"];
 
 // Os cinco atalhos em forma de flor. Cada um tem a sua cor da paleta.
 const ATALHOS = [
-  { slug: "braceletes", nome: "Braceletes", Icone: IconePulseira, cor: "text-secondary" },
-  { slug: "colares", nome: "Colares e Chokers", Icone: IconeColar, cor: "text-rose" },
+  {
+    slug: "braceletes",
+    nome: "Braceletes",
+    Icone: IconeBraceletes,
+    cor: "text-secondary",
+    // O desenho dos braceletes é mais alto e largo que os ícones de linha.
+    tamanho: "h-11 w-9 sm:h-[76px] sm:w-[62px]",
+  },
+  {
+    slug: "colares",
+    nome: "Colares e Chokers",
+    Icone: IconeColar,
+    cor: "text-rose",
+  },
   { slug: "guias", nome: "Guias e Brajás", Icone: IconeGuia, cor: "text-sun" },
-  { slug: "flores-eternas", nome: "3SFlores", Icone: IconeBuque, cor: "text-rose/60" },
-  { slug: "acessorios", nome: "Mais acessórios", Icone: IconeBrilhos, cor: "text-primary/25" },
+  {
+    slug: "flores-eternas",
+    nome: "3SFlores",
+    Icone: IconeBuque,
+    cor: "text-rose/60",
+  },
+  {
+    slug: "acessorios",
+    nome: "Mais acessórios",
+    Icone: IconeBrilhos,
+    cor: "text-primary/25",
+  },
 ];
 
 const BENEFICIOS = [
@@ -164,7 +186,9 @@ export default async function Home() {
     return categoria && categoria.products.length > 0 ? [categoria] : [];
   });
 
-  const comFoto = { images: { orderBy: { position: "asc" as const }, take: 1 } };
+  const comFoto = {
+    images: { orderBy: { position: "asc" as const }, take: 1 },
+  };
 
   // Novidades: as peças mais recentes da loja, de todas as categorias.
   const novidades = await prisma.product.findMany({
@@ -187,7 +211,10 @@ export default async function Home() {
   });
   const produtosVendidos = vendidos.length
     ? await prisma.product.findMany({
-        where: { id: { in: vendidos.map((item) => item.productId) }, active: true },
+        where: {
+          id: { in: vendidos.map((item) => item.productId) },
+          active: true,
+        },
         include: comFoto,
       })
     : [];
@@ -202,7 +229,10 @@ export default async function Home() {
       .find((categoria) => categoria.slug === slug)
       ?.products.find((item) => item.images[0]);
     return produto
-      ? { url: produto.images[0].url, alt: produto.images[0].altText ?? produto.name }
+      ? {
+          url: produto.images[0].url,
+          alt: produto.images[0].altText ?? produto.name,
+        }
       : null;
   };
 
@@ -228,8 +258,11 @@ export default async function Home() {
         className="relative scroll-mt-28 overflow-hidden px-5 pb-6 pt-6 sm:px-6"
       >
         <ul className="mx-auto flex max-w-5xl flex-wrap justify-center gap-x-3 gap-y-5 sm:gap-x-5">
-          {ATALHOS.map(({ slug, nome, Icone, cor }) => (
-            <li key={slug} className="w-[calc(33.333%-0.5rem)] sm:w-[calc(20%-1rem)]">
+          {ATALHOS.map(({ slug, nome, Icone, cor, tamanho }) => (
+            <li
+              key={slug}
+              className="w-[calc(33.333%-0.5rem)] sm:w-[calc(20%-1rem)]"
+            >
               <Link
                 href={`/categorias/${slug}`}
                 className="atalho-flor relative flex aspect-square flex-col items-center justify-center text-center text-foreground"
@@ -238,7 +271,9 @@ export default async function Home() {
                   className={`atalho-forma absolute inset-0 h-full w-full ${cor}`}
                 />
                 <span className="relative flex flex-col items-center gap-1 px-2 sm:gap-1.5">
-                  <Icone className="h-6 w-6 text-primary sm:h-10 sm:w-10" />
+                  <Icone
+                    className={`text-primary ${tamanho ?? "h-6 w-6 sm:h-10 sm:w-10"}`}
+                  />
                   <span className="font-display text-[12px] font-semibold leading-tight sm:text-[17px]">
                     {nome}
                   </span>
@@ -269,7 +304,11 @@ export default async function Home() {
       </section>
 
       {maisVendidos.length >= 4 && (
-        <Vitrine id="mais-vendidos" titulo="Mais vendidos" produtos={maisVendidos} />
+        <Vitrine
+          id="mais-vendidos"
+          titulo="Mais vendidos"
+          produtos={maisVendidos}
+        />
       )}
 
       <section className="theme-flores px-5 py-4 sm:px-6">
@@ -338,7 +377,10 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="sobre" className="scroll-mt-28 px-5 pb-12 pt-2 sm:px-6 sm:pb-16">
+      <section
+        id="sobre"
+        className="scroll-mt-28 px-5 pb-12 pt-2 sm:px-6 sm:pb-16"
+      >
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-8 sm:gap-10">
           <div className="flex h-[220px] w-full items-center justify-center rounded-3xl bg-secondary sm:h-[280px] sm:w-[300px] sm:flex-[1_1_300px]">
             <Image src="/img/flor.png" alt="" width={150} height={150} />

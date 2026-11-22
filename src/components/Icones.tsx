@@ -25,17 +25,26 @@ function Base({
 
 // Categorias
 
-export function IconePulseira({ className }: Props) {
-  const contas = Array.from({ length: 12 }, (_, i) => {
-    const angulo = (i / 12) * Math.PI * 2;
-    return [12 + 8 * Math.cos(angulo), 12 + 8 * Math.sin(angulo)];
-  });
+// Ícone de Braceletes: desenho em arte (arames em espiral com contas e uma
+// flor), guardado como imagem só com o traço. Usado como máscara, ele assume a
+// cor do texto (text-primary etc.), como os ícones de linha.
+export function IconeBraceletes({ className }: Props) {
+  const imagem = "url(/img/icones/braceletes.png)";
   return (
-    <Base className={className}>
-      {contas.map(([x, y], i) => (
-        <circle key={i} cx={x.toFixed(2)} cy={y.toFixed(2)} r="2" />
-      ))}
-    </Base>
+    <span
+      aria-hidden
+      className={`inline-block bg-current ${className ?? ""}`}
+      style={{
+        WebkitMaskImage: imagem,
+        maskImage: imagem,
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+        WebkitMaskPosition: "center",
+        maskPosition: "center",
+        WebkitMaskSize: "contain",
+        maskSize: "contain",
+      }}
+    />
   );
 }
 
