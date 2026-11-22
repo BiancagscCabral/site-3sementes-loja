@@ -148,56 +148,23 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      <section className="relative flex min-h-[420px] items-center overflow-hidden bg-secondary/70 md:min-h-[480px]">
-        {/* Ondas do banner: rosa grande atrás da foto, amarela e terracota na base */}
-        <svg
-          aria-hidden
-          viewBox="0 0 600 460"
-          preserveAspectRatio="none"
-          className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-[58%] md:block"
-        >
-          <path
-            className="fill-rose"
-            d="M170 0C120 90 215 140 160 235C115 315 235 390 170 460H600V0Z"
-          />
-          <path
-            className="fill-sun"
-            d="M110 460C175 360 300 385 395 330C480 280 540 300 600 255V460Z"
-          />
-          <path
-            className="fill-primary"
-            d="M330 460C395 395 500 405 600 360V460Z"
-          />
-        </svg>
+      <section className="relative overflow-hidden bg-secondary/70 md:flex md:min-h-[480px] md:items-center">
         {/* Ondas coladas na borda esquerda */}
         <svg
           aria-hidden
           viewBox="0 0 40 220"
           preserveAspectRatio="none"
-          className="pointer-events-none absolute left-0 top-[30%] hidden h-[52%] w-8 md:block"
+          className="pointer-events-none absolute left-0 top-[30%] z-10 hidden h-[52%] w-8 md:block"
         >
           <path className="fill-primary" d="M0 0C30 8 38 44 22 78C14 94 6 98 0 100Z" />
           <path className="fill-sun" d="M0 86C26 94 34 124 18 152C10 166 4 170 0 172Z" />
           <path className="fill-rose" d="M0 158C24 166 30 190 16 220H0Z" />
         </svg>
 
-        {/* Traços brancos do canto do banner */}
-        <svg
-          aria-hidden
-          viewBox="0 0 64 56"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={5}
-          strokeLinecap="round"
-          className="pointer-events-none absolute right-8 top-6 hidden h-14 w-16 text-surface md:block"
-        >
-          <path d="M8 44l9-15M26 30l7-19M44 26l15-10" />
-        </svg>
-
-        <div className="relative mx-auto grid w-full max-w-5xl items-center gap-6 px-5 py-8 sm:px-6 md:grid-cols-2 md:gap-10 md:py-12">
-          <div className="relative z-10">
-            <Flor className="absolute -top-2 right-6 hidden h-12 w-12 text-sun md:block" />
-            <h1 className="max-w-[12ch] font-display text-[40px] font-semibold leading-[1.05] text-primary sm:text-[56px]">
+        <div className="relative z-10 mx-auto w-full max-w-5xl px-5 pb-6 pt-8 sm:px-6 md:py-12">
+          <div className="relative md:max-w-[46%]">
+            <Flor className="absolute -top-2 right-6 hidden h-12 w-12 text-sun lg:block" />
+            <h1 className="max-w-[12ch] font-display text-[40px] font-semibold leading-[1.05] text-primary md:text-[48px] lg:text-[56px]">
               Feito à mão, cheio de significado.
             </h1>
             <p className="mt-4 max-w-[34ch] text-base leading-7 text-foreground sm:text-lg">
@@ -212,22 +179,28 @@ export default async function Home() {
               <IconeSeta className="h-[18px] w-[18px]" />
             </Link>
           </div>
+        </div>
 
-          <div className="relative">
-            {/* No celular, as ondas do banner viram manchas atrás da foto */}
-            <Mancha
-              forma={2}
-              className="pointer-events-none absolute left-1/2 top-1/2 h-[155%] w-[155%] -translate-x-[46%] -translate-y-1/2 text-rose md:hidden"
+        {/* Foto grande de fundo: embaixo do texto no celular, à direita no computador */}
+        <div className="relative h-[300px] md:absolute md:inset-y-0 md:right-0 md:h-auto md:w-[62%]">
+          <HeroCarousel midia={fotosDoTopo} classeDasFotos="hero-foto" />
+          {/* Ondas amarela e terracota na base da foto */}
+          <svg
+            aria-hidden
+            viewBox="0 0 600 120"
+            preserveAspectRatio="none"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[22%] w-full"
+          >
+            <path
+              className="fill-sun"
+              d="M0 120C140 118 220 62 360 60C470 58 540 30 600 0V120Z"
             />
-            <Mancha
-              forma={1}
-              className="pointer-events-none absolute -bottom-6 -left-4 h-32 w-32 text-sun md:hidden"
+            <path
+              className="fill-primary"
+              d="M140 120C260 114 340 84 440 78C510 74 565 58 600 44V120Z"
             />
-            <Estrela className="pointer-events-none absolute -top-1 left-6 h-6 w-6 text-sun" />
-            <div className="relative z-10 mx-auto max-w-[460px]">
-              <HeroCarousel midia={fotosDoTopo} />
-            </div>
-          </div>
+          </svg>
+          <Estrela className="pointer-events-none absolute right-8 top-6 hidden h-6 w-6 text-surface md:block" />
         </div>
       </section>
 

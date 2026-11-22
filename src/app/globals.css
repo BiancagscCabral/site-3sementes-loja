@@ -113,6 +113,21 @@ body {
   display: none;
 }
 
+/* Foto de fundo do banner: some suavemente na borda que encosta no texto
+   (por baixo no celular, pela esquerda no computador), sem usar gradiente
+   colorido por cima da imagem. */
+.hero-foto {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 30%);
+  mask-image: linear-gradient(to bottom, transparent, #000 30%);
+}
+
+@media (min-width: 768px) {
+  .hero-foto {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 26%);
+    mask-image: linear-gradient(to right, transparent, #000 26%);
+  }
+}
+
 /* Card da vitrine: sobe um pouco e ganha uma sombra leve no hover. */
 .product-card {
   transition:
