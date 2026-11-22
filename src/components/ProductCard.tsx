@@ -39,7 +39,7 @@ export default function ProductCard({
       href={`/produtos/${slug}`}
       className="product-card block overflow-hidden rounded-2xl border border-border bg-surface"
     >
-      <span className="relative block aspect-[4/5] bg-muted-bg">
+      <span className="relative block aspect-square bg-muted-bg">
         {opcoes && (
           <span className="absolute left-3 top-3 z-10 rounded-full bg-surface/95 px-2.5 py-1 text-[11px] font-bold leading-none text-foreground">
             {opcoes}

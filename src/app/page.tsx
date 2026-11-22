@@ -181,6 +181,19 @@ export default async function Home() {
           <path className="fill-rose" d="M0 158C24 166 30 190 16 220H0Z" />
         </svg>
 
+        {/* Traços brancos do canto do banner */}
+        <svg
+          aria-hidden
+          viewBox="0 0 64 56"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={5}
+          strokeLinecap="round"
+          className="pointer-events-none absolute right-8 top-6 hidden h-14 w-16 text-surface md:block"
+        >
+          <path d="M8 44l9-15M26 30l7-19M44 26l15-10" />
+        </svg>
+
         <div className="relative mx-auto grid w-full max-w-5xl items-center gap-6 px-5 py-8 sm:px-6 md:grid-cols-2 md:gap-10 md:py-12">
           <div className="relative z-10">
             <Flor className="absolute -top-2 right-6 hidden h-12 w-12 text-sun md:block" />
@@ -188,8 +201,8 @@ export default async function Home() {
               Feito à mão, cheio de significado.
             </h1>
             <p className="mt-4 max-w-[34ch] text-base leading-7 text-foreground sm:text-lg">
-              Braceletes, guias, colares e flores eternas feitos à mão, do seu
-              jeito.
+              Acessórios, flores e criações personalizadas para você e seus
+              rituais.
             </p>
             <Link
               href="#categorias"
@@ -218,7 +231,18 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="categorias" className="scroll-mt-28 px-5 pb-6 pt-4 sm:px-6">
+      <section
+        id="categorias"
+        className="relative scroll-mt-28 overflow-hidden px-5 pb-6 pt-6 sm:px-6"
+      >
+        <Flor
+          miolo="var(--sun)"
+          className="pointer-events-none absolute -left-7 top-[42%] hidden h-24 w-24 text-rose md:block"
+        />
+        <Flor
+          miolo="var(--primary)"
+          className="pointer-events-none absolute -right-6 top-6 hidden h-20 w-20 text-sun md:block"
+        />
         <ul className="mx-auto flex max-w-5xl flex-wrap justify-center gap-x-3 gap-y-5 sm:gap-x-5">
           {ATALHOS.map(({ slug, nome, Icone, cor }) => (
             <li key={slug} className="w-[calc(33.333%-0.5rem)] sm:w-[calc(20%-1rem)]">
