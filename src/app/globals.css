@@ -24,26 +24,11 @@
   --rose: #e8a6b8;
 }
 
-/* 3SFlores: categoria da marca principal, mesma tipografia e mesma linguagem
-   gráfica, com o rosa como cor de destaque. O rosa claro (#e8a6b8) é para
-   fundos e grafismos; texto e botões usam um tom mais fechado para manter
-   o contraste. */
-.theme-flores {
-  --background: #fce8ec;
-  --surface: #fff7f9;
-  --foreground: #49352e;
-  --muted: #6b4e43;
-  --muted-bg: #f8d3dc;
-  --border: #e6b8c4;
-  --primary: #a83358;
-  --primary-dark: #86294a;
-  --primary-foreground: #fff8f0;
-  --secondary: #f8d3dc;
-  --secondary-foreground: #49352e;
-  --accent: #a83358;
-  --accent-foreground: #fff8f0;
-  --bloom: #e8a6b8;
-}
+/* 3SFlores: categoria da marca principal. As páginas dela usam a mesma paleta
+   da loja (fundo creme, terracota e marrom), sem tema próprio. A classe
+   .theme-flores continua sendo aplicada nas páginas de peças da 3SFlores, mas
+   de propósito não troca nenhuma cor. Se um dia for preciso um toque próprio,
+   é aqui que ele entra. O rosa (--rose) fica só para grafismos e banners. */
 
 /* Painel da loja: só preto e branco, sem a paleta creme da vitrine e sem
    cinza, para cansar menos a vista em quem passa o dia nele. As cores da 3s
