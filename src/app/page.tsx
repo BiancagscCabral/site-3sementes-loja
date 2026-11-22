@@ -296,21 +296,6 @@ export default async function Home() {
           return foto ? [{ ...foto, tipo: "imagem" as const }] : [];
         });
 
-  // Banner da 3SFlores: prefere a foto de um buquê; senão, a primeira peça com foto.
-  const produtosDeFlores =
-    faixas.find((categoria) => categoria.slug === "flores-eternas")?.products ??
-    [];
-  const pecaDoBanner =
-    produtosDeFlores.find(
-      (item) => /buqu/i.test(item.name) && item.images[0],
-    ) ?? produtosDeFlores.find((item) => item.images[0]);
-  const fotoDoBanner = pecaDoBanner
-    ? {
-        url: pecaDoBanner.images[0].url,
-        alt: pecaDoBanner.images[0].altText ?? pecaDoBanner.name,
-      }
-    : null;
-
   return (
     <div className="flex flex-col">
       <BannerDoTopo fotos={fotosDoTopo} />
@@ -376,7 +361,7 @@ export default async function Home() {
         />
       )}
 
-      <BannerDaFlores foto={fotoDoBanner} />
+      <BannerDaFlores />
 
       {novidades.length > 0 && (
         <Vitrine id="novidades" titulo="Novidades" produtos={novidades} />
