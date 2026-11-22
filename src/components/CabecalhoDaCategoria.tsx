@@ -1,19 +1,48 @@
 import Link from "next/link";
 import { Flor } from "@/components/Grafismos";
+import {
+  IconeAcessorios,
+  IconeBraceletes,
+  IconeBuque,
+  IconeColares,
+  IconeGuias,
+} from "@/components/Icones";
+
+// Ícone em arte de cada categoria (os mesmos dos atalhos da home), com o
+// tamanho que mantém a proporção do desenho ao lado do título. Categorias sem
+// ícone próprio (pulseiras, tornozeleiras, anéis) ficam com a flor.
+const ICONES: Record<
+  string,
+  { Icone: (props: { className?: string }) => React.ReactNode; tamanho: string }
+> = {
+  braceletes: {
+    Icone: IconeBraceletes,
+    tamanho: "h-9 w-[29px] sm:h-12 sm:w-[39px]",
+  },
+  colares: { Icone: IconeColares, tamanho: "h-9 w-[32px] sm:h-12 sm:w-[42px]" },
+  guias: { Icone: IconeGuias, tamanho: "h-9 w-[17px] sm:h-12 sm:w-[23px]" },
+  "flores-eternas": { Icone: IconeBuque, tamanho: "h-9 w-9 sm:h-12 sm:w-12" },
+  acessorios: { Icone: IconeAcessorios, tamanho: "h-9 w-9 sm:h-12 sm:w-12" },
+};
 
 // Faixa do topo das páginas de categoria: trilha de navegação, título com uma
 // flor ao lado, subtítulo e a arte de ondas (terracota na borda esquerda; rosa,
 // amarela e terracota à direita).
 export default function CabecalhoDaCategoria({
+  slug,
   trilha,
   titulo,
   subtitulo,
 }: {
+  /** Slug da categoria, para escolher o ícone ao lado do título. */
+  slug: string;
   /** Último item é a página atual (sem link). */
   trilha: { rotulo: string; href?: string }[];
   titulo: string;
   subtitulo: string;
 }) {
+  const icone = ICONES[slug];
+
   return (
     <section className="relative overflow-hidden border-b border-border bg-background">
       <svg
@@ -91,7 +120,11 @@ export default function CabecalhoDaCategoria({
           <h1 className="font-display text-[40px] font-semibold leading-none text-primary sm:text-[56px]">
             {titulo}
           </h1>
-          <Flor className="hidden h-11 w-11 text-sun sm:block" />
+          {icone ? (
+            <icone.Icone className={`shrink-0 text-primary ${icone.tamanho}`} />
+          ) : (
+            <Flor className="hidden h-11 w-11 text-sun sm:block" />
+          )}
         </div>
         <p className="mt-3 max-w-[36ch] text-base leading-7 text-foreground sm:text-lg">
           {subtitulo}

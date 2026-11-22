@@ -102,6 +102,7 @@ export default async function CategoryPage(
   return (
     <div className={`${brand.themeClass} bg-background text-foreground`}>
       <CabecalhoDaCategoria
+        slug={slug}
         trilha={trilha}
         titulo={atual.name}
         subtitulo={
