@@ -10,15 +10,13 @@ function textoDasOpcoes(opcoes: string[], rotulo?: string | null) {
   return `${opcoes.length} ${ehCor ? "cores" : "opções"}`;
 }
 
-// Card da vitrine: a foto ocupa o card inteiro e o nome e o preço ficam por
-// cima dela, sobre um degradê que garante a leitura em qualquer foto.
+// Card da vitrine: foto em cima, nome e preço embaixo em alto contraste (sem
+// texto por cima da foto), e a etiqueta de cores no canto da imagem.
 export default function ProductCard({
   slug,
   name,
   priceCents,
   image,
-  logo,
-  markClass,
   colors = [],
   optionLabel,
   sizes = "(max-width: 640px) 50vw, 260px",
@@ -27,8 +25,9 @@ export default function ProductCard({
   name: string;
   priceCents: number;
   image?: { url: string; altText: string | null } | null;
-  logo: string;
-  markClass: string;
+  /** Mantidos por compatibilidade com quem chama; o card usa a flor da marca. */
+  logo?: string;
+  markClass?: string;
   colors?: string[];
   optionLabel?: string | null;
   sizes?: string;
@@ -38,35 +37,43 @@ export default function ProductCard({
   return (
     <Link
       href={`/produtos/${slug}`}
-      className="product-card relative block aspect-[3/4] overflow-hidden rounded-2xl bg-muted-bg"
+      className="product-card block overflow-hidden rounded-2xl border border-border bg-surface"
     >
-      {opcoes && (
-        <span className="absolute left-3 top-3 z-10 rounded-full bg-background/90 px-2.5 py-1 text-[11px] font-bold leading-none text-foreground">
-          {opcoes}
-        </span>
-      )}
-      {image ? (
-        <Image
-          src={image.url}
-          alt={image.altText ?? name}
-          fill
-          sizes={sizes}
-          className="object-cover"
-        />
-      ) : (
-        <span className="absolute inset-0 flex items-center justify-center">
-          <Image src={logo} alt="" width={56} height={56} className={markClass} />
-        </span>
-      )}
+      <span className="relative block aspect-[4/5] bg-muted-bg">
+        {opcoes && (
+          <span className="absolute left-3 top-3 z-10 rounded-full bg-surface/95 px-2.5 py-1 text-[11px] font-bold leading-none text-foreground">
+            {opcoes}
+          </span>
+        )}
+        {image ? (
+          <Image
+            src={image.url}
+            alt={image.altText ?? name}
+            fill
+            sizes={sizes}
+            className="object-cover"
+          />
+        ) : (
+          <span className="absolute inset-0 flex items-center justify-center">
+            <Image
+              src="/img/flor.png"
+              alt=""
+              width={64}
+              height={64}
+              className="opacity-40"
+            />
+          </span>
+        )}
+      </span>
 
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/90 via-foreground/55 to-transparent p-4 pt-12">
-        <span className="line-clamp-2 font-titulos text-[15px] font-bold leading-snug text-background">
+      <span className="block px-3.5 pb-3.5 pt-3">
+        <span className="line-clamp-2 min-h-[2.5rem] text-[15px] font-semibold leading-snug text-foreground">
           {name}
         </span>
-        <span className="mt-0.5 block text-sm font-medium text-background/85">
+        <span className="mt-1 block text-[15px] font-bold text-primary">
           {formatPriceCents(priceCents)}
         </span>
-      </div>
+      </span>
     </Link>
   );
 }
