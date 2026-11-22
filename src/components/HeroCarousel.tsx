@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { OndasDaBase } from "@/components/ArteDoBanner";
 import type { HeroMedia } from "@/lib/hero";
 
 const SEGUNDOS = 6;
@@ -10,7 +11,8 @@ export type FotoDoBanner = HeroMedia & { alt?: string };
 
 // Arquivo com "recorte" no nome (ex: 01-buque-recorte.png) é uma peça sem
 // fundo: aparece solta, por cima das ondas do banner. Qualquer outro arquivo
-// é uma foto comum e entra numa forma orgânica, que sangra para fora do banner.
+// é uma foto comum e ocupa o painel inteiro da direita, de ponta a ponta, sumindo
+// suavemente na borda do texto, com as ondas da base por cima.
 const ehRecorte = (url: string) => /recorte/i.test(url);
 
 // Fotos do banner do topo. Preenche a caixa em que for colocado (que precisa
@@ -55,27 +57,30 @@ export default function HeroCarousel({ midia }: { midia: FotoDoBanner[] }) {
               />
             </div>
           ) : (
-            <div className="absolute inset-x-[7%] -inset-y-[5%] overflow-hidden rounded-[46%_54%_48%_52%/36%_40%_60%_64%] shadow-[0_18px_40px_-14px_rgb(73_53_46/0.5)]">
-              {item.tipo === "video" ? (
-                <video
-                  src={item.url}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <Image
-                  src={item.url}
-                  alt={item.alt ?? ""}
-                  fill
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                  priority={indice === 0}
-                  className="object-cover"
-                />
-              )}
-            </div>
+            <>
+              <div className="hero-foto absolute inset-0">
+                {item.tipo === "video" ? (
+                  <video
+                    src={item.url}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <Image
+                    src={item.url}
+                    alt={item.alt ?? ""}
+                    fill
+                    sizes="(min-width: 768px) 56vw, 100vw"
+                    priority={indice === 0}
+                    className="object-cover contrast-[1.06] saturate-[1.12]"
+                  />
+                )}
+              </div>
+              <OndasDaBase />
+            </>
           )}
         </div>
       ))}
@@ -96,7 +101,7 @@ export default function HeroCarousel({ midia }: { midia: FotoDoBanner[] }) {
               className={`h-2.5 rounded-full transition-all ${
                 indice === atual
                   ? "w-6 bg-surface"
-                  : "w-2.5 bg-rose hover:bg-surface"
+                  : "w-2.5 bg-surface/55 hover:bg-surface"
               }`}
             />
           ))}

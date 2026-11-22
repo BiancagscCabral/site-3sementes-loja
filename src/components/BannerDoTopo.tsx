@@ -1,59 +1,8 @@
 import Link from "next/link";
+import { ArteDoBanner } from "@/components/ArteDoBanner";
 import HeroCarousel, { type FotoDoBanner } from "@/components/HeroCarousel";
 import { Estrela, Flor } from "@/components/Grafismos";
 import { IconeSeta } from "@/components/Icones";
-
-// Arte do lado direito do banner: ondas rosa, amarela e terracota. O desenho
-// cobre 830 x 460 e é esticado para a caixa em que for colocado.
-function ArteDoBanner({
-  className,
-  preserveAspectRatio = "none",
-}: {
-  className?: string;
-  preserveAspectRatio?: string;
-}) {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 830 460"
-      preserveAspectRatio={preserveAspectRatio}
-      className={className}
-    >
-      <path
-        className="fill-rose/60"
-        d="M260 0C215 60 255 120 195 190C150 245 175 305 200 345C225 388 165 425 190 460H830V0Z"
-      />
-      <path
-        className="fill-rose"
-        d="M305 0C265 55 298 108 247 170C207 220 227 272 247 312C267 352 222 408 237 460H830V0Z"
-      />
-      <path
-        className="fill-sun"
-        d="M520 460C560 390 645 350 705 298C765 246 795 186 830 136V460Z"
-      />
-      <path
-        className="fill-primary"
-        d="M600 460C660 400 750 370 830 252V460Z"
-      />
-      <path className="fill-rose" d="M730 460C760 432 800 416 830 410V460Z" />
-      <path
-        className="fill-sun"
-        d="M20 460C35 400 95 355 170 353C245 351 280 415 292 460Z"
-      />
-      <path
-        className="fill-primary"
-        d="M95 460C112 432 175 410 232 418C268 424 288 440 300 460Z"
-      />
-      <path
-        className="stroke-surface"
-        fill="none"
-        strokeWidth={9}
-        strokeLinecap="round"
-        d="M690 72l12-30M718 58l15-34M748 66l28-20"
-      />
-    </svg>
-  );
-}
 
 // Banner do topo da home. No computador: texto à esquerda sobre o creme, arte
 // de ondas e foto grande à direita. No celular: texto em cima e a foto embaixo,
