@@ -6,9 +6,12 @@ import type { HeroMedia } from "@/lib/hero";
 
 const SEGUNDOS = 6;
 
-// Fundo do topo da home: as fotos e os vídeos se alternam em transição suave,
-// atrás do texto. Com um arquivo só, ele fica parado — sem contador rodando à toa.
-export default function HeroCarousel({ midia }: { midia: HeroMedia[] }) {
+type Foto = HeroMedia & { alt?: string };
+
+// Foto do topo da home, dentro de uma forma orgânica. As fotos se alternam em
+// transição suave; com uma só, ela fica parada. Respeita a preferência por
+// menos movimento e tem bolinhas para escolher a foto.
+export default function HeroCarousel({ midia }: { midia: Foto[] }) {
   const [atual, setAtual] = useState(0);
 
   useEffect(() => {
@@ -20,43 +23,66 @@ export default function HeroCarousel({ midia }: { midia: HeroMedia[] }) {
     }, SEGUNDOS * 1000);
 
     return () => clearInterval(timer);
-  }, [midia.length]);
+  }, [midia.length, atual]);
 
   if (midia.length === 0) return null;
 
   return (
-    <div aria-hidden className="absolute inset-0 overflow-hidden bg-hero">
-      {midia.map((item, indice) => (
-        <div
-          key={item.url}
-          className={`absolute inset-0 transition-opacity duration-1000 ${
-            indice === atual ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          {item.tipo === "video" ? (
-            <video
-              src={item.url}
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <Image
-              src={item.url}
-              alt=""
-              fill
-              sizes="100vw"
-              priority={indice === 0}
-              className="object-cover"
-            />
-          )}
-        </div>
-      ))}
+    <div>
+      <div className="relative aspect-[5/4] w-full overflow-hidden rounded-[58%_42%_50%_50%/50%_55%_45%_50%] bg-muted-bg shadow-[0_18px_40px_-18px_rgb(73_53_46/0.45)]">
+        {midia.map((item, indice) => (
+          <div
+            key={item.url}
+            aria-hidden={indice !== atual}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              indice === atual ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            {item.tipo === "video" ? (
+              <video
+                src={item.url}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <Image
+                src={item.url}
+                alt={item.alt ?? ""}
+                fill
+                sizes="(min-width: 768px) 460px, 90vw"
+                priority={indice === 0}
+                className="object-cover"
+              />
+            )}
+          </div>
+        ))}
+      </div>
 
-      {/* Escurece o fundo o suficiente para o bloco de texto não competir com a foto */}
-      <div className="absolute inset-0 bg-foreground/35" />
+      {midia.length > 1 && (
+        <div
+          role="group"
+          aria-label="Escolher foto"
+          className="mt-4 flex justify-center gap-2"
+        >
+          {midia.map((item, indice) => (
+            <button
+              key={item.url}
+              type="button"
+              onClick={() => setAtual(indice)}
+              aria-label={`Foto ${indice + 1} de ${midia.length}`}
+              aria-current={indice === atual}
+              className={`h-2.5 rounded-full transition-all ${
+                indice === atual
+                  ? "w-6 bg-primary"
+                  : "w-2.5 bg-primary/30 hover:bg-primary/60"
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
