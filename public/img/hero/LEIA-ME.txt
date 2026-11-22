@@ -26,3 +26,9 @@ Video: toca mudo e em repeticao, e entra como foto comum. Deixe curto (ate ~15 s
 
 No celular, a foto aparece embaixo do texto, em largura total (altura de 340 px).
 Por isso, deixe a peca sempre no centro: as laterais podem ser cortadas.
+
+ARQUIVOS PROVISORIOS
+Os tres arquivos 01-luminaria..., 02-bracelete... e 03-guia... sao recortes das
+fotos de pecas da loja, feitos so para mostrar o efeito do banner. Quando
+colocar as suas fotos, apague esses tres (ou eles vao alternar junto com as
+suas).
