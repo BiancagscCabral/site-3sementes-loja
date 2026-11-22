@@ -98,6 +98,81 @@ body {
   display: none;
 }
 
+/* Controle de faixa de preço: dois botões num mesmo trilho. As duas barras de
+   <input type="range"> ficam uma sobre a outra, transparentes, e só as pontas
+   (os botões) recebem clique. */
+.faixa-preco {
+  position: relative;
+  height: 24px;
+}
+
+.faixa-trilho,
+.faixa-selecao {
+  position: absolute;
+  top: 50%;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 999px;
+}
+
+.faixa-trilho {
+  left: 0;
+  right: 0;
+  background: var(--border);
+}
+
+.faixa-selecao {
+  background: var(--primary);
+}
+
+.faixa-preco input[type="range"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 24px;
+  margin: 0;
+  background: transparent;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.faixa-preco input[type="range"]::-webkit-slider-runnable-track {
+  height: 24px;
+  background: transparent;
+}
+
+.faixa-preco input[type="range"]::-moz-range-track {
+  background: transparent;
+}
+
+.faixa-preco input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border: 2px solid var(--primary);
+  border-radius: 999px;
+  background: var(--surface);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.faixa-preco input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--primary);
+  border-radius: 999px;
+  background: var(--surface);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.faixa-preco input[type="range"]:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 /* Card da vitrine: sobe um pouco e ganha uma sombra leve no hover. */
 .product-card {
   transition:
