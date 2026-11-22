@@ -25,7 +25,15 @@ function Base({ className, children }: Props & { children: React.ReactNode }) {
 // Ícones em arte (Braceletes e 3SFlores): desenhos guardados como imagem só com
 // o traço. Usados como máscara, eles assumem a cor do texto (text-primary etc.),
 // como os ícones de linha.
-function IconeDeArte({ arquivo, className }: Props & { arquivo: string }) {
+//
+// `ajusteX` corrige o peso visual do desenho: é quanto (em % da largura) o
+// centro de massa do traço fica à direita do meio da imagem. O ícone é
+// deslocado para a esquerda nessa medida, para parecer centralizado na flor.
+function IconeDeArte({
+  arquivo,
+  className,
+  ajusteX = 0,
+}: Props & { arquivo: string; ajusteX?: number }) {
   const imagem = `url(/img/icones/${arquivo})`;
   return (
     <span
@@ -40,18 +48,23 @@ function IconeDeArte({ arquivo, className }: Props & { arquivo: string }) {
         maskPosition: "center",
         WebkitMaskSize: "contain",
         maskSize: "contain",
+        transform: ajusteX ? `translateX(${-ajusteX}%)` : undefined,
       }}
     />
   );
 }
 
 export function IconeBraceletes({ className }: Props) {
-  return <IconeDeArte arquivo="braceletes.png" className={className} />;
+  return (
+    <IconeDeArte arquivo="braceletes.png" ajusteX={2.5} className={className} />
+  );
 }
 
 // Arames com contas, para "Mais acessórios".
 export function IconeAcessorios({ className }: Props) {
-  return <IconeDeArte arquivo="acessorios.png" className={className} />;
+  return (
+    <IconeDeArte arquivo="acessorios.png" ajusteX={4.6} className={className} />
+  );
 }
 
 // Buquê da 3SFlores.
