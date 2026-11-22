@@ -12,9 +12,9 @@ import {
   IconeCaminhao,
   IconeCartao,
   IconeColar,
+  IconeGuias,
   IconeCoracao,
   IconeFolha,
-  IconeGuia,
   IconeSeta,
   IconeWhatsApp,
 } from "@/components/Icones";
@@ -46,7 +46,14 @@ const ATALHOS = [
     Icone: IconeColar,
     cor: "text-rose",
   },
-  { slug: "guias", nome: "Guias e Brajás", Icone: IconeGuia, cor: "text-sun" },
+  {
+    slug: "guias",
+    nome: "Guias e Brajás",
+    Icone: IconeGuias,
+    cor: "text-sun",
+    // O colar é bem mais alto que largo.
+    tamanho: "h-11 w-[21px] sm:h-[76px] sm:w-[36px]",
+  },
   {
     slug: "flores-eternas",
     nome: "3SFlores",

@@ -67,6 +67,11 @@ export function IconeAcessorios({ className }: Props) {
   );
 }
 
+// Colar de contas com pingente de touro, para Guias e Brajás.
+export function IconeGuias({ className }: Props) {
+  return <IconeDeArte arquivo="guias.png" className={className} />;
+}
+
 // Buquê da 3SFlores.
 export function IconeBuque({ className }: Props) {
   return <IconeDeArte arquivo="3sflores.png" className={className} />;
@@ -78,26 +83,6 @@ export function IconeColar({ className }: Props) {
       <path d="M4.5 3.5c0 9 3 14 7.5 14s7.5-5 7.5-14" />
       <circle cx="12" cy="20" r="2.2" />
       <path d="M12 17.5v.3" />
-    </Base>
-  );
-}
-
-export function IconeGuia({ className }: Props) {
-  const contas = [
-    [6.2, 7.5],
-    [7.6, 12],
-    [10, 15.4],
-    [14, 15.4],
-    [16.4, 12],
-    [17.8, 7.5],
-  ];
-  return (
-    <Base className={className}>
-      <path d="M5.6 3c-.5 6 1 10.5 4 13.2M18.4 3c.5 6-1 10.5-4 13.2" />
-      {contas.map(([x, y], i) => (
-        <circle key={i} cx={x} cy={y} r="1.1" />
-      ))}
-      <path d="M12 17.5v1.7M10.4 19.2h3.2l-1.6 3z" />
     </Base>
   );
 }
