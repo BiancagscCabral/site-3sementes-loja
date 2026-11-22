@@ -148,12 +148,40 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      <section className="relative overflow-hidden bg-background">
-        <Mancha
-          forma={0}
-          className="pointer-events-none absolute -left-28 top-4 h-72 w-72 text-secondary"
-        />
-        <div className="relative mx-auto grid max-w-5xl items-center gap-6 px-5 py-8 sm:px-6 md:grid-cols-2 md:gap-10 md:py-12">
+      <section className="relative flex min-h-[420px] items-center overflow-hidden bg-secondary/70 md:min-h-[480px]">
+        {/* Ondas do banner: rosa grande atrás da foto, amarela e terracota na base */}
+        <svg
+          aria-hidden
+          viewBox="0 0 600 460"
+          preserveAspectRatio="none"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-[58%] md:block"
+        >
+          <path
+            className="fill-rose"
+            d="M170 0C120 90 215 140 160 235C115 315 235 390 170 460H600V0Z"
+          />
+          <path
+            className="fill-sun"
+            d="M110 460C175 360 300 385 395 330C480 280 540 300 600 255V460Z"
+          />
+          <path
+            className="fill-primary"
+            d="M330 460C395 395 500 405 600 360V460Z"
+          />
+        </svg>
+        {/* Ondas coladas na borda esquerda */}
+        <svg
+          aria-hidden
+          viewBox="0 0 40 220"
+          preserveAspectRatio="none"
+          className="pointer-events-none absolute left-0 top-[30%] hidden h-[52%] w-8 md:block"
+        >
+          <path className="fill-primary" d="M0 0C30 8 38 44 22 78C14 94 6 98 0 100Z" />
+          <path className="fill-sun" d="M0 86C26 94 34 124 18 152C10 166 4 170 0 172Z" />
+          <path className="fill-rose" d="M0 158C24 166 30 190 16 220H0Z" />
+        </svg>
+
+        <div className="relative mx-auto grid w-full max-w-5xl items-center gap-6 px-5 py-8 sm:px-6 md:grid-cols-2 md:gap-10 md:py-12">
           <div className="relative z-10">
             <Flor className="absolute -top-2 right-6 hidden h-12 w-12 text-sun md:block" />
             <h1 className="max-w-[12ch] font-display text-[40px] font-semibold leading-[1.05] text-primary sm:text-[56px]">
@@ -173,13 +201,14 @@ export default async function Home() {
           </div>
 
           <div className="relative">
+            {/* No celular, as ondas do banner viram manchas atrás da foto */}
             <Mancha
               forma={2}
-              className="pointer-events-none absolute left-1/2 top-1/2 h-[155%] w-[155%] -translate-x-[46%] -translate-y-1/2 text-rose"
+              className="pointer-events-none absolute left-1/2 top-1/2 h-[155%] w-[155%] -translate-x-[46%] -translate-y-1/2 text-rose md:hidden"
             />
             <Mancha
               forma={1}
-              className="pointer-events-none absolute -bottom-6 -left-4 h-32 w-32 text-sun sm:h-40 sm:w-40"
+              className="pointer-events-none absolute -bottom-6 -left-4 h-32 w-32 text-sun md:hidden"
             />
             <Estrela className="pointer-events-none absolute -top-1 left-6 h-6 w-6 text-sun" />
             <div className="relative z-10 mx-auto max-w-[460px]">
