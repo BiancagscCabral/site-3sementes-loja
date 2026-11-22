@@ -52,6 +52,8 @@ const ATALHOS = [
     nome: "3SFlores",
     Icone: IconeBuque,
     cor: "text-rose/60",
+    // O desenho do buquê é quadrado e cheio, como o dos braceletes.
+    tamanho: "h-11 w-11 sm:h-[76px] sm:w-[74px]",
   },
   {
     slug: "acessorios",

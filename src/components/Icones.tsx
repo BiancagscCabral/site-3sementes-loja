@@ -3,10 +3,7 @@
 
 type Props = { className?: string };
 
-function Base({
-  className,
-  children,
-}: Props & { children: React.ReactNode }) {
+function Base({ className, children }: Props & { children: React.ReactNode }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -25,11 +22,11 @@ function Base({
 
 // Categorias
 
-// Ícone de Braceletes: desenho em arte (arames em espiral com contas e uma
-// flor), guardado como imagem só com o traço. Usado como máscara, ele assume a
-// cor do texto (text-primary etc.), como os ícones de linha.
-export function IconeBraceletes({ className }: Props) {
-  const imagem = "url(/img/icones/braceletes.png)";
+// Ícones em arte (Braceletes e 3SFlores): desenhos guardados como imagem só com
+// o traço. Usados como máscara, eles assumem a cor do texto (text-primary etc.),
+// como os ícones de linha.
+function IconeDeArte({ arquivo, className }: Props & { arquivo: string }) {
+  const imagem = `url(/img/icones/${arquivo})`;
   return (
     <span
       aria-hidden
@@ -46,6 +43,15 @@ export function IconeBraceletes({ className }: Props) {
       }}
     />
   );
+}
+
+export function IconeBraceletes({ className }: Props) {
+  return <IconeDeArte arquivo="braceletes.png" className={className} />;
+}
+
+// Buquê da 3SFlores.
+export function IconeBuque({ className }: Props) {
+  return <IconeDeArte arquivo="3sflores.png" className={className} />;
 }
 
 export function IconeColar({ className }: Props) {
@@ -74,24 +80,6 @@ export function IconeGuia({ className }: Props) {
         <circle key={i} cx={x} cy={y} r="1.1" />
       ))}
       <path d="M12 17.5v1.7M10.4 19.2h3.2l-1.6 3z" />
-    </Base>
-  );
-}
-
-export function IconeBuque({ className }: Props) {
-  return (
-    <Base className={className}>
-      <circle cx="12" cy="7" r="1.6" />
-      {[
-        [12, 3.4],
-        [15.4, 5.8],
-        [14.1, 9.7],
-        [9.9, 9.7],
-        [8.6, 5.8],
-      ].map(([x, y], i) => (
-        <circle key={i} cx={x} cy={y} r="1.9" />
-      ))}
-      <path d="M12 11.5V14M8 14h8l-1.6 7.5H9.6z" />
     </Base>
   );
 }
