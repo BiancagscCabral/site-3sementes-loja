@@ -49,6 +49,11 @@ export function IconeBraceletes({ className }: Props) {
   return <IconeDeArte arquivo="braceletes.png" className={className} />;
 }
 
+// Arames com contas, para "Mais acessórios".
+export function IconeAcessorios({ className }: Props) {
+  return <IconeDeArte arquivo="acessorios.png" className={className} />;
+}
+
 // Buquê da 3SFlores.
 export function IconeBuque({ className }: Props) {
   return <IconeDeArte arquivo="3sflores.png" className={className} />;
@@ -80,15 +85,6 @@ export function IconeGuia({ className }: Props) {
         <circle key={i} cx={x} cy={y} r="1.1" />
       ))}
       <path d="M12 17.5v1.7M10.4 19.2h3.2l-1.6 3z" />
-    </Base>
-  );
-}
-
-export function IconeBrilhos({ className }: Props) {
-  return (
-    <Base className={className}>
-      <path d="M10 3c.6 4.2 3.8 7.4 8 8-4.2.6-7.4 3.8-8 8-.6-4.2-3.8-7.4-8-8 4.2-.6 7.4-3.8 8-8Z" />
-      <path d="M19 3v4M17 5h4M19.5 16.5v3.5M17.8 18.2h3.4" />
     </Base>
   );
 }

@@ -6,8 +6,8 @@ import FlipCard from "@/components/FlipCard";
 import BannerDoTopo from "@/components/BannerDoTopo";
 import { Flor, FormaDeFlor, Mancha } from "@/components/Grafismos";
 import {
+  IconeAcessorios,
   IconeBraceletes,
-  IconeBrilhos,
   IconeBuque,
   IconeCaminhao,
   IconeCartao,
@@ -58,8 +58,10 @@ const ATALHOS = [
   {
     slug: "acessorios",
     nome: "Mais acessórios",
-    Icone: IconeBrilhos,
+    Icone: IconeAcessorios,
     cor: "text-primary/25",
+    // Desenho de arame com contas, quadrado como os outros ícones em arte.
+    tamanho: "h-11 w-11 sm:h-[76px] sm:w-[76px]",
   },
 ];
 
