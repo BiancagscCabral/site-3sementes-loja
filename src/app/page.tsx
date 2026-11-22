@@ -154,14 +154,6 @@ export default async function Home() {
         id="categorias"
         className="relative scroll-mt-28 overflow-hidden px-5 pb-6 pt-6 sm:px-6"
       >
-        <Flor
-          miolo="var(--sun)"
-          className="pointer-events-none absolute -left-7 top-[42%] hidden h-24 w-24 text-rose md:block"
-        />
-        <Flor
-          miolo="var(--primary)"
-          className="pointer-events-none absolute -right-6 top-6 hidden h-20 w-20 text-sun md:block"
-        />
         <ul className="mx-auto flex max-w-5xl flex-wrap justify-center gap-x-3 gap-y-5 sm:gap-x-5">
           {ATALHOS.map(({ slug, nome, Icone, cor }) => (
             <li key={slug} className="w-[calc(33.333%-0.5rem)] sm:w-[calc(20%-1rem)]">
@@ -206,13 +198,9 @@ export default async function Home() {
       {destaques.length > 0 && (
         <section id="destaques" className="scroll-mt-28 px-5 py-10 sm:px-6 sm:py-12">
           <div className="mx-auto max-w-5xl">
-            <div className="flex items-center justify-center gap-3">
-              <Flor className="hidden h-7 w-7 text-sun sm:block" />
-              <h2 className="text-center font-display text-[26px] font-semibold leading-tight text-primary sm:text-[34px]">
-                Destaques da 3Sementes
-              </h2>
-              <Flor className="hidden h-7 w-7 text-sun sm:block" />
-            </div>
+            <h2 className="text-center font-display text-[26px] font-semibold leading-tight text-primary sm:text-[34px]">
+              Destaques da 3Sementes
+            </h2>
 
             <div className="mt-7">
               <ProductCarousel rotulo="Destaques da 3Sementes" automatico>
@@ -322,10 +310,6 @@ export default async function Home() {
         <Flor
           miolo="var(--primary)"
           className="pointer-events-none absolute -bottom-8 -left-8 hidden h-28 w-28 text-sun sm:block"
-        />
-        <Flor
-          miolo="var(--primary)"
-          className="pointer-events-none absolute -right-6 -top-6 hidden h-24 w-24 text-rose sm:block"
         />
         <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-5 text-center md:flex-row md:justify-between md:text-left">
           <div className="flex items-center gap-4">

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArteDoBanner } from "@/components/ArteDoBanner";
 import HeroCarousel, { type FotoDoBanner } from "@/components/HeroCarousel";
-import { Estrela, Flor } from "@/components/Grafismos";
+import { Flor } from "@/components/Grafismos";
 import { IconeSeta } from "@/components/Icones";
 
 // Banner do topo da home. No computador: texto à esquerda sobre o creme, arte
@@ -38,13 +38,10 @@ export default function BannerDoTopo({ fotos }: { fotos: FotoDoBanner[] }) {
             </h1>
             <Flor className="pointer-events-none absolute -top-1 left-full ml-4 hidden h-16 w-16 text-sun lg:block" />
           </div>
-          <div className="relative mt-4 max-w-[34ch]">
-            <p className="text-base leading-7 text-foreground sm:text-lg">
-              Acessórios, flores e criações personalizadas para você e seus
-              rituais.
-            </p>
-            <Estrela className="pointer-events-none absolute left-full top-1/2 ml-8 hidden h-7 w-7 -translate-y-1/2 text-primary lg:block" />
-          </div>
+          <p className="mt-4 max-w-[34ch] text-base leading-7 text-foreground sm:text-lg">
+            Acessórios, flores e criações personalizadas para você e seus
+            rituais.
+          </p>
           <Link
             href="#categorias"
             className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-[15px] font-semibold text-primary-foreground transition-colors hover:bg-primary-dark"

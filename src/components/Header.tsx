@@ -107,9 +107,6 @@ export default function Header() {
     <div className="sticky top-0 z-30">
       <div className="bg-primary px-3 py-2 text-[12px] font-medium text-primary-foreground sm:px-4 sm:text-[13px]">
         <ul className="mx-auto flex max-w-5xl items-center justify-center gap-x-2.5 whitespace-nowrap sm:gap-x-4">
-          <li aria-hidden className="hidden sm:block">
-            <Estrela className="h-3 w-3 text-sun" />
-          </li>
           <li className="flex items-center gap-2">
             <IconeCaminhao className="hidden h-4 w-4 text-sun sm:block" />
             Envio para todo o Brasil
@@ -122,9 +119,6 @@ export default function Header() {
             <Estrela className="h-3 w-3 text-sun" />
           </li>
           <li>Personalize do seu jeito!</li>
-          <li aria-hidden className="hidden sm:block">
-            <Estrela className="h-3 w-3 text-sun" />
-          </li>
         </ul>
       </div>
 

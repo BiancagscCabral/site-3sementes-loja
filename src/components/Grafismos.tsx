@@ -1,6 +1,17 @@
 // Grafismos de apoio da identidade Groovy: flor, estrela, manchas orgânicas e a
 // forma de flor dos atalhos. Todos usam currentColor (a cor vem da classe de
 // texto) e são decorativos: ficam escondidos de leitores de tela.
+//
+// REGRA DE USO. O grafismo apoia o produto, não compete com ele:
+// 1. Ondas e manchas grandes: só nos banners (topo e 3SFlores) e nas manchas
+//    coladas na borda do banner. Nunca no meio de uma lista de produtos.
+// 2. Flor pequena: no máximo uma por seção, perto do título, nunca encostada
+//    em foto de produto.
+// 3. Estrela: só como separador da faixa de anúncio.
+// 4. Em uma mesma tela visível, no máximo duas flores soltas.
+// 5. Páginas de compra (produto, sacola, checkout, conta, pedido): nenhum
+//    grafismo solto.
+// 6. Na dúvida, tire. Se a tela funciona sem o grafismo, ele não entra.
 
 type Props = { className?: string };
 
