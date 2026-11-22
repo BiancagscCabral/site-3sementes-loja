@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { OndasDaBase } from "@/components/ArteDoBanner";
+import { OndasDaFrente } from "@/components/ArteDoBanner";
 import type { HeroMedia } from "@/lib/hero";
 
 const SEGUNDOS = 6;
@@ -12,7 +12,7 @@ export type FotoDoBanner = HeroMedia & { alt?: string };
 // Arquivo com "recorte" no nome (ex: 01-buque-recorte.png) é uma peça sem
 // fundo: aparece solta, por cima das ondas do banner. Qualquer outro arquivo
 // é uma foto comum e ocupa o painel inteiro da direita, de ponta a ponta, sumindo
-// suavemente na borda do texto, com as ondas da base por cima.
+// suavemente na borda do texto, com as ondas por cima.
 const ehRecorte = (url: string) => /recorte/i.test(url);
 
 // Fotos do banner do topo. Preenche a caixa em que for colocado (que precisa
@@ -79,7 +79,7 @@ export default function HeroCarousel({ midia }: { midia: FotoDoBanner[] }) {
                   />
                 )}
               </div>
-              <OndasDaBase />
+              <OndasDaFrente />
             </>
           )}
         </div>

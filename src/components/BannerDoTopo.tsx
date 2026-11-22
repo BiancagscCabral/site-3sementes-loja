@@ -10,24 +10,27 @@ import { IconeSeta } from "@/components/Icones";
 export default function BannerDoTopo({ fotos }: { fotos: FotoDoBanner[] }) {
   return (
     <section className="relative overflow-hidden bg-background md:h-[460px]">
-      <ArteDoBanner className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-[66%] md:block" />
+      <ArteDoBanner className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-[63.4%] md:block" />
 
-      {/* Manchas coladas na borda esquerda */}
+      {/* Manchas coladas na borda esquerda: terracota, amarela e rosa */}
       <svg
         aria-hidden
-        viewBox="0 0 80 460"
+        viewBox="0 0 100 452"
         preserveAspectRatio="none"
-        className="pointer-events-none absolute left-0 top-0 z-10 hidden h-full w-16 md:block"
+        className="pointer-events-none absolute left-0 top-0 z-10 hidden h-full w-12 md:block lg:w-20"
       >
         <path
           className="fill-primary"
-          d="M0 178C42 188 60 232 46 266C38 284 16 296 0 296Z"
+          d="M0 175C30 180 45 215 38 250C34 270 15 285 0 290Z"
         />
         <path
           className="fill-sun"
-          d="M0 290C42 296 92 346 86 402C84 430 70 444 62 460H0Z"
+          d="M0 270C40 280 95 330 92 385C90 420 75 440 62 452H0Z"
         />
-        <path className="fill-rose" d="M0 385C30 390 52 415 46 460H0Z" />
+        <path
+          className="fill-rose"
+          d="M0 360C28 365 58 392 52 430C50 440 45 447 42 452H0Z"
+        />
       </svg>
 
       <div className="relative z-10 mx-auto h-full w-full max-w-5xl px-5 pb-6 pt-8 sm:px-6 md:flex md:items-center md:py-0">
