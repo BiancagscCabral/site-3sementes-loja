@@ -10,8 +10,8 @@ export type FotoDoBanner = HeroMedia & { alt?: string };
 
 // Arquivo com "recorte" no nome (ex: 01-buque-recorte.png) é uma peça sem
 // fundo: aparece solta, por cima das ondas do banner. Qualquer outro arquivo
-// é uma foto comum e flutua num cartão de cantos arredondados, com moldura
-// branca, por cima das ondas.
+// é uma foto comum e flutua por cima das ondas, só com os cantos arredondados:
+// sem moldura, sem sombra, sem nenhuma marca ao redor.
 const ehRecorte = (url: string) => /recorte/i.test(url);
 
 // Fotos do banner do topo. Preenche a caixa em que for colocado (que precisa
@@ -52,11 +52,11 @@ export default function HeroCarousel({ midia }: { midia: FotoDoBanner[] }) {
                 fill
                 sizes="(min-width: 768px) 56vw, 100vw"
                 priority={indice === 0}
-                className="object-contain object-bottom drop-shadow-[0_14px_24px_rgb(73_53_46/0.28)]"
+                className="object-contain object-bottom"
               />
             </div>
           ) : (
-            <div className="absolute inset-x-[9%] bottom-[14%] top-[5%] overflow-hidden rounded-[28px] shadow-[0_22px_44px_-16px_rgb(73_53_46/0.55)] ring-[6px] ring-surface md:inset-y-[9%] md:left-[19%] md:right-[16%]">
+            <div className="absolute inset-x-[9%] bottom-[14%] top-[5%] overflow-hidden rounded-[28px] md:inset-y-[9%] md:left-[19%] md:right-[16%]">
               {item.tipo === "video" ? (
                 <video
                   src={item.url}
