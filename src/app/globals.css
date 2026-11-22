@@ -113,21 +113,6 @@ body {
   display: none;
 }
 
-/* Foto de fundo do banner: só a faixa bem estreita que encosta no texto fica
-   transparente (por cima no celular, pela esquerda no computador). O resto da
-   foto aparece inteiro, para a peça ter presença. */
-.hero-foto {
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 12%);
-  mask-image: linear-gradient(to bottom, transparent, #000 12%);
-}
-
-@media (min-width: 768px) {
-  .hero-foto {
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 9%);
-    mask-image: linear-gradient(to right, transparent, #000 9%);
-  }
-}
-
 /* Card da vitrine: sobe um pouco e ganha uma sombra leve no hover. */
 .product-card {
   transition:

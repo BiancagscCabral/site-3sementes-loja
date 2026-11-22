@@ -2,7 +2,7 @@
 // medidas da referência (1310 x 452). Os caminhos estão nessas coordenadas e
 // cada SVG usa um viewBox que mostra só a parte que lhe cabe.
 
-// Ondas: aparecem atrás de uma peça recortada e, por cima, de uma foto comum.
+// Ondas: ficam atrás da foto, que flutua por cima delas.
 const AMARELA_DIREITA =
   "M1310 98L1296 108C1262 138 1230 178 1198 208C1166 238 1152 268 1122 294C1090 320 1052 332 1020 358C986 386 984 422 1004 452H1310Z";
 const TERRACOTA_DIREITA =
@@ -51,31 +51,5 @@ export function ArteDoBanner({
       />
       <Ondas />
     </svg>
-  );
-}
-
-// As mesmas ondas, para ficarem POR CIMA de uma foto comum, alinhadas com a
-// arte de trás. No computador, a caixa da foto começa na posição 576 da
-// referência (44% da largura); no celular, a caixa usa o desenho inteiro.
-export function OndasDaFrente() {
-  return (
-    <>
-      <svg
-        aria-hidden
-        viewBox="480 0 830 452"
-        preserveAspectRatio="xMidYMid slice"
-        className="pointer-events-none absolute inset-0 h-full w-full md:hidden"
-      >
-        <Ondas />
-      </svg>
-      <svg
-        aria-hidden
-        viewBox="576 0 734 452"
-        preserveAspectRatio="none"
-        className="pointer-events-none absolute inset-0 hidden h-full w-full md:block"
-      >
-        <Ondas />
-      </svg>
-    </>
   );
 }

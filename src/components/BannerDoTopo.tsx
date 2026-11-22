@@ -21,15 +21,15 @@ export default function BannerDoTopo({ fotos }: { fotos: FotoDoBanner[] }) {
       >
         <path
           className="fill-primary"
-          d="M0 175C30 180 45 215 38 250C34 270 15 285 0 290Z"
+          d="M0 150C34 158 46 186 34 212C24 234 44 254 32 276C25 290 12 296 0 298Z"
         />
         <path
           className="fill-sun"
-          d="M0 270C40 280 95 330 92 385C90 420 75 440 62 452H0Z"
+          d="M0 250C38 262 66 288 52 322C40 352 76 378 88 408C96 428 82 442 72 452H0Z"
         />
         <path
           className="fill-rose"
-          d="M0 360C28 365 58 392 52 430C50 440 45 447 42 452H0Z"
+          d="M0 346C26 354 52 370 44 396C38 416 56 430 50 452H0Z"
         />
       </svg>
 
