@@ -3,8 +3,8 @@ import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import ProductCarousel from "@/components/ProductCarousel";
 import FlipCard from "@/components/FlipCard";
-import HeroCarousel from "@/components/HeroCarousel";
-import { Estrela, Flor, FormaDeFlor, Mancha } from "@/components/Grafismos";
+import BannerDoTopo from "@/components/BannerDoTopo";
+import { Flor, FormaDeFlor, Mancha } from "@/components/Grafismos";
 import {
   IconeBrilhos,
   IconeBuque,
@@ -148,61 +148,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      <section className="relative overflow-hidden bg-secondary/70 md:flex md:min-h-[480px] md:items-center">
-        {/* Ondas coladas na borda esquerda */}
-        <svg
-          aria-hidden
-          viewBox="0 0 40 220"
-          preserveAspectRatio="none"
-          className="pointer-events-none absolute left-0 top-[30%] z-10 hidden h-[52%] w-8 md:block"
-        >
-          <path className="fill-primary" d="M0 0C30 8 38 44 22 78C14 94 6 98 0 100Z" />
-          <path className="fill-sun" d="M0 86C26 94 34 124 18 152C10 166 4 170 0 172Z" />
-          <path className="fill-rose" d="M0 158C24 166 30 190 16 220H0Z" />
-        </svg>
-
-        <div className="relative z-10 mx-auto w-full max-w-5xl px-5 pb-6 pt-8 sm:px-6 md:py-12">
-          <div className="relative md:max-w-[46%]">
-            <Flor className="absolute -top-2 right-6 hidden h-12 w-12 text-sun lg:block" />
-            <h1 className="max-w-[12ch] font-display text-[40px] font-semibold leading-[1.05] text-primary md:text-[48px] lg:text-[56px]">
-              Feito à mão, cheio de significado.
-            </h1>
-            <p className="mt-4 max-w-[34ch] text-base leading-7 text-foreground sm:text-lg">
-              Acessórios, flores e criações personalizadas para você e seus
-              rituais.
-            </p>
-            <Link
-              href="#categorias"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-[15px] font-semibold text-primary-foreground transition-colors hover:bg-primary-dark"
-            >
-              Conheça a loja
-              <IconeSeta className="h-[18px] w-[18px]" />
-            </Link>
-          </div>
-        </div>
-
-        {/* Foto grande de fundo: embaixo do texto no celular, à direita no computador */}
-        <div className="relative h-[300px] md:absolute md:inset-y-0 md:right-0 md:h-auto md:w-[62%]">
-          <HeroCarousel midia={fotosDoTopo} classeDasFotos="hero-foto" />
-          {/* Ondas amarela e terracota na base da foto */}
-          <svg
-            aria-hidden
-            viewBox="0 0 600 120"
-            preserveAspectRatio="none"
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-[22%] w-full"
-          >
-            <path
-              className="fill-sun"
-              d="M0 120C140 118 220 62 360 60C470 58 540 30 600 0V120Z"
-            />
-            <path
-              className="fill-primary"
-              d="M140 120C260 114 340 84 440 78C510 74 565 58 600 44V120Z"
-            />
-          </svg>
-          <Estrela className="pointer-events-none absolute right-8 top-6 hidden h-6 w-6 text-surface md:block" />
-        </div>
-      </section>
+      <BannerDoTopo fotos={fotosDoTopo} />
 
       <section
         id="categorias"

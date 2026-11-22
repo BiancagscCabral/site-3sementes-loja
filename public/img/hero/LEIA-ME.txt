@@ -1,9 +1,28 @@
-Fotos e videos do fundo do topo da home (atras do texto "Produtos feitos a mao").
+Fotos do banner do topo da home (ao lado do texto "Feito a mao, cheio de significado").
 
 Aceita .jpg .png .webp .avif .mp4 .webm
 A ordem e a alfabetica do nome do arquivo: use 01-, 02-, 03- para mandar na ordem.
-Cada um fica 6 segundos na tela. Com um arquivo so, ele fica parado.
-Nao precisa mexer no codigo: e so colocar os arquivos aqui.
+Cada uma fica 6 segundos na tela. Com um arquivo so, ela fica parada.
+Nao precisa mexer no codigo: e so colocar os arquivos aqui. Pode ir colocando
+aos poucos; o que estiver na pasta aparece no banner.
+Enquanto a pasta so tiver este arquivo, o banner mostra fotos de pecas da loja.
 
-Dica: fotos deitadas (paisagem) e de pelo menos 1600px de largura ficam melhores.
-Video: deixe curto (ate ~15s) e sem audio, porque ele toca mudo e em repeticao.
+DOIS JEITOS DE COLOCAR UMA FOTO
+
+1) Foto comum (com fundo). Ex: 01-bracelete-oxum.jpg
+   Entra numa forma organica grande, que sai um pouco para fora do banner,
+   sobre as ondas coloridas.
+   Melhor: quadrada ou um pouco deitada (4:3), com 1600 px ou mais no lado
+   maior, e a peca no centro da foto.
+
+2) Foto RECORTADA (so a peca, sem fundo). Coloque a palavra "recorte" no nome.
+   Ex: 02-buque-girassol-recorte.png
+   Tem que ser PNG ou WebP com fundo transparente. Ela aparece solta e grande,
+   por cima das ondas, como no desenho do banner.
+   Melhor: quadrada ou mais alta do que larga (ex: 1200 x 1400 px), com a peca
+   ocupando quase todo o quadro e encostada na base da imagem.
+
+Video: toca mudo e em repeticao, e entra como foto comum. Deixe curto (ate ~15 s).
+
+No celular, a foto aparece embaixo do texto, em largura total (altura de 340 px).
+Por isso, deixe a peca sempre no centro: as laterais podem ser cortadas.
