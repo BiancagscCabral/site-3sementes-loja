@@ -96,6 +96,57 @@ function RulerIcon() {
   );
 }
 
+type ProdutoDaVitrine = {
+  slug: string;
+  name: string;
+  priceCents: number;
+  colors: string[];
+  optionLabel: string | null;
+  images: { url: string; altText: string | null }[];
+};
+
+// Faixa de produtos em carrossel, com título centralizado.
+function Vitrine({
+  id,
+  titulo,
+  produtos,
+}: {
+  id: string;
+  titulo: string;
+  produtos: ProdutoDaVitrine[];
+}) {
+  return (
+    <section id={id} className="scroll-mt-28 px-5 py-10 sm:px-6 sm:py-12">
+      <div className="mx-auto max-w-5xl">
+        <h2 className="text-center font-display text-[26px] font-semibold leading-tight text-primary sm:text-[34px]">
+          {titulo}
+        </h2>
+
+        <div className="mt-7">
+          <ProductCarousel rotulo={titulo} automatico>
+            {produtos.map((produto) => (
+              <div
+                key={produto.slug}
+                className="w-[44%] shrink-0 snap-start sm:w-[calc((100%-78px)/4)]"
+              >
+                <ProductCard
+                  slug={produto.slug}
+                  name={produto.name}
+                  priceCents={produto.priceCents}
+                  image={produto.images[0]}
+                  colors={produto.colors}
+                  optionLabel={produto.optionLabel}
+                  sizes="(max-width: 640px) 44vw, 240px"
+                />
+              </div>
+            ))}
+          </ProductCarousel>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default async function Home() {
   const categorias = await prisma.category.findMany({
     where: { slug: { in: FAIXAS } },
@@ -113,15 +164,37 @@ export default async function Home() {
     return categoria && categoria.products.length > 0 ? [categoria] : [];
   });
 
-  // Vitrine: as peças mais novas de cada categoria, intercaladas, para a
-  // primeira tela já mostrar a variedade da loja.
-  const destaques = [];
-  for (let rodada = 0; rodada < 4; rodada++) {
-    for (const categoria of faixas) {
-      const produto = categoria.products[rodada];
-      if (produto) destaques.push(produto);
-    }
-  }
+  const comFoto = { images: { orderBy: { position: "asc" as const }, take: 1 } };
+
+  // Novidades: as peças mais recentes da loja, de todas as categorias.
+  const novidades = await prisma.product.findMany({
+    where: { active: true },
+    orderBy: { createdAt: "desc" },
+    take: 12,
+    include: comFoto,
+  });
+
+  // Mais vendidos: soma das unidades de pedidos já pagos (pagos, postados ou
+  // finalizados; pedido cancelado ou à espera de pagamento não conta). Se ainda
+  // não houver vendas suficientes, a seção não aparece: não dá para chamar de
+  // "mais vendido" o que não vendeu.
+  const vendidos = await prisma.orderItem.groupBy({
+    by: ["productId"],
+    where: { order: { status: { in: ["PAID", "SHIPPED", "DELIVERED"] } } },
+    _sum: { quantity: true },
+    orderBy: { _sum: { quantity: "desc" } },
+    take: 12,
+  });
+  const produtosVendidos = vendidos.length
+    ? await prisma.product.findMany({
+        where: { id: { in: vendidos.map((item) => item.productId) }, active: true },
+        include: comFoto,
+      })
+    : [];
+  const maisVendidos = vendidos.flatMap((item) => {
+    const produto = produtosVendidos.find((p) => p.id === item.productId);
+    return produto ? [produto] : [];
+  });
 
   // Primeira peça com foto de uma categoria (para o topo e o banner).
   const fotoDaCategoria = (slug: string) => {
@@ -195,35 +268,8 @@ export default async function Home() {
         </ul>
       </section>
 
-      {destaques.length > 0 && (
-        <section id="destaques" className="scroll-mt-28 px-5 py-10 sm:px-6 sm:py-12">
-          <div className="mx-auto max-w-5xl">
-            <h2 className="text-center font-display text-[26px] font-semibold leading-tight text-primary sm:text-[34px]">
-              Destaques da 3Sementes
-            </h2>
-
-            <div className="mt-7">
-              <ProductCarousel rotulo="Destaques da 3Sementes" automatico>
-                {destaques.slice(0, 12).map((produto) => (
-                  <div
-                    key={produto.slug}
-                    className="w-[44%] shrink-0 snap-start sm:w-[calc((100%-78px)/4)]"
-                  >
-                    <ProductCard
-                      slug={produto.slug}
-                      name={produto.name}
-                      priceCents={produto.priceCents}
-                      image={produto.images[0]}
-                      colors={produto.colors}
-                      optionLabel={produto.optionLabel}
-                      sizes="(max-width: 640px) 44vw, 240px"
-                    />
-                  </div>
-                ))}
-              </ProductCarousel>
-            </div>
-          </div>
-        </section>
+      {maisVendidos.length >= 4 && (
+        <Vitrine id="mais-vendidos" titulo="Mais vendidos" produtos={maisVendidos} />
       )}
 
       <section className="theme-flores px-5 py-4 sm:px-6">
@@ -268,6 +314,10 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {novidades.length > 0 && (
+        <Vitrine id="novidades" titulo="Novidades" produtos={novidades} />
+      )}
 
       <section className="px-5 py-10 sm:px-6 sm:py-12">
         <div className="mx-auto max-w-5xl">
