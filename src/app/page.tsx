@@ -11,7 +11,7 @@ import {
   IconeBuque,
   IconeCaminhao,
   IconeCartao,
-  IconeColar,
+  IconeColares,
   IconeGuias,
   IconeCoracao,
   IconeFolha,
@@ -43,8 +43,10 @@ const ATALHOS = [
   {
     slug: "colares",
     nome: "Colares e Chokers",
-    Icone: IconeColar,
+    Icone: IconeColares,
     cor: "text-rose",
+    // Desenho quase quadrado, como o dos braceletes.
+    tamanho: "h-9 w-8 sm:h-[76px] sm:w-[67px]",
   },
   {
     slug: "guias",

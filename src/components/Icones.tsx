@@ -67,6 +67,13 @@ export function IconeAcessorios({ className }: Props) {
   );
 }
 
+// Choker de arame com flor e espirais, para Colares e Chokers.
+export function IconeColares({ className }: Props) {
+  return (
+    <IconeDeArte arquivo="colares.png" ajusteX={7.2} className={className} />
+  );
+}
+
 // Colar de contas com pingente de touro, para Guias e Brajás.
 export function IconeGuias({ className }: Props) {
   return <IconeDeArte arquivo="guias.png" className={className} />;
@@ -75,16 +82,6 @@ export function IconeGuias({ className }: Props) {
 // Buquê da 3SFlores.
 export function IconeBuque({ className }: Props) {
   return <IconeDeArte arquivo="3sflores.png" className={className} />;
-}
-
-export function IconeColar({ className }: Props) {
-  return (
-    <Base className={className}>
-      <path d="M4.5 3.5c0 9 3 14 7.5 14s7.5-5 7.5-14" />
-      <circle cx="12" cy="20" r="2.2" />
-      <path d="M12 17.5v.3" />
-    </Base>
-  );
 }
 
 // Benefícios e interface
