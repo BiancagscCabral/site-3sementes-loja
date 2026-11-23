@@ -11,16 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SITUACOES } from "@/components/admin/statusDoPedido";
 import { podeExcluir, statusPermitidos } from "@/lib/regras-pedido";
 
-const STATUS = [
-  { valor: "AWAITING_CONTACT", nome: "Aguardando contato" },
-  { valor: "AWAITING_PAYMENT", nome: "Aguardando pagamento" },
-  { valor: "PAID", nome: "Pago" },
-  { valor: "SHIPPED", nome: "Postado" },
-  { valor: "DELIVERED", nome: "Finalizado" },
-  { valor: "CANCELLED", nome: "Cancelado" },
-];
+const STATUS = SITUACOES.map((item) => ({
+  valor: item.valor as string,
+  nome: item.nome as string,
+}));
 
 export default function AcoesDoPedido({
   id,
@@ -37,7 +34,9 @@ export default function AcoesDoPedido({
     paymentStatus: foiPago ? "PAID" : "PENDING",
   });
   const opcoes = STATUS.filter((item) => permitidos.includes(item.valor));
-  const excluivel = podeExcluir({ paymentStatus: foiPago ? "PAID" : "PENDING" });
+  const excluivel = podeExcluir({
+    paymentStatus: foiPago ? "PAID" : "PENDING",
+  });
 
   const [confirmando, setConfirmando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
@@ -106,7 +105,7 @@ export default function AcoesDoPedido({
               type="button"
               onClick={apagar}
               disabled={salvando}
-              className="cursor-pointer border border-danger px-3 py-1.5 text-[13px] font-medium text-danger transition-colors hover:bg-danger hover:text-background disabled:opacity-60"
+              className="cursor-pointer rounded-full border border-danger px-4 py-1.5 text-[13px] font-medium text-danger transition-colors hover:bg-danger hover:text-background disabled:opacity-60"
             >
               {salvando ? "Apagando..." : "Apagar"}
             </button>

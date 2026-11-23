@@ -1,58 +1,82 @@
-import Image from "next/image";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { formatPriceCents } from "@/lib/format";
 import { ehAdmin, usuarioAtual } from "@/lib/supabase/servidor";
+import CabecalhoDoPainel from "@/components/admin/CabecalhoDoPainel";
+import EmBreve from "@/components/admin/EmBreve";
+import GradeDeProdutos from "@/components/admin/GradeDeProdutos";
+import { IconeMais, IconeNuvem } from "@/components/Icones";
 
 export const dynamic = "force-dynamic";
 
-export default async function ProdutosDoAdmin() {
+export default async function ProdutosDoAdmin({
+  searchParams,
+}: PageProps<"/admin/produtos">) {
   const usuario = await usuarioAtual();
   if (!usuario) redirect("/admin/entrar");
   if (!ehAdmin(usuario.email)) redirect("/admin");
 
-  const produtos = await prisma.product.findMany({
-    orderBy: [{ category: { name: "asc" } }, { name: "asc" }],
-    select: {
-      slug: true,
-      name: true,
-      weightGrams: true,
-      category: { select: { name: true } },
-      images: {
-        orderBy: { position: "asc" },
-        take: 1,
-        select: { url: true, altText: true },
-      },
-      _count: { select: { images: true } },
-    },
-  });
+  const parametros = await searchParams;
+  const categoriaInicial =
+    typeof parametros.categoria === "string" ? parametros.categoria : "";
 
-  const semFoto = produtos.filter((p) => p._count.images === 0);
-  const comFoto = produtos.filter((p) => p._count.images > 0);
+  const [produtos, categorias] = await Promise.all([
+    prisma.product.findMany({
+      orderBy: [{ category: { name: "asc" } }, { name: "asc" }],
+      select: {
+        slug: true,
+        name: true,
+        priceCents: true,
+        weightGrams: true,
+        category: { select: { name: true, slug: true } },
+        images: {
+          orderBy: { position: "asc" },
+          take: 1,
+          select: { url: true, altText: true },
+        },
+        _count: { select: { images: true } },
+      },
+    }),
+    prisma.category.findMany({
+      orderBy: { name: "asc" },
+      select: { slug: true, name: true },
+    }),
+  ]);
+
   const semPeso = produtos.filter((p) => p.weightGrams === null).length;
 
-  // Uma seção por categoria, com ou sem foto. A lista já vem ordenada por
-  // categoria e nome, então basta agrupar na ordem em que chegou.
-  const porCategoria = new Map<string, ProdutoDaLista[]>();
-  for (const produto of produtos) {
-    const lista = porCategoria.get(produto.category.name) ?? [];
-    lista.push(produto);
-    porCategoria.set(produto.category.name, lista);
-  }
-
   return (
-    <div className="mx-auto max-w-5xl px-5 py-10 sm:px-6 sm:py-14">
-      <div className="flex flex-wrap items-baseline gap-4 border-b-2 border-foreground pb-2.5">
-        <h1 className="text-[15px] font-bold uppercase tracking-[0.18em]">
-          Fotos dos produtos
-        </h1>
-        <span className="text-[13px] text-muted">
-          {semFoto.length} sem foto, {comFoto.length} com foto
+    <div className="px-5 py-8 sm:px-8 sm:py-10">
+      <CabecalhoDoPainel
+        titulo="Produtos"
+        subtitulo="Adicione, edite e organize os produtos da sua loja."
+      >
+        <span
+          aria-disabled
+          className="inline-flex h-11 cursor-not-allowed items-center gap-2 rounded-full bg-primary/55 px-6 text-[15px] font-semibold text-primary-foreground"
+        >
+          <IconeMais className="h-[18px] w-[18px]" />
+          Adicionar produto
+          <EmBreve />
         </span>
+      </CabecalhoDoPainel>
+
+      <div
+        aria-disabled
+        className="relative mt-6 flex cursor-not-allowed flex-col items-center gap-1 rounded-2xl border-2 border-dashed border-primary/40 px-6 py-7 text-center"
+      >
+        <IconeNuvem className="h-10 w-10 text-primary" />
+        <p className="mt-1 text-[16px] font-bold text-foreground">
+          Adicionar fotos de produtos
+        </p>
+        <p className="text-[13px] text-muted">
+          Arraste e solte suas imagens aqui ou clique para escolher
+        </p>
+        <EmBreve className="mt-2" />
       </div>
 
       {semPeso > 0 && (
-        <p className="mt-5 rounded-lg border border-border bg-muted-bg/60 px-3 py-2.5 text-[12px] leading-[1.6] text-muted">
+        <p className="mt-5 rounded-2xl bg-muted-bg px-4 py-3 text-[13px] leading-[1.6] text-foreground">
           <strong>{semPeso}</strong> produto{semPeso > 1 ? "s" : ""} ainda{" "}
           {semPeso > 1 ? "usam" : "usa"} peso e medida estimados no cálculo do
           frete. Se a estimativa for menor que a embalagem real, a diferença sai
@@ -61,77 +85,21 @@ export default async function ProdutosDoAdmin() {
         </p>
       )}
 
-      {[...porCategoria].map(([categoria, lista]) => (
-        <Secao key={categoria} titulo={categoria} produtos={lista} />
-      ))}
+      <GradeDeProdutos
+        categoriaInicial={categoriaInicial}
+        categorias={categorias.map((c) => ({ slug: c.slug, nome: c.name }))}
+        produtos={produtos.map((p) => ({
+          slug: p.slug,
+          nome: p.name,
+          preco: formatPriceCents(p.priceCents),
+          categoria: p.category.name,
+          categoriaSlug: p.category.slug,
+          foto: p.images[0]
+            ? { url: p.images[0].url, alt: p.images[0].altText ?? p.name }
+            : null,
+          totalDeFotos: p._count.images,
+        }))}
+      />
     </div>
-  );
-}
-
-type ProdutoDaLista = {
-  slug: string;
-  name: string;
-  weightGrams: number | null;
-  category: { name: string };
-  images: { url: string; altText: string | null }[];
-  _count: { images: number };
-};
-
-function Secao({
-  titulo,
-  produtos,
-}: {
-  titulo: string;
-  produtos: ProdutoDaLista[];
-}) {
-  return (
-    <section className="mt-8">
-      <h2 className="flex items-baseline gap-3 border-b border-border pb-2 text-[13px] font-bold uppercase tracking-[0.14em]">
-        {titulo}
-        <span className="text-[11px] font-normal normal-case tracking-normal text-muted">
-          {produtos.length} produto{produtos.length > 1 ? "s" : ""}
-        </span>
-      </h2>
-
-      <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        {produtos.map((produto) => (
-          <li key={produto.slug}>
-            <Link
-              href={`/admin/produtos/${produto.slug}`}
-              className="group block overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-foreground"
-            >
-              <span className="relative block aspect-square bg-muted-bg">
-                {produto.images[0] ? (
-                  <Image
-                    src={produto.images[0].url}
-                    alt={produto.images[0].altText ?? produto.name}
-                    fill
-                    sizes="(min-width: 1024px) 220px, (min-width: 640px) 30vw, 45vw"
-                    className="object-cover"
-                  />
-                ) : (
-                  <span className="absolute inset-0 flex items-center justify-center text-[12px] text-muted">
-                    sem foto
-                  </span>
-                )}
-              </span>
-
-              <span className="block px-3 py-2.5">
-                <span className="line-clamp-2 block text-[13px] font-medium leading-snug">
-                  {produto.name}
-                </span>
-                <span className="mt-1 block text-[11px] text-muted">
-                  {produto.category.name}
-                  {produto._count.images > 0 &&
-                    ` · ${produto._count.images} foto${
-                      produto._count.images > 1 ? "s" : ""
-                    }`}
-                </span>
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
   );
 }

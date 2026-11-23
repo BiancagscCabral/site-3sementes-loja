@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { criarClienteNavegador } from "@/lib/supabase/navegador";
+import CartaoDeAcesso from "@/components/admin/CartaoDeAcesso";
+import CampoDoFormulario from "@/components/admin/CampoDoFormulario";
+import { IconeCadeado, IconeEmail, IconeSeta } from "@/components/Icones";
 
 type ErroSupabase = { code?: string; status?: number; message?: string };
 
@@ -13,7 +16,7 @@ function explicar(error: ErroSupabase) {
     return "Limite de e-mails do Supabase atingido (2 por hora no plano grátis). Espere alguns minutos e tente de novo.";
   }
   if (error.code === "user_already_exists" || error.code === "email_exists") {
-    return "Esse e-mail já tem conta. Use \"Esqueci minha senha\".";
+    return 'Esse e-mail já tem conta. Use "Esqueci minha senha".';
   }
   if (error.code === "email_address_invalid") {
     return "O Supabase recusou esse endereço de e-mail.";
@@ -84,38 +87,27 @@ export default function EntrarPage() {
   };
 
   return (
-    <div className="mx-auto max-w-sm px-5 py-16 sm:px-6">
-      <h1 className="text-center font-display text-[26px] font-bold text-foreground">
-        Painel da loja
-      </h1>
-      <p className="mt-2 text-center text-sm text-muted">
-        Acesso restrito. Entre com o e-mail da loja.
-      </p>
-
+    <CartaoDeAcesso
+      titulo="Painel da loja"
+      subtitulo="Acesso restrito. Entre com o e-mail da loja."
+    >
       <form onSubmit={entrar} className="mt-7 flex flex-col gap-4">
-        <label className="flex flex-col gap-1.5">
-          <span className="text-[13px] font-medium text-foreground">E-mail</span>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
-            required
-            className="h-11 border border-border bg-surface px-3.5 text-sm text-foreground outline-none transition-colors focus:border-accent"
-          />
-        </label>
-
-        <label className="flex flex-col gap-1.5">
-          <span className="text-[13px] font-medium text-foreground">Senha</span>
-          <input
-            type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            autoComplete="current-password"
-            required
-            className="h-11 border border-border bg-surface px-3.5 text-sm text-foreground outline-none transition-colors focus:border-accent"
-          />
-        </label>
+        <CampoDoFormulario
+          rotulo="E-mail"
+          Icone={IconeEmail}
+          tipo="email"
+          valor={email}
+          aoMudar={setEmail}
+          autoComplete="email"
+        />
+        <CampoDoFormulario
+          rotulo="Senha"
+          Icone={IconeCadeado}
+          tipo="password"
+          valor={senha}
+          aoMudar={setSenha}
+          autoComplete="current-password"
+        />
 
         {erro && <p className="text-[13px] text-danger">{erro}</p>}
         {aviso && <p className="text-[13px] text-muted">{aviso}</p>}
@@ -123,21 +115,20 @@ export default function EntrarPage() {
         <button
           type="submit"
           disabled={carregando}
-          className="flex h-11 items-center justify-center bg-accent px-5 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+          className="mt-1 flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full bg-primary px-5 text-[16px] font-semibold text-primary-foreground transition-colors hover:bg-primary-dark disabled:opacity-60"
         >
           {carregando ? "Aguarde..." : "Entrar"}
+          {!carregando && <IconeSeta className="h-[18px] w-[18px]" />}
         </button>
 
-        <div className="flex flex-col gap-2 text-[13px] text-muted">
-          <button
-            type="button"
-            onClick={recuperarSenha}
-            className="cursor-pointer underline underline-offset-4 transition-colors hover:text-foreground"
-          >
-            Esqueci minha senha
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={recuperarSenha}
+          className="cursor-pointer self-center text-[14px] text-foreground underline underline-offset-4 transition-colors hover:text-primary"
+        >
+          Esqueci minha senha
+        </button>
       </form>
-    </div>
+    </CartaoDeAcesso>
   );
 }

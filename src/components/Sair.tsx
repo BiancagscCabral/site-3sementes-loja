@@ -9,9 +9,12 @@ const ESTILO_PADRAO =
 export default function Sair({
   destino = "/admin/entrar",
   className = ESTILO_PADRAO,
+  icone,
 }: {
   destino?: string;
   className?: string;
+  /** Ícone opcional, mostrado antes do texto. */
+  icone?: React.ReactNode;
 }) {
   const router = useRouter();
 
@@ -22,11 +25,8 @@ export default function Sair({
   };
 
   return (
-    <button
-      type="button"
-      onClick={sair}
-      className={className}
-    >
+    <button type="button" onClick={sair} className={className}>
+      {icone}
       Sair
     </button>
   );

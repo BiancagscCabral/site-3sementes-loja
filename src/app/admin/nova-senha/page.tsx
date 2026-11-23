@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { criarClienteNavegador } from "@/lib/supabase/navegador";
+import CartaoDeAcesso from "@/components/admin/CartaoDeAcesso";
+import CampoDoFormulario from "@/components/admin/CampoDoFormulario";
+import { IconeCadeado, IconeSeta } from "@/components/Icones";
 
 // Tela aberta pelo link que o Supabase manda por e-mail. O link já deixa a
 // pessoa autenticada; aqui ela só define a senha nova.
@@ -40,50 +43,39 @@ export default function NovaSenhaPage() {
   };
 
   return (
-    <div className="mx-auto max-w-sm px-5 py-16 sm:px-6">
-      <h1 className="font-display text-[26px] font-bold text-foreground">
-        Criar senha
-      </h1>
-
+    <CartaoDeAcesso
+      titulo="Criar senha"
+      subtitulo="Escolha a senha de acesso ao painel."
+    >
       <form onSubmit={salvar} className="mt-7 flex flex-col gap-4">
-        <label className="flex flex-col gap-1.5">
-          <span className="text-[13px] font-medium text-foreground">
-            Nova senha
-          </span>
-          <input
-            type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            autoComplete="new-password"
-            required
-            className="h-11 border border-border bg-surface px-3.5 text-sm text-foreground outline-none transition-colors focus:border-accent"
-          />
-        </label>
-
-        <label className="flex flex-col gap-1.5">
-          <span className="text-[13px] font-medium text-foreground">
-            Repita a senha
-          </span>
-          <input
-            type="password"
-            value={repetida}
-            onChange={(e) => setRepetida(e.target.value)}
-            autoComplete="new-password"
-            required
-            className="h-11 border border-border bg-surface px-3.5 text-sm text-foreground outline-none transition-colors focus:border-accent"
-          />
-        </label>
+        <CampoDoFormulario
+          rotulo="Nova senha"
+          Icone={IconeCadeado}
+          tipo="password"
+          valor={senha}
+          aoMudar={setSenha}
+          autoComplete="new-password"
+        />
+        <CampoDoFormulario
+          rotulo="Repita a senha"
+          Icone={IconeCadeado}
+          tipo="password"
+          valor={repetida}
+          aoMudar={setRepetida}
+          autoComplete="new-password"
+        />
 
         {erro && <p className="text-[13px] text-danger">{erro}</p>}
 
         <button
           type="submit"
           disabled={carregando}
-          className="flex h-11 items-center justify-center bg-accent px-5 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+          className="mt-1 flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full bg-primary px-5 text-[16px] font-semibold text-primary-foreground transition-colors hover:bg-primary-dark disabled:opacity-60"
         >
           {carregando ? "Salvando..." : "Salvar senha"}
+          {!carregando && <IconeSeta className="h-[18px] w-[18px]" />}
         </button>
       </form>
-    </div>
+    </CartaoDeAcesso>
   );
 }

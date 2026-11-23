@@ -196,3 +196,121 @@ export function IconeWhatsApp({ className }: Props) {
     </Base>
   );
 }
+
+// Painel da loja
+
+export function IconeCaixa({ className }: Props) {
+  return (
+    <Base className={className}>
+      <path d="M12 3 3.5 7.5v9L12 21l8.5-4.500v-9L12 3Z" />
+      <path d="M3.500 7.500 12 12l8.500-4.500M12 12v9" />
+    </Base>
+  );
+}
+
+export function IconeCamadas({ className }: Props) {
+  return (
+    <Base className={className}>
+      <path d="m12 3 9 5-9 5-9-5 9-5Z" />
+      <path d="m3 12.500 9 5 9-5M3 16.500l9 5 9-5" />
+    </Base>
+  );
+}
+
+export function IconeClientes({ className }: Props) {
+  return (
+    <Base className={className}>
+      <circle cx="9" cy="8" r="3.500" />
+      <path d="M2.500 20c.6-3.500 3.200-5.500 6.500-5.500s5.900 2 6.500 5.500" />
+      <path d="M16 4.700a3.500 3.500 0 0 1 0 6.600M18 14.800c1.800.7 3 2.400 3.400 5.200" />
+    </Base>
+  );
+}
+
+export function IconeEngrenagem({ className }: Props) {
+  return (
+    <Base className={className}>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 2.500v2.600M12 18.900v2.600M4.200 7.200l2.200 1.300M17.600 15.500l2.200 1.300M4.200 16.800l2.200-1.300M17.600 8.500l2.200-1.300" />
+      <circle cx="12" cy="12" r="7.200" />
+    </Base>
+  );
+}
+
+export function IconeSair({ className }: Props) {
+  return (
+    <Base className={className}>
+      <path d="M10 4H5.500A1.500 1.500 0 0 0 4 5.500v13A1.500 1.500 0 0 0 5.500 20H10" />
+      <path d="M15 8l4 4-4 4M19 12H9" />
+    </Base>
+  );
+}
+
+export function IconeBarras({ className }: Props) {
+  return (
+    <Base className={className}>
+      <rect x="3.500" y="12" width="4" height="8" rx="1" />
+      <rect x="10" y="7" width="4" height="13" rx="1" />
+      <rect x="16.500" y="3.500" width="4" height="16.500" rx="1" />
+    </Base>
+  );
+}
+
+export function IconeNuvem({ className }: Props) {
+  return (
+    <Base className={className}>
+      <path d="M7 18a4.500 4.500 0 0 1-.6-8.960A6 6 0 0 1 18 9.500a4 4 0 0 1-.5 8" />
+      <path d="M12 21v-8M9 15.500l3-3 3 3" />
+    </Base>
+  );
+}
+
+export function IconeMais({ className }: Props) {
+  return (
+    <Base className={className}>
+      <path d="M12 5v14M5 12h14" />
+    </Base>
+  );
+}
+
+export function IconeOlho({ className }: Props) {
+  return (
+    <Base className={className}>
+      <path d="M2 12s3.600-6.500 10-6.500S22 12 22 12s-3.600 6.500-10 6.500S2 12 2 12Z" />
+      <circle cx="12" cy="12" r="2.800" />
+    </Base>
+  );
+}
+
+export function IconeEmail({ className }: Props) {
+  return (
+    <Base className={className}>
+      <rect x="3" y="5" width="18" height="14" rx="2.500" />
+      <path d="m4 7.500 8 6 8-6" />
+    </Base>
+  );
+}
+
+export function IconeCadeado({ className }: Props) {
+  return (
+    <Base className={className}>
+      <rect x="4.500" y="10.500" width="15" height="10" rx="2.500" />
+      <path d="M8 10.500V8a4 4 0 0 1 8 0v2.500" />
+    </Base>
+  );
+}
+
+export function IconePontos({ className }: Props) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+      className={className}
+    >
+      <circle cx="12" cy="5.500" r="1.700" />
+      <circle cx="12" cy="12" r="1.700" />
+      <circle cx="12" cy="18.500" r="1.700" />
+    </svg>
+  );
+}

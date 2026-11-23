@@ -30,27 +30,9 @@
    de propósito não troca nenhuma cor. Se um dia for preciso um toque próprio,
    é aqui que ele entra. O rosa (--rose) fica só para grafismos e banners. */
 
-/* Painel da loja: só preto e branco, sem a paleta creme da vitrine e sem
-   cinza, para cansar menos a vista em quem passa o dia nele. As cores da 3s
-   entram só como detalhe: o verde-oliva vira a cor dos botões (--accent) e o
-   laranja (--bloom) fica para pequenos toques e nomes. Os valores de verde e
-   laranja ficam fixos aqui: o painel não acompanha a paleta da vitrine. */
-.tema-painel {
-  --background: #ffffff;
-  --surface: #ffffff;
-  --foreground: #000000;
-  --muted: #000000;
-  --muted-bg: #ffffff;
-  --border: #000000;
-  --secondary: #ffffff;
-  --secondary-foreground: #000000;
-  --primary: #3e4229;
-  --primary-dark: #2e3120;
-  --primary-foreground: #fff8f1;
-  --accent: #3e4229;
-  --accent-foreground: #ffffff;
-  --bloom: #c4611a;
-}
+/* Painel da loja: usa a mesma paleta da vitrine (creme, terracota, rosa e
+   amarelo), sem tema próprio. A classe .tema-painel fica só como marcador do
+   que é do painel; se um dia o painel precisar de um tom seu, é aqui. */
 
 @theme inline {
   --color-background: var(--background);
