@@ -5,6 +5,7 @@ import ProductCarousel from "@/components/ProductCarousel";
 import FlipCard from "@/components/FlipCard";
 import BannerDoTopo from "@/components/BannerDoTopo";
 import BannerDaFlores from "@/components/BannerDaFlores";
+import FaixaDePagamento from "@/components/FaixaDePagamento";
 import { Flor, FormaDeFlor } from "@/components/Grafismos";
 import {
   IconeAcessorios,
@@ -360,6 +361,8 @@ export default async function Home() {
           produtos={maisVendidos}
         />
       )}
+
+      <FaixaDePagamento />
 
       <BannerDaFlores />
 
