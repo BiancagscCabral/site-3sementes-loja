@@ -50,11 +50,16 @@ export default async function AdminPage() {
     );
   }
 
-  const pedidos = await prisma.order.findMany({
+  const todos = await prisma.order.findMany({
     orderBy: { createdAt: "desc" },
     take: 100,
     include: { items: true },
   });
+
+  // Carrinho que chegou no pagamento e não voltou sai da tela: acumulado, ele
+  // esconde o pedido que importa. Continua no banco, então pagamento atrasado
+  // ainda acha o pedido e o traz de volta por si.
+  const pedidos = todos.filter((pedido) => !pedidoExpirou(pedido));
 
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);

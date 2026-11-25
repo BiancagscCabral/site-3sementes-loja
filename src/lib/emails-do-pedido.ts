@@ -233,45 +233,6 @@ export function emailPagamentoConfirmado(pedido: PedidoDoEmail) {
   };
 }
 
-// Aviso para a loja, não para a cliente.
-//
-// O botão principal aqui é o do WhatsApp, não o do painel: quando este e-mail
-// chega, quase sempre é no celular, e a dúvida sobre um pedido se resolve
-// falando com a cliente. A mensagem já vai escrita, com o código dentro.
-export function emailNovoPedidoParaLoja(
-  pedido: PedidoDoEmail & { customerPhone: string; customerEmail: string | null },
-) {
-  const painel = `${enderecoDoSite()}/admin`;
-  const whatsapp = linkDoWhatsApp(
-    pedido.customerPhone,
-    mensagemSobreOPedido(pedido.customerName, pedido.code),
-  );
-
-  return {
-    assunto: `Novo pedido ${pedido.code} · ${formatPriceCents(pedido.totalCents)}`,
-    html: moldura(`
-      ${titulo("Entrou um pedido novo")}
-      ${codigoEmDestaque(pedido.code)}
-      ${paragrafo(
-        `<strong>${escapar(pedido.customerName)}</strong><br>` +
-          `${escapar(pedido.customerPhone)}` +
-          (pedido.customerEmail ? `<br>${escapar(pedido.customerEmail)}` : ""),
-      )}
-      <div style="margin-top:24px;border-top:1px solid ${LINHA};padding-top:4px">
-        ${resumoDoPedido(pedido)}
-      </div>
-      ${
-        whatsapp
-          ? botao("Falar com a cliente no WhatsApp", whatsapp)
-          : paragrafo(
-              "O telefone veio incompleto, então não dá para abrir a conversa daqui.",
-            )
-      }
-      ${linkDiscreto("Abrir o painel", painel)}
-    `),
-  };
-}
-
 // Aviso para a loja quando o pagamento entra.
 //
 // É este que importa no dia a dia: pedido feito é intenção, pedido pago é

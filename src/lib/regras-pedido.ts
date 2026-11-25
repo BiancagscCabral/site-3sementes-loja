@@ -6,9 +6,15 @@
 
 export type PedidoProtegido = { paymentStatus: string };
 
-// Horas que um pedido fica esperando o pagamento antes de ser considerado
-// desistência. O link do Pix da InfinitePay vence bem antes disso.
-export const HORAS_ATE_EXPIRAR = 24;
+// Horas que um pedido fica esperando o pagamento antes de sumir das telas.
+//
+// Carrinho que chegou no pagamento e não voltou é desistência na prática, e
+// acumulado ele esconde o pedido que importa no meio do que não serve.
+//
+// Expirar NÃO apaga nada: o pedido continua no banco. Se a cliente pagar
+// depois das duas horas, o aviso da InfinitePay ainda acha o pedido, ele vira
+// pago e reaparece sozinho. Apagar quebraria justamente a venda atrasada.
+export const HORAS_ATE_EXPIRAR = 2;
 
 export function pedidoFoiPago(pedido: PedidoProtegido) {
   return pedido.paymentStatus === "PAID";
@@ -43,8 +49,8 @@ export function pedidoExpirou(pedido: { status: string; createdAt: Date }) {
   return horas > HORAS_ATE_EXPIRAR;
 }
 
-// Carrinho que foi até o pagamento e não voltou some do histórico da cliente,
-// mas continua no banco e visível no painel: é dado de venda perdida.
+// Carrinho que foi até o pagamento e não voltou some do histórico da cliente
+// e também do painel, mas continua no banco.
 //
 // Cuidado deliberado: isto NÃO alcança os pedidos de WhatsApp
 // (AWAITING_CONTACT). Eles nunca constam como pagos aqui, porque o pagamento

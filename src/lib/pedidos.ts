@@ -1,11 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { priceForSize } from "@/lib/catalog";
 import { usuarioAtual } from "@/lib/supabase/servidor";
-import { enderecosDaLoja, enviarEmailSemEsperar } from "@/lib/email";
-import {
-  emailNovoPedidoParaLoja,
-  emailPedidoRecebido,
-} from "@/lib/emails-do-pedido";
+import { enviarEmailSemEsperar } from "@/lib/email";
+import { emailPedidoRecebido } from "@/lib/emails-do-pedido";
 
 export type ItemRecebido = {
   slug: string;
@@ -138,21 +135,13 @@ function avisarDoPedidoNovo(
     enviarEmailSemEsperar({ para: pedido.customerEmail, assunto, html });
   }
 
-  const { assunto, html } = emailNovoPedidoParaLoja({
-    ...dados,
-    customerPhone: pedido.customerPhone,
-    customerEmail: pedido.customerEmail,
-  });
-
-  for (const endereco of enderecosDaLoja()) {
-    enviarEmailSemEsperar({
-      para: endereco,
-      assunto,
-      html,
-      // Responder o aviso vai direto para a cliente, quando ela deixou e-mail.
-      responderPara: pedido.customerEmail ?? undefined,
-    });
-  }
+  // A loja NÃO é avisada aqui, de propósito. Pedido feito é intenção, e a
+  // maioria não vira venda: avisar aqui encheria a caixa de entrada de
+  // carrinho abandonado e faria o aviso que importa se perder no meio.
+  //
+  // O aviso da loja sai quando o pagamento entra, no webhook da InfinitePay.
+  // No caminho do WhatsApp não sai e-mail nenhum porque a própria cliente
+  // manda o pedido inteiro na conversa: seria aviso em duplicata.
 }
 
 export {
