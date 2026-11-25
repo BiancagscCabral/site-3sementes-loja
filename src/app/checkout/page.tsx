@@ -538,7 +538,12 @@ export default function CheckoutPage() {
                           type="radio"
                           name="frete"
                           checked={escolhida}
-                          onChange={() => setFreteEscolhido(opcao)}
+                          onChange={() => {
+                            // Só uma forma de entrega vale por vez: escolher
+                            // Correios desmarca o Uber Flash, e vice-versa.
+                            setFreteEscolhido(opcao);
+                            setUberFlashEscolhido(false);
+                          }}
                           className="accent-accent"
                         />
                         <span className="flex-1">
