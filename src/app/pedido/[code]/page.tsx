@@ -4,16 +4,34 @@ import { prisma } from "@/lib/prisma";
 import { formatPriceCents } from "@/lib/format";
 import { WHATSAPP_URL } from "@/lib/catalog";
 import AcompanhaPagamento from "@/components/AcompanhaPagamento";
+import { sincronizarPagamento } from "@/lib/sincronizar-pagamento";
 
 export const dynamic = "force-dynamic";
 
 // Para onde a InfinitePay manda a cliente depois do pagamento. O endereço não
-// prova nada: o que vale é o que o webhook já confirmou no banco.
+// prova nada: o que vale é o que a consulta à InfinitePay disser.
 export default async function PedidoPage(props: PageProps<"/pedido/[code]">) {
   const { code } = await props.params;
+  const codigo = code.toUpperCase();
+
+  // Antes de mostrar a página, pergunta à InfinitePay se o pagamento entrou.
+  //
+  // É isto que faz a página mudar sozinha mesmo quando o aviso da InfinitePay
+  // não chega: ela recarrega de poucos em poucos segundos enquanto a cliente
+  // espera, e a cada recarga a resposta é conferida na fonte. A função sabe
+  // quando não vale consultar (pedido pago, de WhatsApp, velho, ou consultado
+  // agora há pouco), então chamar sempre sai barato.
+  //
+  // Nunca derruba a página: se a InfinitePay estiver fora do ar, a cliente vê
+  // o pedido do jeito que está em vez de um erro.
+  try {
+    await sincronizarPagamento(codigo);
+  } catch (erro) {
+    console.error("[pedido] não deu para conferir o pagamento:", erro);
+  }
 
   const pedido = await prisma.order.findUnique({
-    where: { code: code.toUpperCase() },
+    where: { code: codigo },
     include: { items: true },
   });
 

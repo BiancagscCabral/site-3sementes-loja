@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { formatPriceCents } from "@/lib/format";
 import { ehAdmin, usuarioAtual } from "@/lib/supabase/servidor";
 import { pedidoExpirou } from "@/lib/regras-pedido";
+import { sincronizarPagamento } from "@/lib/sincronizar-pagamento";
 import AtualizaSozinho from "@/components/AtualizaSozinho";
 import Sair from "@/components/Sair";
 import CabecalhoDoPainel from "@/components/admin/CabecalhoDoPainel";
@@ -49,6 +50,27 @@ export default async function AdminPage() {
       </div>
     );
   }
+
+  // Confere na InfinitePay os pedidos que ainda esperam pagamento, antes de
+  // montar a tela. Assim o painel descobre o pagamento sozinho, sem depender
+  // nem do aviso da InfinitePay nem de a cliente abrir a página dela.
+  //
+  // São poucos: só os não pagos das últimas horas, e a função ignora o que
+  // consultou agora há pouco. Erro aqui não derruba o painel.
+  const esperandoPagamento = await prisma.order.findMany({
+    where: { status: "AWAITING_PAYMENT", paymentStatus: "PENDING" },
+    select: { code: true },
+    orderBy: { createdAt: "desc" },
+    take: 20,
+  });
+
+  await Promise.all(
+    esperandoPagamento.map((pedido) =>
+      sincronizarPagamento(pedido.code).catch((erro) => {
+        console.error(`[admin] ${pedido.code}:`, erro);
+      }),
+    ),
+  );
 
   const todos = await prisma.order.findMany({
     orderBy: { createdAt: "desc" },
