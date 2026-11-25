@@ -5,6 +5,8 @@ import { formatPriceCents } from "@/lib/format";
 import { WHATSAPP_URL } from "@/lib/catalog";
 import AcompanhaPagamento from "@/components/AcompanhaPagamento";
 import { sincronizarPagamento } from "@/lib/sincronizar-pagamento";
+import { andamentoDoPedido } from "@/lib/andamento-do-pedido";
+import AndamentoDoPedido from "@/components/AndamentoDoPedido";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +43,8 @@ export default async function PedidoPage(props: PageProps<"/pedido/[code]">) {
   // Só acompanha enquanto há pagamento a esperar: pedido fechado pelo WhatsApp
   // ou cancelado não tem o que aguardar.
   const aguardando = pedido.status === "AWAITING_PAYMENT" && !pago;
+  const cancelado = pedido.status === "CANCELLED";
+  const andamento = andamentoDoPedido(pedido);
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-12 sm:px-6 sm:py-16">
@@ -49,16 +53,30 @@ export default async function PedidoPage(props: PageProps<"/pedido/[code]">) {
       </span>
 
       <h1 className="font-display mt-2 text-[28px] font-semibold leading-tight text-primary sm:text-[34px]">
-        {pago ? "Pagamento confirmado!" : "Recebemos seu pedido"}
+        {cancelado
+          ? "Pedido cancelado"
+          : pago
+            ? "Pagamento confirmado!"
+            : "Recebemos seu pedido"}
       </h1>
 
-      <p className="mt-3 text-base leading-7 text-muted">
-        {pago
-          ? "Já estamos preparando sua encomenda. Você recebe o código de rastreio assim que ela for postada."
-          : "Assim que o pagamento for confirmado, esta página muda sozinha. Se você acabou de pagar, pode levar um minutinho."}
-      </p>
+      {cancelado && (
+        <p className="mt-3 text-base leading-7 text-muted">
+          Este pedido foi cancelado. Se não foi você que pediu o cancelamento,
+          chame a gente no WhatsApp que a gente resolve.
+        </p>
+      )}
+
+      {aguardando && (
+        <p className="mt-3 text-base leading-7 text-muted">
+          Assim que o pagamento for confirmado, esta página muda sozinha. Se
+          você acabou de pagar, pode levar um minutinho.
+        </p>
+      )}
 
       {aguardando && <AcompanhaPagamento codigo={pedido.code} />}
+
+      {andamento && <AndamentoDoPedido etapas={andamento.etapas} />}
 
       <div className="mt-8 rounded-2xl border border-border bg-surface p-5">
         <ul className="flex flex-col gap-2 text-[15px]">
