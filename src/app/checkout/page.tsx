@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart";
 import { formatPriceCents } from "@/lib/format";
 import { getWhatsAppUrl } from "@/lib/catalog";
@@ -103,6 +104,7 @@ export default function CheckoutPage() {
   const [temUberFlash, setTemUberFlash] = useState(false);
   const [uberFlashEscolhido, setUberFlashEscolhido] = useState(false);
   const [enviando, setEnviando] = useState(false);
+  const router = useRouter();
   const [pagando, setPagando] = useState(false);
   const [erroPagamento, setErroPagamento] = useState<string | null>(null);
 
@@ -233,6 +235,18 @@ export default function CheckoutPage() {
     setErroPagamento(null);
     setPagando(true);
 
+    // A aba do pagamento é aberta já no clique: os navegadores (principalmente
+    // no celular) só deixam abrir aba nova como resposta direta a um toque, e
+    // não depois de esperar o servidor. Se mesmo assim bloquearem, o
+    // pagamento abre na própria aba, como antes.
+    const aba = window.open("", "_blank");
+    if (aba) {
+      aba.document.title = "Abrindo pagamento...";
+      aba.document.body.style.cssText =
+        "font-family:sans-serif;color:#49352e;background:#fff0dc;display:flex;align-items:center;justify-content:center;height:100vh;margin:0";
+      aba.document.body.textContent = "Abrindo o pagamento...";
+    }
+
     try {
       const resposta = await fetch("/api/pagamento", {
         method: "POST",
@@ -243,16 +257,31 @@ export default function CheckoutPage() {
 
       if (resposta.ok && dados.url) {
         clear();
-        window.location.href = dados.url;
+        if (aba) {
+          // O pagamento fica na aba nova; esta aba segue para o
+          // acompanhamento do pedido, que muda sozinho quando o pagamento
+          // for aprovado. O endereço fica guardado para reabrir, se preciso.
+          try {
+            sessionStorage.setItem(`pagamento:${dados.codigo}`, dados.url);
+          } catch {
+            // sem armazenamento: o botão de reabrir só não aparece
+          }
+          aba.location.href = dados.url;
+          router.push(`/pedido/${dados.codigo}`);
+        } else {
+          window.location.href = dados.url;
+        }
         return;
       }
 
+      aba?.close();
       setErroPagamento(
         dados.codigo
           ? `Seu pedido ${dados.codigo} foi registrado, mas o pagamento não abriu. Feche pelo WhatsApp que a gente resolve.`
           : "Não conseguimos abrir o pagamento agora. Use o WhatsApp.",
       );
     } catch {
+      aba?.close();
       setErroPagamento(
         "Não conseguimos abrir o pagamento agora. Use o WhatsApp.",
       );
@@ -635,9 +664,9 @@ export default function CheckoutPage() {
           )}
 
           <p className="mt-3 text-[13px] leading-6 text-muted">
-            No <strong>Pagar agora</strong> você paga por Pix ou cartão e o
-            pedido entra na fila na hora. No WhatsApp a gente combina tudo na
-            conversa.
+            No <strong>Pagar agora</strong> o pagamento abre em uma aba nova,
+            por Pix ou cartão, e esta página acompanha o pedido e avisa quando
+            for aprovado. No WhatsApp a gente combina tudo na conversa.
           </p>
 
           <Link

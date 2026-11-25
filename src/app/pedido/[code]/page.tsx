@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatPriceCents } from "@/lib/format";
 import { WHATSAPP_URL } from "@/lib/catalog";
+import AcompanhaPagamento from "@/components/AcompanhaPagamento";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,9 @@ export default async function PedidoPage(props: PageProps<"/pedido/[code]">) {
   if (!pedido) notFound();
 
   const pago = pedido.paymentStatus === "PAID";
+  // Só acompanha enquanto há pagamento a esperar: pedido fechado pelo WhatsApp
+  // ou cancelado não tem o que aguardar.
+  const aguardando = pedido.status === "AWAITING_PAYMENT" && !pago;
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-12 sm:px-6 sm:py-16">
@@ -26,7 +30,7 @@ export default async function PedidoPage(props: PageProps<"/pedido/[code]">) {
         Pedido {pedido.code}
       </span>
 
-      <h1 className="font-display mt-2 text-[28px] font-bold leading-tight text-foreground sm:text-[32px]">
+      <h1 className="font-display mt-2 text-[28px] font-semibold leading-tight text-primary sm:text-[34px]">
         {pago ? "Pagamento confirmado!" : "Recebemos seu pedido"}
       </h1>
 
@@ -36,7 +40,9 @@ export default async function PedidoPage(props: PageProps<"/pedido/[code]">) {
           : "Assim que o pagamento for confirmado, esta página muda sozinha. Se você acabou de pagar, pode levar um minutinho."}
       </p>
 
-      <div className="mt-8 border border-border p-5">
+      {aguardando && <AcompanhaPagamento codigo={pedido.code} />}
+
+      <div className="mt-8 rounded-2xl border border-border bg-surface p-5">
         <ul className="flex flex-col gap-2 text-[15px]">
           {pedido.items.map((item) => (
             <li key={item.id} className="flex gap-3">
@@ -82,13 +88,13 @@ export default async function PedidoPage(props: PageProps<"/pedido/[code]">) {
           href={WHATSAPP_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-11 items-center bg-accent px-6 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90"
+          className="inline-flex h-11 items-center rounded-full bg-accent px-6 text-sm font-semibold text-accent-foreground transition-colors hover:bg-primary-dark"
         >
           Falar no WhatsApp
         </a>
         <Link
           href="/minha-conta"
-          className="inline-flex h-11 items-center border border-primary px-6 text-sm font-medium text-primary transition-colors hover:bg-secondary"
+          className="inline-flex h-11 items-center rounded-full border border-primary px-6 text-sm font-medium text-primary transition-colors hover:bg-secondary"
         >
           Meus pedidos
         </Link>
