@@ -14,6 +14,15 @@ export function emailConfigurado() {
   return Boolean(process.env.RESEND_API_KEY);
 }
 
+// Para onde vão os avisos da loja. ADMIN_EMAIL aceita mais de um endereço
+// separado por vírgula, o mesmo valor que decide quem enxerga o painel.
+export function enderecosDaLoja() {
+  return (process.env.ADMIN_EMAIL ?? "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 function remetente() {
   return process.env.EMAIL_REMETENTE ?? "3sementes <pedidos@3sementes.com.br>";
 }

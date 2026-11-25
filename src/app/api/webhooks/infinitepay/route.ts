@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { conferirPagamento } from "@/lib/infinitepay";
-import { enviarEmailSemEsperar } from "@/lib/email";
-import { emailPagamentoConfirmado } from "@/lib/emails-do-pedido";
+import { enderecosDaLoja, enviarEmailSemEsperar } from "@/lib/email";
+import {
+  emailPagamentoAprovadoParaLoja,
+  emailPagamentoConfirmado,
+} from "@/lib/emails-do-pedido";
 
 // Aviso de pagamento da InfinitePay.
 //
@@ -70,31 +73,53 @@ export async function POST(request: Request) {
       );
     }
 
+    const itens = await prisma.orderItem.findMany({
+      where: { orderId: pedido.id },
+      select: {
+        productName: true,
+        variantName: true,
+        size: true,
+        quantity: true,
+        unitPriceCents: true,
+      },
+    });
+
+    const resumo = {
+      code: pedido.code,
+      customerName: pedido.customerName,
+      totalCents: pedido.totalCents,
+      shippingCents: pedido.shippingCents,
+      shippingService: pedido.shippingService,
+      items: itens,
+    };
+
     // Avisa a cliente, mas só quando o valor fecha: dizer "pagamento
     // confirmado" para quem pagou a menos criaria uma expectativa errada, e
     // esse caso vai para conferência manual no painel.
     if (valorConfere && pedido.customerEmail) {
-      const itens = await prisma.orderItem.findMany({
-        where: { orderId: pedido.id },
-        select: {
-          productName: true,
-          variantName: true,
-          size: true,
-          quantity: true,
-          unitPriceCents: true,
-        },
-      });
-
-      const { assunto, html } = emailPagamentoConfirmado({
-        code: pedido.code,
-        customerName: pedido.customerName,
-        totalCents: pedido.totalCents,
-        shippingCents: pedido.shippingCents,
-        shippingService: pedido.shippingService,
-        items: itens,
-      });
-
+      const { assunto, html } = emailPagamentoConfirmado(resumo);
       enviarEmailSemEsperar({ para: pedido.customerEmail, assunto, html });
+    }
+
+    // A loja é avisada nos dois casos. Quando o valor não fecha, o aviso vai
+    // justamente para pedir conferência: é o caso em que ficar sem saber dói
+    // mais, porque o pedido fica parado esperando alguém olhar.
+    const aviso = emailPagamentoAprovadoParaLoja({
+      ...resumo,
+      customerPhone: pedido.customerPhone,
+      customerEmail: pedido.customerEmail,
+      valorPagoCents: valorPago ?? null,
+      meioDePagamento: confirmacao.meio ?? null,
+      valorConfere,
+    });
+
+    for (const endereco of enderecosDaLoja()) {
+      enviarEmailSemEsperar({
+        para: endereco,
+        assunto: aviso.assunto,
+        html: aviso.html,
+        responderPara: pedido.customerEmail ?? undefined,
+      });
     }
 
     return NextResponse.json({ ok: true });

@@ -271,3 +271,79 @@ export function emailNovoPedidoParaLoja(
     `),
   };
 }
+
+// Aviso para a loja quando o pagamento entra.
+//
+// É este que importa no dia a dia: pedido feito é intenção, pedido pago é
+// venda. Por isso ele traz o botão do WhatsApp em destaque, para tirar uma
+// dúvida sobre a peça sem procurar o número em lugar nenhum.
+export function emailPagamentoAprovadoParaLoja(pedido: {
+  code: string;
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string | null;
+  totalCents: number;
+  shippingCents: number | null;
+  shippingService: string | null;
+  items: ItemDoEmail[];
+  valorPagoCents: number | null;
+  meioDePagamento: string | null;
+  valorConfere: boolean;
+}) {
+  const painel = `${enderecoDoSite()}/admin`;
+  const whatsapp = linkDoWhatsApp(
+    pedido.customerPhone,
+    mensagemSobreOPedido(pedido.customerName, pedido.code),
+  );
+
+  const comoPagou =
+    pedido.meioDePagamento === "credit_card"
+      ? "cartão"
+      : pedido.meioDePagamento === "pix"
+        ? "Pix"
+        : pedido.meioDePagamento;
+
+  // Pagou menos que o total: o pedido fica retido para conferência e o aviso
+  // precisa dizer isso em primeiro lugar, senão a peça sai sem o valor fechar.
+  const alerta = pedido.valorConfere
+    ? ""
+    : `
+      <div style="margin-top:20px;border:2px solid ${TERRACOTA};border-radius:10px;padding:14px 16px;text-align:left">
+        <p style="margin:0;font-size:15px;font-weight:bold;color:${TERRACOTA}">
+          Confira antes de preparar
+        </p>
+        <p style="margin:8px 0 0;font-size:14px;line-height:1.6;color:${TEXTO}">
+          Entrou ${pedido.valorPagoCents === null ? "um valor que a InfinitePay não informou" : formatPriceCents(pedido.valorPagoCents)},
+          e o pedido é de ${formatPriceCents(pedido.totalCents)}. Ele ficou parado
+          como não pago no painel até você conferir.
+        </p>
+      </div>`;
+
+  return {
+    assunto: pedido.valorConfere
+      ? `Pagamento aprovado · ${pedido.code} · ${formatPriceCents(pedido.totalCents)}`
+      : `CONFERIR pagamento · ${pedido.code}`,
+    html: moldura(`
+      ${titulo(pedido.valorConfere ? "Pagamento aprovado" : "Pagamento a conferir")}
+      ${codigoEmDestaque(pedido.code)}
+      ${alerta}
+      ${paragrafo(
+        `<strong>${escapar(pedido.customerName)}</strong><br>` +
+          `${escapar(pedido.customerPhone)}` +
+          (pedido.customerEmail ? `<br>${escapar(pedido.customerEmail)}` : "") +
+          (comoPagou ? `<br>pago por ${escapar(comoPagou)}` : ""),
+      )}
+      <div style="margin-top:24px;border-top:1px solid ${LINHA};padding-top:4px">
+        ${resumoDoPedido(pedido)}
+      </div>
+      ${
+        whatsapp
+          ? botao("Falar com a cliente no WhatsApp", whatsapp)
+          : paragrafo(
+              "O telefone veio incompleto, então não dá para abrir a conversa daqui.",
+            )
+      }
+      ${linkDiscreto("Abrir o painel", painel)}
+    `),
+  };
+}

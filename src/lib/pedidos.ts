@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { priceForSize } from "@/lib/catalog";
 import { usuarioAtual } from "@/lib/supabase/servidor";
-import { enviarEmailSemEsperar } from "@/lib/email";
+import { enderecosDaLoja, enviarEmailSemEsperar } from "@/lib/email";
 import {
   emailNovoPedidoParaLoja,
   emailPedidoRecebido,
@@ -153,14 +153,6 @@ function avisarDoPedidoNovo(
       responderPara: pedido.customerEmail ?? undefined,
     });
   }
-}
-
-// ADMIN_EMAIL aceita mais de um endereço separado por vírgula.
-function enderecosDaLoja() {
-  return (process.env.ADMIN_EMAIL ?? "")
-    .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean);
 }
 
 export {
