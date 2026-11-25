@@ -100,9 +100,17 @@ export default function CheckoutPage() {
   const [freteStatus, setFreteStatus] = useState<
     "idle" | "calculando" | "indisponivel"
   >("idle");
-  const [freteEscolhido, setFreteEscolhido] = useState<OpcaoFrete | null>(null);
+  // A forma de entrega escolhida é uma só: uma opção dos Correios, o Uber Flash
+  // ou nenhuma. Guardar tudo num único valor impede de ter duas marcadas, que
+  // acontecia quando a cotação dos Correios chegava depois de a cliente já ter
+  // clicado no Uber Flash.
+  const [escolhaDeEntrega, setEscolhaDeEntrega] = useState<
+    OpcaoFrete | "uber" | null
+  >(null);
+  const uberFlashEscolhido = escolhaDeEntrega === "uber";
+  const freteEscolhido =
+    escolhaDeEntrega && escolhaDeEntrega !== "uber" ? escolhaDeEntrega : null;
   const [temUberFlash, setTemUberFlash] = useState(false);
-  const [uberFlashEscolhido, setUberFlashEscolhido] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const router = useRouter();
   const [pagando, setPagando] = useState(false);
@@ -118,8 +126,7 @@ export default function CheckoutPage() {
 
     setFreteStatus("calculando");
     setOpcoesFrete([]);
-    setFreteEscolhido(null);
-    setUberFlashEscolhido(false);
+    setEscolhaDeEntrega(null);
 
     try {
       const resposta = await fetch("/api/frete", {
@@ -141,7 +148,11 @@ export default function CheckoutPage() {
       }
 
       setOpcoesFrete(dados.opcoes);
-      setFreteEscolhido(dados.opcoes[0]);
+      // Só escolhe a primeira opção sozinho se a cliente não tiver escolhido
+      // o Uber Flash enquanto a cotação carregava.
+      setEscolhaDeEntrega((atual) =>
+        atual === "uber" ? atual : dados.opcoes[0],
+      );
       setFreteStatus("idle");
     } catch {
       // sem internet ou SuperFrete fora do ar: o frete fica para o WhatsApp
@@ -538,12 +549,7 @@ export default function CheckoutPage() {
                           type="radio"
                           name="frete"
                           checked={escolhida}
-                          onChange={() => {
-                            // Só uma forma de entrega vale por vez: escolher
-                            // Correios desmarca o Uber Flash, e vice-versa.
-                            setFreteEscolhido(opcao);
-                            setUberFlashEscolhido(false);
-                          }}
+                          onChange={() => setEscolhaDeEntrega(opcao)}
                           className="accent-accent"
                         />
                         <span className="flex-1">
@@ -577,10 +583,7 @@ export default function CheckoutPage() {
                     type="radio"
                     name="frete"
                     checked={uberFlashEscolhido}
-                    onChange={() => {
-                      setUberFlashEscolhido(true);
-                      setFreteEscolhido(null);
-                    }}
+                    onChange={() => setEscolhaDeEntrega("uber")}
                     className="accent-accent"
                   />
                   <span className="flex-1">
