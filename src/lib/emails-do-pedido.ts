@@ -1,4 +1,5 @@
 import { formatPriceCents } from "@/lib/format";
+import { linkDoWhatsApp, mensagemSobreOPedido } from "@/lib/telefone";
 
 // Os e-mails que o site manda sobre um pedido.
 //
@@ -156,6 +157,14 @@ function moldura(conteudo: string) {
 </table>`;
 }
 
+// Segunda opção, abaixo do botão: presente sem competir com ele.
+function linkDiscreto(texto: string, endereco: string) {
+  return `
+    <p style="margin:16px 0 0;font-size:13px;text-align:center">
+      <a href="${endereco}" style="color:${TEXTO};text-decoration:underline">${texto}</a>
+    </p>`;
+}
+
 function titulo(texto: string) {
   return `<h1 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:23px;line-height:1.3;color:${ESCURO}">${texto}</h1>`;
 }
@@ -217,10 +226,18 @@ export function emailPagamentoConfirmado(pedido: PedidoDoEmail) {
 }
 
 // Aviso para a loja, não para a cliente.
+//
+// O botão principal aqui é o do WhatsApp, não o do painel: quando este e-mail
+// chega, quase sempre é no celular, e a dúvida sobre um pedido se resolve
+// falando com a cliente. A mensagem já vai escrita, com o código dentro.
 export function emailNovoPedidoParaLoja(
   pedido: PedidoDoEmail & { customerPhone: string; customerEmail: string | null },
 ) {
-  const link = `${enderecoDoSite()}/admin`;
+  const painel = `${enderecoDoSite()}/admin`;
+  const whatsapp = linkDoWhatsApp(
+    pedido.customerPhone,
+    mensagemSobreOPedido(pedido.customerName, pedido.code),
+  );
 
   return {
     assunto: `Novo pedido ${pedido.code} · ${formatPriceCents(pedido.totalCents)}`,
@@ -235,7 +252,14 @@ export function emailNovoPedidoParaLoja(
       <div style="margin-top:24px;border-top:1px solid ${BORDA};padding-top:4px">
         ${resumoDoPedido(pedido)}
       </div>
-      ${botao("Abrir o painel", link)}
+      ${
+        whatsapp
+          ? botao("Falar com a cliente no WhatsApp", whatsapp)
+          : paragrafo(
+              "O telefone veio incompleto, então não dá para abrir a conversa daqui.",
+            )
+      }
+      ${linkDiscreto("Abrir o painel", painel)}
     `),
   };
 }

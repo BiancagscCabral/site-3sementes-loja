@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import CampoDeBusca from "@/components/admin/CampoDeBusca";
+import { linkDoWhatsApp } from "@/lib/telefone";
 
 export type ClienteDaLista = {
   chave: string;
@@ -79,14 +80,18 @@ export default function ListaDeClientes({
                 <span className="col-span-2 break-all text-muted md:col-span-1 md:text-foreground">
                   {cliente.email ?? "sem e-mail"}
                 </span>
-                <a
-                  href={`https://wa.me/55${cliente.telefone.replace(/\D/g, "")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline underline-offset-4 hover:text-primary"
-                >
-                  {cliente.telefone}
-                </a>
+                {linkDoWhatsApp(cliente.telefone) ? (
+                  <a
+                    href={linkDoWhatsApp(cliente.telefone) as string}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-4 hover:text-primary"
+                  >
+                    {cliente.telefone}
+                  </a>
+                ) : (
+                  <span className="text-muted">{cliente.telefone}</span>
+                )}
                 <span className="text-right text-muted md:text-left md:text-foreground">
                   {cliente.pedidos} pedido{cliente.pedidos === 1 ? "" : "s"}
                 </span>

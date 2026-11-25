@@ -5,6 +5,7 @@ import AcoesDoPedido from "@/components/AcoesDoPedido";
 import CampoDeBusca from "@/components/admin/CampoDeBusca";
 import { IconeSetaBaixo } from "@/components/Icones";
 import { SITUACOES, situacao } from "@/components/admin/statusDoPedido";
+import { linkDoWhatsApp, mensagemSobreOPedido } from "@/lib/telefone";
 
 export type PedidoDaLista = {
   id: string;
@@ -168,14 +169,11 @@ export default function ListaDePedidos({
                           <span className="block text-[14px] font-semibold text-foreground">
                             {pedido.cliente}
                           </span>
-                          <a
-                            href={`https://wa.me/55${pedido.telefone.replace(/\D/g, "")}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="underline underline-offset-4 hover:text-primary"
-                          >
-                            {pedido.telefone}
-                          </a>
+                          <ContatoNoWhatsApp
+                            telefone={pedido.telefone}
+                            nome={pedido.cliente}
+                            codigo={pedido.codigo}
+                          />
                           {pedido.email && (
                             <span className="block">{pedido.email}</span>
                           )}
@@ -213,5 +211,42 @@ export default function ListaDePedidos({
         </div>
       )}
     </div>
+  );
+}
+
+// O telefone vira um atalho para a conversa, com a mensagem já escrita e o
+// código do pedido dentro. Telefone que não dá para montar aparece como texto
+// simples: link quebrado abre um contato que não existe, e isso é pior do que
+// copiar o número na mão.
+function ContatoNoWhatsApp({
+  telefone,
+  nome,
+  codigo,
+}: {
+  telefone: string;
+  nome: string;
+  codigo: string;
+}) {
+  const link = linkDoWhatsApp(telefone, mensagemSobreOPedido(nome, codigo));
+
+  if (!link) {
+    return (
+      <span className="block">
+        {telefone}{" "}
+        <span className="text-[12px]">(número incompleto)</span>
+      </span>
+    );
+  }
+
+  return (
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1.5 underline underline-offset-4 hover:text-primary"
+    >
+      {telefone}
+      <span className="text-[12px] no-underline">falar no WhatsApp</span>
+    </a>
   );
 }
