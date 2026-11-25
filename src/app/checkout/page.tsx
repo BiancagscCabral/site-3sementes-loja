@@ -571,7 +571,9 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              {temUberFlash && (
+              {/* O Uber Flash só aparece depois da cotação dos Correios, para as
+                  opções chegarem juntas e a primeira já vir marcada. */}
+              {temUberFlash && freteStatus !== "calculando" && (
                 <label
                   className={`mt-2.5 flex cursor-pointer items-center gap-3 border p-3.5 transition-colors ${
                     uberFlashEscolhido
