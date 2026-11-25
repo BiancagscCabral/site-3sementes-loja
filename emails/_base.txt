@@ -16,3 +16,7 @@ pelo link e pelo e-mail de verdade na hora do envio. Nao mexa nelas.
 
 E-mail nao tem as mesmas regras de um site: as cores vao escritas em cada
 etiqueta e o desenho usa tabelas, porque e o que o Gmail e o Outlook entendem.
+
+Imagem do topo: os modelos usam {{ .SiteURL }}/img/email/topo.png (logo com as
+ondas), que fica na pasta public/img/email do site. Ela so aparece nos e-mails
+depois que o site com essa imagem estiver publicado.

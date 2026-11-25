@@ -1,36 +1,34 @@
 <!-- Modelo: Confirm signup
      Assunto sugerido: Confirme seu e-mail na 3sementes -->
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0;padding:0;background-color:#fff8f1;font-family:Helvetica,Arial,sans-serif">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0;padding:0;background-color:#fff0dc;font-family:'DM Sans',Helvetica,Arial,sans-serif">
   <tr>
     <td align="center" style="padding:32px 16px">
 
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background-color:#ffffff;border:1px solid #c9c2ac">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background-color:#fff8ee;border:1px solid #dcc2a2;border-radius:24px;overflow:hidden">
 
         <tr>
-          <td style="background-color:#3e4229;padding:22px 28px">
-            <span style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:bold;color:#fff8f1">3sementes</span>
-            <span style="font-size:11px;letter-spacing:3px;color:#e6b48a;margin-left:6px">STORE</span>
+          <td align="center" style="background-color:#fff8ee;padding:0;line-height:0;font-size:0">
+            <img src="{{ .SiteURL }}/img/email/topo.png" width="520" alt="3Sementes Store" style="display:block;width:100%;max-width:520px;height:auto;border:0;font-family:Georgia,serif;font-size:24px;line-height:1.4;color:#a52800">
           </td>
         </tr>
 
         <tr>
-          <td style="padding:32px 28px 8px">
-            <h1 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:1.3;color:#262719">
+          <td align="center" style="padding:28px 32px 8px;text-align:center">
+            <h1 style="margin:0;font-family:'Fredoka','Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;font-size:28px;font-weight:600;line-height:1.25;color:#a52800">
               Falta só confirmar seu e-mail
             </h1>
-            <p style="margin:14px 0 0;font-size:15px;line-height:1.7;color:#4f5139">
-              Oi! Sua conta na 3sementes está quase pronta. Clique no botão
-              abaixo para confirmar que este e-mail é seu e já entrar.
+            <p style="margin:14px 0 0;font-size:16px;line-height:1.7;color:#49352e">
+              Oi! Sua conta na 3sementes está quase pronta. Clique no botão abaixo para confirmar que este e-mail é seu e já entrar.
             </p>
           </td>
         </tr>
 
         <tr>
-          <td style="padding:24px 28px 8px">
-            <table role="presentation" cellpadding="0" cellspacing="0">
+          <td align="center" style="padding:24px 32px 8px">
+            <table role="presentation" align="center" cellpadding="0" cellspacing="0" style="margin:0 auto">
               <tr>
-                <td style="background-color:#c4611a">
-                  <a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&amp;type=signup&amp;next=/minha-conta" style="display:inline-block;padding:14px 32px;font-size:15px;font-weight:bold;color:#fff8f1;text-decoration:none">
+                <td align="center" style="background-color:#a52800;border-radius:999px">
+                  <a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&amp;type=signup&amp;next=/minha-conta" style="display:inline-block;padding:15px 36px;font-size:16px;font-weight:bold;color:#fff8f0;text-decoration:none;border-radius:999px">
                     Confirmar meu e-mail
                   </a>
                 </td>
@@ -40,25 +38,23 @@
         </tr>
 
         <tr>
-          <td style="padding:16px 28px 32px">
-            <p style="margin:0;font-size:13px;line-height:1.7;color:#4f5139">
-              O link vale por uma hora e só pode ser usado uma vez. Se expirar,
-              é só pedir outro no site.
+          <td align="center" style="padding:18px 32px 32px;text-align:center">
+            <p style="margin:0;font-size:13px;line-height:1.7;color:#6b4e43">
+              O link vale por uma hora e só pode ser usado uma vez. Se expirar, é só pedir outro no site.
             </p>
-            <p style="margin:14px 0 0;font-size:13px;line-height:1.7;color:#4f5139">
-              Se não foi você que criou a conta, pode ignorar este e-mail.
-              Nada acontece sem o clique aqui.
+            <p style="margin:12px 0 0;font-size:13px;line-height:1.7;color:#6b4e43">
+              Se não foi você que criou a conta, pode ignorar este e-mail. Nada acontece sem o clique aqui.
             </p>
           </td>
         </tr>
 
         <tr>
-          <td style="background-color:#f1ead9;padding:18px 28px">
-            <p style="margin:0;font-size:12px;line-height:1.7;color:#4f5139">
+          <td align="center" style="background-color:#f8e2c8;padding:18px 32px;text-align:center">
+            <p style="margin:0;font-size:12px;line-height:1.7;color:#6b4e43">
               Peças feitas à mão em Pernambuco &middot; enviamos para todo o Brasil<br>
               Dúvidas? Chame no WhatsApp (81) 92005-1830
             </p>
-            <p style="margin:10px 0 0;font-size:11px;color:#8a8463">
+            <p style="margin:10px 0 0;font-size:11px;color:#8a6d5f">
               Este endereço não recebe respostas.
             </p>
           </td>

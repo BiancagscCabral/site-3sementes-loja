@@ -6,16 +6,23 @@ import { linkDoWhatsApp, mensagemSobreOPedido } from "@/lib/telefone";
 // O HTML aqui é propositalmente antiquado: tabela dentro de tabela e estilo
 // escrito em cada tag. Cliente de e-mail não entende CSS moderno, e o Gmail
 // descarta folha de estilo, então é assim que se escreve e-mail que chega
-// legível. As cores acompanham os modelos de login em emails/.
+// legível. As cores e o desenho acompanham o site (creme, terracota, rosa e
+// amarelo) e os modelos de login em emails/. O topo é uma imagem (logo com as
+// ondas) que fica em public/img/email/topo.png.
 
-const CREME = "#fff8f1";
-const OLIVA = "#3e4229";
-const AREIA = "#e6b48a";
-const ESCURO = "#262719";
-const TEXTO = "#4f5139";
-const BORDA = "#c9c2ac";
-const LARANJA = "#c4611a";
-const RODAPE = "#f1ead9";
+const FUNDO = "#fff0dc";
+const CARTAO = "#fff8ee";
+const TERRACOTA = "#a52800";
+const ESCURO = "#49352e";
+const TEXTO = "#49352e";
+const SUAVE = "#6b4e43";
+const BORDA = "#dcc2a2";
+const LINHA = "#ead6bb";
+const RODAPE = "#f8e2c8";
+const CLARO = "#fff8f0";
+const FONTE_TITULO =
+  "'Fredoka','Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif";
+const FONTE_TEXTO = "'DM Sans',Helvetica,Arial,sans-serif";
 
 export type ItemDoEmail = {
   productName: string;
@@ -38,7 +45,7 @@ function enderecoDoSite() {
   return (process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
 }
 
-function escapar(texto: string) {
+export function escapar(texto: string) {
   return texto
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -47,7 +54,7 @@ function escapar(texto: string) {
 }
 
 // Só o primeiro nome: "Oi, Maria" soa melhor que o nome completo do cadastro.
-function primeiroNome(nome: string) {
+export function primeiroNome(nome: string) {
   return escapar(nome.trim().split(/\s+/)[0] ?? "");
 }
 
@@ -61,11 +68,11 @@ function linhasDosItens(itens: ItemDoEmail[]) {
 
       return `
         <tr>
-          <td style="padding:10px 0;border-bottom:1px solid ${BORDA};font-size:14px;color:${TEXTO};text-align:left">
+          <td style="padding:10px 0;border-bottom:1px solid ${LINHA};font-size:14px;color:${TEXTO};text-align:left">
             ${item.quantity}x ${escapar(item.productName)}
-            ${detalhes ? `<br><span style="font-size:12px;color:#8a8463">${detalhes}</span>` : ""}
+            ${detalhes ? `<br><span style="font-size:12px;color:${SUAVE}">${detalhes}</span>` : ""}
           </td>
-          <td style="padding:10px 0;border-bottom:1px solid ${BORDA};font-size:14px;color:${TEXTO};text-align:right;white-space:nowrap">
+          <td style="padding:10px 0;border-bottom:1px solid ${LINHA};font-size:14px;color:${TEXTO};text-align:right;white-space:nowrap">
             ${formatPriceCents(item.unitPriceCents * item.quantity)}
           </td>
         </tr>`;
@@ -73,7 +80,7 @@ function linhasDosItens(itens: ItemDoEmail[]) {
     .join("");
 }
 
-function resumoDoPedido(pedido: PedidoDoEmail) {
+export function resumoDoPedido(pedido: PedidoDoEmail) {
   const frete =
     pedido.shippingCents === null
       ? `<tr>
@@ -105,13 +112,14 @@ function resumoDoPedido(pedido: PedidoDoEmail) {
 }
 
 // A tabela do botão precisa de margin auto E do align: o Outlook ignora a
-// margem, e alguns clientes ignoram o align.
-function botao(texto: string, endereco: string) {
+// margem, e alguns clientes ignoram o align. O arredondado do botão vale onde
+// há suporte; onde não há, vira um botão reto, igual funcional.
+export function botao(texto: string, endereco: string) {
   return `
-    <table role="presentation" align="center" cellpadding="0" cellspacing="0" style="margin:22px auto 0">
+    <table role="presentation" align="center" cellpadding="0" cellspacing="0" style="margin:24px auto 0">
       <tr>
-        <td style="background-color:${LARANJA}">
-          <a href="${endereco}" style="display:inline-block;padding:14px 30px;font-size:15px;font-weight:bold;color:${CREME};text-decoration:none">
+        <td align="center" style="background-color:${TERRACOTA};border-radius:999px">
+          <a href="${endereco}" style="display:inline-block;padding:15px 36px;font-size:16px;font-weight:bold;color:${CLARO};text-decoration:none;border-radius:999px">
             ${texto}
           </a>
         </td>
@@ -119,33 +127,33 @@ function botao(texto: string, endereco: string) {
     </table>`;
 }
 
-function moldura(conteudo: string) {
+export function moldura(conteudo: string) {
+  const topo = `${enderecoDoSite()}/img/email/topo.png`;
   return `
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0;padding:0;background-color:${CREME};font-family:Helvetica,Arial,sans-serif">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0;padding:0;background-color:${FUNDO};font-family:${FONTE_TEXTO}">
   <tr>
     <td align="center" style="padding:32px 16px">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background-color:#ffffff;border:1px solid ${BORDA}">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background-color:${CARTAO};border:1px solid ${BORDA};border-radius:24px;overflow:hidden">
 
         <tr>
-          <td align="center" style="background-color:${OLIVA};padding:22px 28px;text-align:center">
-            <span style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:bold;color:${CREME}">3sementes</span>
-            <span style="font-size:11px;letter-spacing:3px;color:${AREIA};margin-left:6px">STORE</span>
+          <td align="center" style="background-color:${CARTAO};padding:0;line-height:0;font-size:0">
+            <img src="${topo}" width="520" alt="3Sementes Store" style="display:block;width:100%;max-width:520px;height:auto;border:0;font-family:Georgia,serif;font-size:24px;line-height:1.4;color:${TERRACOTA}">
           </td>
         </tr>
 
         <tr>
-          <td align="center" style="padding:32px 28px;text-align:center">
+          <td align="center" style="padding:28px 32px 32px;text-align:center">
             ${conteudo}
           </td>
         </tr>
 
         <tr>
-          <td align="center" style="background-color:${RODAPE};padding:18px 28px;text-align:center">
-            <p style="margin:0;font-size:12px;line-height:1.7;color:${TEXTO}">
+          <td align="center" style="background-color:${RODAPE};padding:18px 32px;text-align:center">
+            <p style="margin:0;font-size:12px;line-height:1.7;color:${SUAVE}">
               Peças feitas à mão em Pernambuco &middot; enviamos para todo o Brasil<br>
               Dúvidas? Chame no WhatsApp (81) 92005-1830
             </p>
-            <p style="margin:10px 0 0;font-size:11px;color:#8a8463">
+            <p style="margin:10px 0 0;font-size:11px;color:${SUAVE}">
               Este endereço não recebe respostas.
             </p>
           </td>
@@ -158,25 +166,25 @@ function moldura(conteudo: string) {
 }
 
 // Segunda opção, abaixo do botão: presente sem competir com ele.
-function linkDiscreto(texto: string, endereco: string) {
+export function linkDiscreto(texto: string, endereco: string) {
   return `
     <p style="margin:16px 0 0;font-size:13px;text-align:center">
-      <a href="${endereco}" style="color:${TEXTO};text-decoration:underline">${texto}</a>
+      <a href="${endereco}" style="color:${SUAVE};text-decoration:underline">${texto}</a>
     </p>`;
 }
 
-function titulo(texto: string) {
-  return `<h1 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:23px;line-height:1.3;color:${ESCURO}">${texto}</h1>`;
+export function titulo(texto: string) {
+  return `<h1 style="margin:0;font-family:${FONTE_TITULO};font-size:28px;font-weight:600;line-height:1.25;color:${TERRACOTA}">${texto}</h1>`;
 }
 
-function paragrafo(texto: string) {
-  return `<p style="margin:14px 0 0;font-size:15px;line-height:1.7;color:${TEXTO}">${texto}</p>`;
+export function paragrafo(texto: string) {
+  return `<p style="margin:14px 0 0;font-size:16px;line-height:1.7;color:${TEXTO}">${texto}</p>`;
 }
 
-function codigoEmDestaque(code: string) {
+export function codigoEmDestaque(code: string) {
   return `
-    <p style="margin:18px 0 0;font-size:13px;color:${TEXTO}">Código do pedido</p>
-    <p style="margin:4px 0 0;font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:bold;letter-spacing:1px;color:${LARANJA}">
+    <p style="margin:20px 0 0;font-size:13px;color:${SUAVE}">Código do pedido</p>
+    <p style="margin:6px 0 0;font-family:${FONTE_TITULO};font-size:26px;font-weight:600;letter-spacing:1px;color:${TERRACOTA}">
       ${escapar(code)}
     </p>`;
 }
@@ -193,7 +201,7 @@ export function emailPedidoRecebido(pedido: PedidoDoEmail) {
         `Oi, ${primeiroNome(pedido.customerName)}! Seu pedido está registrado. Guarde o código abaixo: é por ele que você acompanha tudo.`,
       )}
       ${codigoEmDestaque(pedido.code)}
-      <div style="margin-top:24px;border-top:1px solid ${BORDA};padding-top:4px">
+      <div style="margin-top:24px;border-top:1px solid ${LINHA};padding-top:4px">
         ${resumoDoPedido(pedido)}
       </div>
       ${paragrafo(
@@ -216,7 +224,7 @@ export function emailPagamentoConfirmado(pedido: PedidoDoEmail) {
         `Oi, ${primeiroNome(pedido.customerName)}! Seu pagamento caiu e já estamos preparando sua peça. Como tudo aqui é feito à mão, cada uma leva o tempo que precisa.`,
       )}
       ${codigoEmDestaque(pedido.code)}
-      <div style="margin-top:24px;border-top:1px solid ${BORDA};padding-top:4px">
+      <div style="margin-top:24px;border-top:1px solid ${LINHA};padding-top:4px">
         ${resumoDoPedido(pedido)}
       </div>
       ${paragrafo("Quando o pedido for postado, a gente te avisa.")}
@@ -249,7 +257,7 @@ export function emailNovoPedidoParaLoja(
           `${escapar(pedido.customerPhone)}` +
           (pedido.customerEmail ? `<br>${escapar(pedido.customerEmail)}` : ""),
       )}
-      <div style="margin-top:24px;border-top:1px solid ${BORDA};padding-top:4px">
+      <div style="margin-top:24px;border-top:1px solid ${LINHA};padding-top:4px">
         ${resumoDoPedido(pedido)}
       </div>
       ${
