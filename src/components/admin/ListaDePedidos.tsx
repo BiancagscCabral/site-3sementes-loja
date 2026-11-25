@@ -144,7 +144,24 @@ export default function ListaDePedidos({
                     <span className="col-start-2 row-start-2 text-right text-[14px] font-semibold text-foreground md:col-start-auto md:row-start-auto md:text-left">
                       {pedido.valor}
                     </span>
-                    <span className="col-start-2 row-start-1 justify-self-end md:col-start-auto md:row-start-auto md:justify-self-start">
+                    <span className="col-start-2 row-start-1 flex flex-wrap items-center justify-end gap-1.5 justify-self-end md:col-start-auto md:row-start-auto md:justify-start md:justify-self-start">
+                      {/* Duas etiquetas porque são duas coisas diferentes: se o
+                          dinheiro entrou, e em que pé está o preparo. Confundir
+                          as duas já deu problema: dá para marcar "Em produção"
+                          na mão sem ninguém ter pago. */}
+                      {pedido.foiPago &&
+                        (pedido.status === "AWAITING_PAYMENT" ? (
+                          // Entrou dinheiro, mas menos que o total: o pedido
+                          // fica retido de propósito. Dizer "confirmado" aqui
+                          // faria a peça sair antes de a conta fechar.
+                          <span className="inline-block rounded-full bg-rose/45 px-2.5 py-1 text-[11px] font-semibold text-primary-dark">
+                            Conferir pagamento
+                          </span>
+                        ) : (
+                          <span className="inline-block rounded-full bg-[#cfe6c9] px-2.5 py-1 text-[11px] font-semibold text-[#2f5a2a]">
+                            Pagamento confirmado
+                          </span>
+                        ))}
                       <span
                         className={`inline-block rounded-full px-3 py-1 text-[12px] font-semibold ${
                           pedido.expirou
