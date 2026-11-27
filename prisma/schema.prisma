@@ -21,28 +21,28 @@ model Category {
 
 // Produto artesanal vendido na loja
 model Product {
-  id          String        @id @default(cuid())
-  name        String
-  slug        String        @unique
-  description String
-  priceCents  Int // preço em centavos, evita problemas de arredondamento com float
-  images      ProductImage[]
-  variants    ProductVariant[]
-  sizes       String[] @default([]) // ex: ["P", "M", "G", "GG"]
-  colors      String[] @default([]) // ex: ["Dourado", "Prata"]
-  optionLabel String? // rótulo da lista acima quando não é cor (ex: "Tema")
-  allowsGiftCard Boolean @default(false) // mostra na página que o pedido pode levar card polaroid ou cartão presente
-  stock       Int           @default(0) // estoque padrão, usado se não houver variantes
-  weightGrams Int? // peso em gramas, necessário para cotação de frete (SuperFrete)
-  heightCm    Float?
-  widthCm     Float?
-  lengthCm    Float?
-  category    Category      @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  active      Boolean       @default(true)
-  orderItems  OrderItem[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id             String           @id @default(cuid())
+  name           String
+  slug           String           @unique
+  description    String
+  priceCents     Int // preço em centavos, evita problemas de arredondamento com float
+  images         ProductImage[]
+  variants       ProductVariant[]
+  sizes          String[]         @default([]) // ex: ["P", "M", "G", "GG"]
+  colors         String[]         @default([]) // ex: ["Dourado", "Prata"]
+  optionLabel    String? // rótulo da lista acima quando não é cor (ex: "Tema")
+  allowsGiftCard Boolean          @default(false) // mostra na página que o pedido pode levar card polaroid ou cartão presente
+  stock          Int              @default(0) // estoque padrão, usado se não houver variantes
+  weightGrams    Int? // peso em gramas, necessário para cotação de frete (SuperFrete)
+  heightCm       Float?
+  widthCm        Float?
+  lengthCm       Float?
+  category       Category         @relation(fields: [categoryId], references: [id])
+  categoryId     String
+  active         Boolean          @default(true)
+  orderItems     OrderItem[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 }
 
 // Fotos do produto (galeria)
@@ -52,8 +52,8 @@ model ProductImage {
   altText    String?
   position   Int     @default(0)
   optionName String? // foto de uma opção específica (ex: o tema "Cinderela")
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId String
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  String
 }
 
 // Variante do produto (ex: cor, tamanho) — opcional, nem todo produto precisa ter
@@ -68,8 +68,8 @@ model ProductVariant {
 
 // Pedido feito por um cliente
 model Order {
-  id              String      @id @default(cuid())
-  code            String      @unique // código curto que a cliente usa para acompanhar (ex: 3S-K7P2QX)
+  id              String  @id @default(cuid())
+  code            String  @unique // código curto que a cliente usa para acompanhar (ex: 3S-K7P2QX)
   // Conta da cliente no Supabase Auth, quando ela estava logada ao comprar.
   // Pedido feito sem conta fica nulo e é reconhecido depois pelo e-mail.
   customerUserId  String?
@@ -84,17 +84,23 @@ model Order {
   shippingService String? // ex: "PAC", "SEDEX", "Uber Flash"
 
   // Pagamento (InfinitePay)
-  infinitePayOrderNsu String?  @unique // seu identificador do pedido, enviado à InfinitePay
+  infinitePayOrderNsu String?       @unique // seu identificador do pedido, enviado à InfinitePay
   infinitePaySlug     String? // slug do link de checkout retornado pela API
   paymentStatus       PaymentStatus @default(PENDING)
   paidAmountCents     Int?
   paymentMethod       String? // "pix" | "credit_card"
 
-  status     OrderStatus @default(AWAITING_PAYMENT)
+  // Rastreio. Guarda o que a loja colar: o código dos Correios sozinho
+  // (DG048745602BR) ou o link que a SuperFrete dá quando a etiqueta é postada.
+  // Aceitar os dois evita obrigar a loja a extrair o código de dentro do link.
+  tracking String?
+
+  status     OrderStatus  @default(AWAITING_PAYMENT)
   items      OrderItem[]
+  events     OrderEvent[]
   totalCents Int
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 
   @@index([customerUserId])
   @@index([customerEmail])
@@ -126,8 +132,30 @@ enum PaymentStatus {
 enum OrderStatus {
   AWAITING_CONTACT // veio pelo site e será fechado pelo WhatsApp
   AWAITING_PAYMENT
-  PAID
+  PAID // o dinheiro entrou, a peça ainda não começou
+  IN_PRODUCTION // a peça está sendo feita
   SHIPPED
   DELIVERED
   CANCELLED
+}
+
+// Cada passo que o pedido deu, com a hora em que deu.
+//
+// Sem isto o pedido só sabe dizer onde está agora, nunca quando chegou ali, e
+// a cliente ficaria com uma trilha sem datas. Guardar os passos em linhas
+// separadas, em vez de uma coluna de data por situação, significa que criar
+// uma situação nova no futuro não exige mexer na tabela de pedidos.
+model OrderEvent {
+  id      String @id @default(cuid())
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String
+
+  status OrderStatus
+  // Quem causou: "sistema" quando foi o pagamento confirmado sozinho, ou o
+  // e-mail da administradora quando foi mudado na mão pelo painel.
+  origem String?
+
+  createdAt DateTime @default(now())
+
+  @@index([orderId, createdAt])
 }

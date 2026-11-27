@@ -34,7 +34,10 @@ export default async function PedidoPage(props: PageProps<"/pedido/[code]">) {
 
   const pedido = await prisma.order.findUnique({
     where: { code: codigo },
-    include: { items: true },
+    include: {
+      items: true,
+      events: { select: { status: true, createdAt: true } },
+    },
   });
 
   if (!pedido) notFound();
@@ -44,7 +47,7 @@ export default async function PedidoPage(props: PageProps<"/pedido/[code]">) {
   // ou cancelado não tem o que aguardar.
   const aguardando = pedido.status === "AWAITING_PAYMENT" && !pago;
   const cancelado = pedido.status === "CANCELLED";
-  const andamento = andamentoDoPedido(pedido);
+  const andamento = andamentoDoPedido(pedido, pedido.events);
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-12 sm:px-6 sm:py-16">
@@ -76,7 +79,12 @@ export default async function PedidoPage(props: PageProps<"/pedido/[code]">) {
 
       {aguardando && <AcompanhaPagamento codigo={pedido.code} />}
 
-      {andamento && <AndamentoDoPedido etapas={andamento.etapas} />}
+      {andamento && (
+        <AndamentoDoPedido
+          etapas={andamento.etapas}
+          rastreio={pedido.tracking}
+        />
+      )}
 
       <div className="mt-8 rounded-2xl border border-border bg-surface p-5">
         <ul className="flex flex-col gap-2 text-[15px]">

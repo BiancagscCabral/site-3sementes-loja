@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { conferirPagamento, pagamentoConfigurado } from "@/lib/infinitepay";
 import { enderecosDaLoja, enviarEmailSemEsperar } from "@/lib/email";
+import { registrarEventoSemQuebrar } from "@/lib/eventos-do-pedido";
 import {
   emailPagamentoAprovadoParaLoja,
   emailPagamentoConfirmado,
@@ -107,6 +108,12 @@ export async function sincronizarPagamento(
       `[pagamento] pedido ${code}: pago ${valorPago} de ${pedido.totalCents}`,
     );
   }
+
+  void registrarEventoSemQuebrar(
+    pedido.id,
+    valorConfere ? "PAID" : "AWAITING_PAYMENT",
+    "sistema",
+  );
 
   await avisarDoPagamento(pedido, valorPago, confirmacao.meio, valorConfere);
 

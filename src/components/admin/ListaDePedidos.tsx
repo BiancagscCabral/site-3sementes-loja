@@ -6,6 +6,8 @@ import CampoDeBusca from "@/components/admin/CampoDeBusca";
 import { IconeSetaBaixo } from "@/components/Icones";
 import { SITUACOES, situacao } from "@/components/admin/statusDoPedido";
 import { linkDoWhatsApp, mensagemSobreOPedido } from "@/lib/telefone";
+import RastreioDoPedido from "@/components/admin/RastreioDoPedido";
+import HistoricoDoPedido from "@/components/admin/HistoricoDoPedido";
 
 export type PedidoDaLista = {
   id: string;
@@ -21,6 +23,8 @@ export type PedidoDaLista = {
   endereco: string[];
   itens: string[];
   entrega: string;
+  rastreio: string | null;
+  historico: { status: string; origem: string | null; createdAt: Date }[];
 };
 
 // Lista de pedidos: abas por situação, busca e linhas que abrem para mostrar
@@ -219,6 +223,13 @@ export default function ListaDePedidos({
                         codigo={pedido.codigo}
                         foiPago={pedido.foiPago}
                       />
+
+                      <RastreioDoPedido
+                        id={pedido.id}
+                        atual={pedido.rastreio}
+                      />
+
+                      <HistoricoDoPedido linhas={pedido.historico} />
                     </div>
                   )}
                 </li>

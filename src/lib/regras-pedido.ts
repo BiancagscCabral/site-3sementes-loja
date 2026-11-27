@@ -35,12 +35,13 @@ export function statusPermitidos(pedido: PedidoProtegido) {
       "AWAITING_CONTACT",
       "AWAITING_PAYMENT",
       "PAID",
+      "IN_PRODUCTION",
       "SHIPPED",
       "DELIVERED",
       "CANCELLED",
     ];
   }
-  return ["PAID", "SHIPPED", "DELIVERED", "CANCELLED"];
+  return ["PAID", "IN_PRODUCTION", "SHIPPED", "DELIVERED", "CANCELLED"];
 }
 
 export function pedidoExpirou(pedido: { status: string; createdAt: Date }) {

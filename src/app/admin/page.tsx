@@ -75,7 +75,10 @@ export default async function AdminPage() {
   const todos = await prisma.order.findMany({
     orderBy: { createdAt: "desc" },
     take: 100,
-    include: { items: true },
+    include: {
+      items: true,
+      events: { select: { status: true, origem: true, createdAt: true } },
+    },
   });
 
   // Carrinho que chegou no pagamento e não voltou sai da tela: acumulado, ele
@@ -116,6 +119,8 @@ export default async function AdminPage() {
             item.variantName ? ` (${item.variantName})` : ""
           }: ${formatPriceCents(item.unitPriceCents * item.quantity)}`,
       ),
+      rastreio: pedido.tracking,
+      historico: pedido.events,
       entrega: `Entrega: ${pedido.shippingService ?? "não escolhida"}${
         pedido.shippingCents != null
           ? `, ${formatPriceCents(pedido.shippingCents)}`

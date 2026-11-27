@@ -1,6 +1,9 @@
-// Nome e cor de cada situação de pedido no painel. Como tudo na loja é feito
-// sob encomenda, "pago" aparece como "Em produção": é o que acontece em
-// seguida. Cores suaves, uma por situação, para a lista ser lida de relance.
+// Nome e cor de cada situação de pedido no painel.
+//
+// "Pago" e "Em produção" são situações diferentes de propósito: o dinheiro
+// entrar e a peça começar a ser feita são momentos distintos, e a cliente vê
+// os dois na trilha do pedido. Cores suaves, uma por situação, para a lista
+// ser lida de relance.
 export const SITUACOES = [
   {
     valor: "AWAITING_CONTACT",
@@ -14,6 +17,11 @@ export const SITUACOES = [
   },
   {
     valor: "PAID",
+    nome: "Pago",
+    chip: "bg-[#cfe6c9] text-[#2f5a2a]",
+  },
+  {
+    valor: "IN_PRODUCTION",
     nome: "Em produção",
     chip: "bg-sun/70 text-foreground",
   },

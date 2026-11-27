@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { priceForSize } from "@/lib/catalog";
 import { usuarioAtual } from "@/lib/supabase/servidor";
 import { enviarEmailSemEsperar } from "@/lib/email";
+import { registrarEventoSemQuebrar } from "@/lib/eventos-do-pedido";
 import { emailPedidoRecebido } from "@/lib/emails-do-pedido";
 
 export type ItemRecebido = {
@@ -108,6 +109,7 @@ export async function criarPedido(
     include: { items: true },
   });
 
+  void registrarEventoSemQuebrar(pedido.id, pedido.status, "sistema");
   avisarDoPedidoNovo(pedido);
 
   return pedido;
