@@ -24,11 +24,15 @@ type Endereco = {
   estado?: string;
 };
 
+// Com a hora: saber que o pedido entrou às 23h40 muda o que você faz com ele,
+// e sem isso dois pedidos do mesmo dia ficam indistinguíveis na lista.
 function data(valor: Date) {
   return new Intl.DateTimeFormat("pt-BR", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   }).format(valor);
 }
 
