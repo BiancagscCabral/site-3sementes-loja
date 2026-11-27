@@ -64,3 +64,28 @@ export function filtroDePedidosDaCliente() {
     },
   };
 }
+
+// Cancelamento pedido pela cliente.
+//
+// A régua é o dinheiro e o trabalho já gastos:
+//
+// - Ainda não pagou: desistir não custa nada a ninguém. Cancela na hora.
+// - Já pagou: cancelar significa devolver dinheiro, e isso é decisão da loja,
+//   não do site. A cliente pede, a loja resolve.
+// - Já foi postado: não é mais cancelamento, é devolução, e passa por
+//   conversa.
+export type PedidoParaCancelar = { status: string; paymentStatus: string };
+
+export function clientePodeCancelarDireto(pedido: PedidoParaCancelar) {
+  return (
+    pedido.paymentStatus !== "PAID" &&
+    (pedido.status === "AWAITING_PAYMENT" ||
+      pedido.status === "AWAITING_CONTACT")
+  );
+}
+
+export function clientePodePedirCancelamento(pedido: PedidoParaCancelar) {
+  if (clientePodeCancelarDireto(pedido)) return false;
+  // Depois de postado não há o que cancelar: a encomenda está com o correio.
+  return ["AWAITING_PAYMENT", "PAID", "IN_PRODUCTION"].includes(pedido.status);
+}

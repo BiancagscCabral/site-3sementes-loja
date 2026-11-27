@@ -7,6 +7,11 @@ import AcompanhaPagamento from "@/components/AcompanhaPagamento";
 import { sincronizarPagamento } from "@/lib/sincronizar-pagamento";
 import { andamentoDoPedido } from "@/lib/andamento-do-pedido";
 import AndamentoDoPedido from "@/components/AndamentoDoPedido";
+import CancelarPedido from "@/components/CancelarPedido";
+import {
+  clientePodeCancelarDireto,
+  clientePodePedirCancelamento,
+} from "@/lib/regras-pedido";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +53,8 @@ export default async function PedidoPage(props: PageProps<"/pedido/[code]">) {
   const aguardando = pedido.status === "AWAITING_PAYMENT" && !pago;
   const cancelado = pedido.status === "CANCELLED";
   const andamento = andamentoDoPedido(pedido, pedido.events);
+  const podeCancelarDireto = clientePodeCancelarDireto(pedido);
+  const podePedirCancelamento = clientePodePedirCancelamento(pedido);
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-12 sm:px-6 sm:py-16">
@@ -121,6 +128,13 @@ export default async function PedidoPage(props: PageProps<"/pedido/[code]">) {
           </span>
         </div>
       </div>
+
+      {(podeCancelarDireto || podePedirCancelamento) && (
+        <CancelarPedido
+          codigo={pedido.code}
+          modo={podeCancelarDireto ? "direto" : "pedido"}
+        />
+      )}
 
       <p className="mt-6 text-[13px] leading-6 text-muted">
         Guarde o código <strong>{pedido.code}</strong>. É por ele que a gente

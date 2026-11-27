@@ -308,3 +308,68 @@ export function emailPagamentoAprovadoParaLoja(pedido: {
     `),
   };
 }
+
+// A cliente pediu para cancelar.
+//
+// Este e-mail não decide nada: ele leva a decisão até você, com o botão do
+// WhatsApp para resolver na conversa. Quando o pedido já foi pago, o aviso
+// diz isso em primeiro lugar, porque aí cancelar significa devolver dinheiro
+// e o estorno é feito por você na InfinitePay, não pelo site.
+export function emailPedidoDeCancelamento(
+  pedido: PedidoDoEmail & {
+    customerPhone: string;
+    customerEmail: string | null;
+    motivo: string;
+    jaPago: boolean;
+  },
+) {
+  const whatsapp = linkDoWhatsApp(
+    pedido.customerPhone,
+    mensagemSobreOPedido(pedido.customerName, pedido.code),
+  );
+
+  const alerta = pedido.jaPago
+    ? `
+      <div style="margin-top:20px;border:2px solid ${TERRACOTA};border-radius:10px;padding:14px 16px;text-align:left">
+        <p style="margin:0;font-size:15px;font-weight:bold;color:${TERRACOTA}">
+          Este pedido já foi pago
+        </p>
+        <p style="margin:8px 0 0;font-size:14px;line-height:1.6;color:${TEXTO}">
+          Cancelar significa devolver ${formatPriceCents(pedido.totalCents)}.
+          O site não faz isso sozinho: o estorno é feito por você na
+          InfinitePay, e o pedido só é cancelado no painel depois.
+        </p>
+      </div>`
+    : "";
+
+  return {
+    assunto: `Pedido de cancelamento · ${pedido.code}`,
+    html: moldura(`
+      ${titulo("Querem cancelar um pedido")}
+      ${codigoEmDestaque(pedido.code)}
+      ${alerta}
+      ${paragrafo(
+        `<strong>${escapar(pedido.customerName)}</strong><br>` +
+          `${escapar(pedido.customerPhone)}` +
+          (pedido.customerEmail ? `<br>${escapar(pedido.customerEmail)}` : ""),
+      )}
+      ${
+        pedido.motivo
+          ? `<div style="margin-top:18px;border-left:3px solid ${LINHA};padding-left:14px;text-align:left">
+               <p style="margin:0;font-size:13px;color:${SUAVE}">Motivo</p>
+               <p style="margin:4px 0 0;font-size:15px;line-height:1.6;color:${TEXTO}">${escapar(pedido.motivo)}</p>
+             </div>`
+          : paragrafo("Ela não escreveu o motivo.")
+      }
+      <div style="margin-top:24px;border-top:1px solid ${LINHA};padding-top:4px">
+        ${resumoDoPedido(pedido)}
+      </div>
+      ${
+        whatsapp
+          ? botao("Falar com a cliente no WhatsApp", whatsapp)
+          : paragrafo("O telefone veio incompleto, então não dá para abrir a conversa daqui.")
+      }
+      ${linkDiscreto("Abrir o painel", `${enderecoDoSite()}/admin`)}
+    `),
+  };
+}
