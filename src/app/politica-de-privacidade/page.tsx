@@ -42,9 +42,9 @@ export default function PoliticaDePrivacidadePage() {
 
       <Section title="Quem é responsável pelos seus dados">
         <p>
-          [RAZÃO SOCIAL], CNPJ [PREENCHER], sediada em Igarassu (PE), é quem
-          trata os dados coletados neste site. Para falar sobre privacidade,
-          use o{" "}
+          A 3SEMENTES COMERCIO DE ARTESANATO LTDA, CNPJ 64.489.827/0001-93,
+          sediada em Igarassu (PE), é quem trata os dados coletados neste site.
+          Para falar sobre privacidade, use o{" "}
           <a
             href={WHATSAPP_URL}
             target="_blank"
