@@ -136,10 +136,13 @@ export default async function PedidoPage(props: PageProps<"/pedido/[code]">) {
         />
       )}
 
-      <p className="mt-6 text-[13px] leading-6 text-muted">
-        Guarde o código <strong>{pedido.code}</strong>. É por ele que a gente
-        acha seu pedido.
-      </p>
+      {/* Pedido cancelado não precisa mais do código para acompanhar. */}
+      {!cancelado && (
+        <p className="mt-6 text-[13px] leading-6 text-muted">
+          Guarde o código <strong>{pedido.code}</strong>. É por ele que a gente
+          acha seu pedido.
+        </p>
+      )}
 
       <div className="mt-6 flex flex-wrap gap-3">
         <a
