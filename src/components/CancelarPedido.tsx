@@ -5,6 +5,7 @@ import {
   cancelarPedidoPelaCliente,
   pedirCancelamento,
 } from "@/app/pedido/[code]/acoes";
+import { getWhatsAppUrl } from "@/lib/catalog";
 
 // O botão de desistir, na página do pedido.
 //
@@ -65,8 +66,34 @@ export default function CancelarPedido({
     );
   }
 
+  // Quem clicou em cancelar nem sempre quer cancelar. Muita vez é o tamanho
+  // errado, a cor errada, o endereço errado: coisas que se resolvem numa
+  // conversa e mantêm a venda. Por isso esta saída aparece ANTES do botão de
+  // confirmar, e não depois, quando já não adianta.
+  const conversa = getWhatsAppUrl(
+    `Olá! Sobre o meu pedido ${codigo}, eu precisava alterar uma coisa.`,
+  );
+
   return (
     <div className="mt-6 rounded-2xl border border-border bg-surface p-5">
+      <div className="mb-4 rounded-xl bg-muted-bg/70 p-4">
+        <p className="text-[14px] font-medium leading-6 text-foreground">
+          Quer trocar o tamanho ou mudar algo?
+        </p>
+        <p className="mt-1 text-[13px] leading-6 text-muted">
+          Tamanho, cor, endereço: dá para acertar sem cancelar. Fale com a
+          gente que a gente resolve.
+        </p>
+        <a
+          href={conversa}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 inline-flex h-10 items-center rounded-full bg-primary px-5 text-[13px] font-semibold text-primary-foreground transition-colors hover:bg-primary-dark"
+        >
+          Falar no WhatsApp
+        </a>
+      </div>
+
       {modo === "direto" ? (
         <p className="text-[14px] leading-6 text-foreground">
           Quer mesmo cancelar o pedido {codigo}? Isso não dá para desfazer, mas
