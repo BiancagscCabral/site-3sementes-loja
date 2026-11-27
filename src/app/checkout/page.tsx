@@ -7,11 +7,13 @@ import { useCart } from "@/lib/cart";
 import { formatPriceCents } from "@/lib/format";
 import { getWhatsAppUrl } from "@/lib/catalog";
 import { aceitaUberFlash, UBER_FLASH } from "@/lib/entrega";
+import { documentoValido, formatarDocumento } from "@/lib/documento";
 
 type Form = {
   nome: string;
   telefone: string;
   email: string;
+  documento: string;
   cep: string;
   rua: string;
   numero: string;
@@ -25,6 +27,7 @@ const EMPTY: Form = {
   nome: "",
   telefone: "",
   email: "",
+  documento: "",
   cep: "",
   rua: "",
   numero: "",
@@ -37,6 +40,7 @@ const EMPTY: Form = {
 const REQUIRED: (keyof Form)[] = [
   "nome",
   "telefone",
+  "documento",
   "cep",
   "rua",
   "numero",
@@ -205,6 +209,11 @@ export default function CheckoutPage() {
     if (form.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) {
       found.email = "E-mail inválido";
     }
+    // Conferimos os dígitos aqui para o erro aparecer enquanto ela ainda está
+    // no formulário, e não só quando o servidor recusar.
+    if (form.documento && !documentoValido(form.documento)) {
+      found.documento = "Confira o número, algum dígito não fecha";
+    }
     setErrors(found);
     return Object.keys(found).length === 0;
   };
@@ -214,6 +223,7 @@ export default function CheckoutPage() {
       nome: form.nome,
       telefone: form.telefone,
       email: form.email,
+      documento: form.documento,
     },
     endereco: {
       cep: form.cep,
@@ -412,6 +422,18 @@ export default function CheckoutPage() {
                 inputMode="tel"
                 placeholder="(81) 90000-0000"
                 autoComplete="tel"
+              />
+              <Field
+                label="CPF ou CNPJ"
+                name="documento"
+                value={form.documento}
+                onChange={(nome, valor) =>
+                  update(nome, formatarDocumento(valor))
+                }
+                error={errors.documento}
+                inputMode="numeric"
+                placeholder="000.000.000-00"
+                autoComplete="off"
               />
               <Field
                 label="E-mail (opcional)"

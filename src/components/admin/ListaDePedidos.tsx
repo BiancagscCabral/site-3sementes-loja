@@ -20,6 +20,7 @@ export type PedidoDaLista = {
   cliente: string;
   telefone: string;
   email: string | null;
+  documento: string | null;
   endereco: string[];
   itens: string[];
   entrega: string;
@@ -197,6 +198,11 @@ export default function ListaDePedidos({
                           />
                           {pedido.email && (
                             <span className="block">{pedido.email}</span>
+                          )}
+                          {pedido.documento && (
+                            <span className="block">
+                              CPF/CNPJ: {pedido.documento}
+                            </span>
                           )}
                           <span className="mt-1.5 block">
                             {pedido.endereco.map((linha, i) => (

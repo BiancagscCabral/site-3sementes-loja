@@ -68,15 +68,19 @@ model ProductVariant {
 
 // Pedido feito por um cliente
 model Order {
-  id              String  @id @default(cuid())
-  code            String  @unique // código curto que a cliente usa para acompanhar (ex: 3S-K7P2QX)
+  id               String  @id @default(cuid())
+  code             String  @unique // código curto que a cliente usa para acompanhar (ex: 3S-K7P2QX)
   // Conta da cliente no Supabase Auth, quando ela estava logada ao comprar.
   // Pedido feito sem conta fica nulo e é reconhecido depois pelo e-mail.
-  customerUserId  String?
-  customerName    String
-  customerEmail   String?
-  customerPhone   String
-  shippingAddress Json // CEP, rua, número, bairro, cidade, estado, complemento
+  customerUserId   String?
+  customerName     String
+  customerEmail    String?
+  customerPhone    String
+  // CPF ou CNPJ de quem recebe. A SuperFrete exige o documento da
+  // destinatária para emitir a etiqueta. Guardado só com os dígitos, sem
+  // pontuação, para não depender de como a pessoa digitou.
+  customerDocument String?
+  shippingAddress  Json // CEP, rua, número, bairro, cidade, estado, complemento
 
   // Frete
   deliveryMethod  String? // "correios" | "uber-flash"

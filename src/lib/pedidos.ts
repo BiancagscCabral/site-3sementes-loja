@@ -3,6 +3,7 @@ import { priceForSize } from "@/lib/catalog";
 import { usuarioAtual } from "@/lib/supabase/servidor";
 import { enviarEmailSemEsperar } from "@/lib/email";
 import { registrarEventoSemQuebrar } from "@/lib/eventos-do-pedido";
+import { documentoValido, soDigitos } from "@/lib/documento";
 import { emailPedidoRecebido } from "@/lib/emails-do-pedido";
 
 export type ItemRecebido = {
@@ -13,7 +14,12 @@ export type ItemRecebido = {
 };
 
 export type CorpoDoPedido = {
-  cliente?: { nome?: string; telefone?: string; email?: string };
+  cliente?: {
+    nome?: string;
+    telefone?: string;
+    email?: string;
+    documento?: string;
+  };
   endereco?: Record<string, string>;
   entrega?: { metodo?: string; servico?: string; precoCents?: number | null };
   itens?: ItemRecebido[];
@@ -88,6 +94,18 @@ export async function criarPedido(
       ? Math.max(0, Math.round(corpo.entrega.precoCents))
       : null;
 
+  // Documento da destinatária, guardado só com os dígitos. Recusamos o que
+  // não fecha a conta de verificação: documento errado só apareceria na hora
+  // de gerar a etiqueta, com a peça já embalada.
+  const documentoCru = String(corpo.cliente?.documento ?? "").trim();
+  let documento: string | null = null;
+  if (documentoCru) {
+    if (!documentoValido(documentoCru)) {
+      throw new ErroDePedido("CPF ou CNPJ inválido.");
+    }
+    documento = soDigitos(documentoCru);
+  }
+
   // A conta vem da sessão no servidor, nunca do que o navegador mandou.
   const usuario = await usuarioAtual();
 
@@ -97,6 +115,7 @@ export async function criarPedido(
       customerUserId: usuario?.id ?? null,
       customerName: nome,
       customerPhone: telefone,
+      customerDocument: documento,
       customerEmail: corpo.cliente?.email?.trim() || usuario?.email || null,
       shippingAddress: corpo.endereco ?? {},
       deliveryMethod: corpo.entrega?.metodo ?? null,

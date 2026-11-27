@@ -4,6 +4,7 @@ import { formatPriceCents } from "@/lib/format";
 import { ehAdmin, usuarioAtual } from "@/lib/supabase/servidor";
 import { pedidoExpirou } from "@/lib/regras-pedido";
 import { sincronizarPagamento } from "@/lib/sincronizar-pagamento";
+import { formatarDocumento } from "@/lib/documento";
 import AtualizaSozinho from "@/components/AtualizaSozinho";
 import Sair from "@/components/Sair";
 import CabecalhoDoPainel from "@/components/admin/CabecalhoDoPainel";
@@ -110,6 +111,9 @@ export default async function AdminPage() {
       cliente: pedido.customerName,
       telefone: pedido.customerPhone,
       email: pedido.customerEmail,
+      documento: pedido.customerDocument
+        ? formatarDocumento(pedido.customerDocument)
+        : null,
       endereco: [
         `${endereco.rua ?? ""}, ${endereco.numero ?? ""}${
           endereco.complemento ? ` - ${endereco.complemento}` : ""

@@ -65,8 +65,10 @@ export default function PoliticaDePrivacidadePage() {
         </p>
         <p>
           <strong>Quando você faz um pedido:</strong> nome, telefone, e-mail,
-          endereço de entrega, itens comprados e valor. Esses dados são
-          necessários para produzir, cobrar e entregar a encomenda.
+          CPF ou CNPJ, endereço de entrega, itens comprados e valor. Esses
+          dados são necessários para produzir, cobrar e entregar a encomenda.
+          O CPF ou CNPJ é exigido pelos Correios para emitir a etiqueta de
+          envio, e é usado só para isso.
         </p>
         <p>
           <strong>Dados de pagamento:</strong> os dados do cartão ou do Pix são
